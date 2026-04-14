@@ -21,13 +21,7 @@ def root():
 # CORS — permite peticiones desde Live Server (:5500) y otros puertos locales
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://127.0.0.1:5501",  # 🔥 AGREGA ESTE
-        "http://localhost:5501"   # 🔥 Y ESTE
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,4 +42,3 @@ app.include_router(tipos_solicitud_routes)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-    
