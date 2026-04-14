@@ -37,7 +37,7 @@ async function iniciarSesion() {
     btnLogin.disabled = true;
 
     try {
-        const respuesta = await fetch(`${DIRECCION_LOGIN}/auth/login`, {
+        const respuesta = await fetch(`${DIRECCION_API}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ correo, contrasena })
@@ -46,12 +46,13 @@ async function iniciarSesion() {
         const datos = await respuesta.json();
 
         if (!respuesta.ok) {
-            textoError.textContent = datos.detail || 'Correo o contraseña incorrectos';
+            textoError.textContent = datos.detail || `Error ${respuesta.status}`;
             error.classList.add('visible');
             restaurarBoton();
             return;
         }
 
+        sessionStorage.setItem('token', datos.access_token);
         sessionStorage.setItem('portalUser', JSON.stringify({
             nombre: datos.nombre,
             apellido: datos.apellido,
@@ -59,12 +60,11 @@ async function iniciarSesion() {
             correo: datos.correo,
             id_usuario: datos.id_usuario
         }));
-        sessionStorage.setItem('token', datos.access_token);
 
         mostrarRedireccion(datos);
 
-    } catch {
-        textoError.textContent = 'Error de conexión con el servidor';
+    } catch (err) {
+        textoError.textContent = err.message || 'Error de conexión con el servidor';
         error.classList.add('visible');
         restaurarBoton();
     }
