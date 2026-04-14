@@ -1,0 +1,281 @@
+/* 
+   LOGIN.CSS — Portal de acceso institucional
+*/
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    background-image:
+        radial-gradient(ellipse at 80% 10%, rgba(91, 158, 249, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 90%, rgba(22, 163, 74, 0.07) 0%, transparent 50%);
+}
+
+/* ============================================================
+   CONTENEDOR
+============================================================ */
+.portal-wrap {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem 1.5rem;
+    animation: slideUp 0.5s ease both;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+.portal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.portal-logo {
+    width: 64px;
+    height: 64px;
+    background: var(--navy);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 20px rgba(26, 35, 64, 0.2);
+}
+
+.portal-header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.portal-header p {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+/* ============================================================
+   TARJETA
+============================================================ */
+.portal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(26, 35, 64, 0.08), 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.linea-superior {
+    height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Etiqueta de sección dentro de la card */
+.etiqueta-seccion {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 1.4rem;
+    font-family: var(--font-mono);
+}
+
+/* ============================================================
+   CAMPO PASSWORD
+============================================================ */
+.campo-password {
+    position: relative;
+}
+
+.campo-password input {
+    padding-right: 44px;
+}
+
+.btn-ver-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+}
+
+.btn-ver-password:hover {
+    color: var(--text-strong);
+}
+
+/* ============================================================
+   MENSAJE DE ERROR
+============================================================ */
+.mensaje-error {
+    background: var(--danger-soft);
+    border: 1px solid var(--danger-mid);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: var(--danger-text);
+    margin-bottom: 1.2rem;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.mensaje-error.visible {
+    display: flex;
+    animation: shake 0.35s ease;
+}
+
+/* ============================================================
+   BOTÓN PRINCIPAL
+============================================================ */
+.btn-ingresar {
+    width: 100%;
+    background: var(--navy);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--r-md);
+    padding: 13px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.6rem;
+    box-shadow: 0 3px 10px rgba(26, 35, 64, 0.25);
+}
+
+.btn-ingresar:hover:not(:disabled) {
+    background: var(--navy-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(26, 35, 64, 0.3);
+}
+
+.btn-ingresar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================================
+   SPINNER DENTRO DEL BOTÓN
+============================================================ */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+/* ============================================================
+   PANTALLA DE REDIRECCIÓN
+============================================================ */
+.pantalla-redireccion {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.icono-redireccion {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.texto-redireccion {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    margin-bottom: 6px;
+}
+
+.subtexto-redireccion {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 1.5rem;
+}
+
+.barra-progreso {
+    height: 3px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.relleno-barra {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+    border-radius: 10px;
+    transition: width 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   PIE
+============================================================ */
+.portal-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ============================================================
+   ANIMACIONES
+============================================================ */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animar-entrada {
+    animation: slideUp 0.4s ease both;
+}

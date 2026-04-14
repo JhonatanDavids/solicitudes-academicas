@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica — Solicitudes Académicas</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div id="admin-panel">
+        <app-sidebar rol="admin" seccion="analitica"></app-sidebar>
+
+        <main style="display:flex; flex-direction:column; width:100%; height:100vh;">
+            <app-navbar title="ANALÍTICA GLOBAL"></app-navbar>
+
+            <section class="section active" id="section-analitica" style="flex:1; padding:20px; overflow:hidden;">
+                <!-- REPORTE DE POWER BI -->
+                <div style="width:100%; height:100%; border-radius:12px; overflow:hidden; background:var(--surface);">
+                    <iframe title="solicitudes_academicas" style="width:100%; height:100%; border:none;"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiOGZlNjM5N2QtYzI3ZC00OTliLWFhZTctMDliZDJhYmIwMWNlIiwidCI6IjI1ZGFmZThmLTBkOGItNGM3Ni04YWUxLWFjNDc5OTFhODA5ZSJ9"
+                        frameborder="0" allowFullScreen="true"></iframe>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- UTILS -->
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/utils/auth.js"></script>
+    <script src="../js/utils/ui.js"></script>
+
+    <!-- API -->
+    <script src="../js/api.js"></script>
+
+    <!-- COMPONENTS -->
+    <script src="../js/components.js"></script>
+
+    <!-- MÓDULO (CAMBIA SEGÚN PÁGINA) -->
+    <script src="../js/analitica.js"></script>
+</body>
+
+</html>

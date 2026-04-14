@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Coordinador — Solicitudes Académicas</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/datatables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- PANEL COORDINADOR -->
+    <div id="admin-panel">
+        <app-sidebar rol="coordinador" seccion="overview"></app-sidebar>
+
+        <app-navbar title="APROBACIONES"></app-navbar>
+
+        <main class="main-content">
+
+            <!-- OVERVIEW -->
+            <section class="section active" id="section-overview">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Overview</div>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-box c-purple">
+                        <div class="stat-box-icon">📄</div>
+                        <div class="stat-box-num" id="ov-solicitudes">–</div>
+                        <div class="stat-box-label">Solicitudes</div>
+                    </div>
+                    <div class="stat-box c-yellow">
+                        <div class="stat-box-icon">⏳</div>
+                        <div class="stat-box-num" id="ov-pendientes">–</div>
+                        <div class="stat-box-label">Pendientes</div>
+                    </div>
+                    <div class="stat-box c-blue">
+                        <div class="stat-box-icon">🔍</div>
+                        <div class="stat-box-num" id="ov-en-revision">–</div>
+                        <div class="stat-box-label">En Revisión</div>
+                    </div>
+                    <div class="stat-box c-green">
+                        <div class="stat-box-icon">✅</div>
+                        <div class="stat-box-num" id="ov-aprobadas">–</div>
+                        <div class="stat-box-label">Aprobadas</div>
+                    </div>
+                    <div class="stat-box c-red">
+                        <div class="stat-box-icon">❌</div>
+                        <div class="stat-box-num" id="ov-rechazadas">–</div>
+                        <div class="stat-box-label">Rechazadas</div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3>
+                            <div class="panel-head-dot"></div> Últimas Solicitudes
+                        </h3>
+                    </div>
+                    <div id="overview-recent">
+                        <div class="loading-state">
+                            <div class="spinner"></div><br>Cargando...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOLICITUDES -->
+            <section class="section" id="section-solicitudes">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Aprobar Solicitudes</div>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <select id="filter-estado"
+                            style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:6px;font-size:0.72rem;font-family:var(--font-mono);outline:none;cursor:pointer;">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_revision">En revisión</option>
+                            <option value="aprobada">Aprobada</option>
+                            <option value="rechazada">Rechazada</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3>
+                            <div class="panel-head-dot"></div> solicitudes
+                        </h3><button class="btn-sm blue" id="btn-recargar-solicitudes">↻ Recargar</button>
+                    </div>
+                    <div class="search-bar"><input class="search-input" id="input-buscar-solicitudes"
+                            placeholder="Buscar solicitudes..."></div>
+                    <div id="data-solicitudes">
+                        <div class="loading-state">
+                            <div class="spinner"></div><br>Cargando...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL JSON -->
+    <div class="modal-overlay" id="modal-json">
+        <div class="modal-box wide">
+            <div class="modal-head">
+                <h4 id="modal-json-title">JSON</h4>
+                <button class="modal-close" id="btn-cerrar-json-1">✕</button>
+            </div>
+            <div class="modal-body" style="padding:0;">
+                <div class="json-view">
+                    <pre id="modal-json-content"></pre>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copiar-json">⎘
+                    Copiar</button></div>
+        </div>
+    </div>
+
+    <!-- UTILS -->
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/utils/auth.js"></script>
+    <script src="../js/utils/ui.js"></script>
+
+    <!-- API -->
+    <script src="../js/api.js"></script>
+
+    <!-- COMPONENTS -->
+    <script src="../js/components.js"></script>
+
+    <!-- MÓDULO (CAMBIA SEGÚN PÁGINA) -->
+    <script src="../js/coordinador.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+/* 
+   ESTUDIANTE.CSS — Portal de estudiantes
+   Depende de global.css para colores y componentes base.
+*/
+
+/* ============================================================
+   TOPBAR
+============================================================ */
+.topbar {
+    height: 58px;
+    background: var(--navy);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.75rem;
+    box-shadow: 0 2px 8px rgba(26, 35, 64, 0.18);
+}
+
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.brand-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+}
+
+.user-chip {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 4px 12px 4px 4px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.user-chip:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.user-chip-name {
+    font-size: 0.78rem;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.user-chip-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ============================================================
+   HERO (CABECERA OSCURA INSTITUCIONAL)
+============================================================ */
+.hero {
+    background: var(--navy);
+    padding: 4rem 2rem 5rem 2rem;
+    margin-top: 58px;
+    position: relative;
+}
+
+.hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.hero h2 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-family: var(--font-display);
+    margin-bottom: 0.3rem;
+}
+
+.hero p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.btn-nueva {
+    background: var(--blue);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 4px 12px rgba(91, 158, 249, 0.3);
+}
+
+.btn-nueva:hover {
+    background: var(--blue-hover);
+    transform: translateY(-2px);
+}
+
+.main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem 2rem;
+}
+
+/* ============================================================
+   STAT GRID (ESTILO HÍBRIDO)
+============================================================ */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: -3rem; /* Sube las tarjetas para montarse sobre el Hero */
+    position: relative;
+    z-index: 10;
+    margin-bottom: 24px;
+}
+
+.stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.stat-box:hover {
+    box-shadow: 0 8px 24px rgba(26, 35, 64, 0.08);
+    transform: translateY(-2px);
+}
+
+.stat-box.c-blue::before { background: var(--blue); }
+.stat-box.c-yellow::before { background: var(--warning); }
+.stat-box.c-green::before { background: var(--success); }
+.stat-box.c-cyan::before { background: var(--info); }
+
+.stat-icon {
+    font-size: 1.8rem;
+    opacity: 0.8;
+}
+
+.stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-strong);
+    font-family: var(--font-sans); 
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -0.03em;
+}
+
+.stat-lbl {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+}
+
+/* ============================================================
+   PANEL / SOLICITUDES
+============================================================ */
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.panel-head {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+}
+
+.panel-head h3 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+}
+
+.panel-head-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--blue);
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   FILTER BAR (chips)
+============================================================ */
+.filter-bar {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: var(--surface2);
+}
+
+.filter-chip {
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filter-chip:hover {
+    background: var(--blue-soft);
+    color: var(--info);
+    border-color: var(--blue-soft2);
+}
+
+.filter-chip.active {
+    background: var(--navy);
+    color: #ffffff;
+    border-color: var(--navy);
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 768px) {
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-stats {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .main {
+        padding: 20px 1rem 3rem;
+    }
+
+    .hero {
+        padding: 2.5rem 1rem 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+}

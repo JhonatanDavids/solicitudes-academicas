@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal — Solicitudes Académicas</title>
+    <meta name="description" content="Portal de acceso al sistema de solicitudes académicas universitarias">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <div class="portal-wrap">
+
+        <!-- ENCABEZADO -->
+        <div class="portal-header">
+            <div class="portal-logo">🎓</div>
+            <h1>Solicitudes Académicas</h1>
+            <p>PORTAL DE ACCESO</p>
+        </div>
+
+        <!-- TARJETA PRINCIPAL -->
+        <div class="portal-card">
+            <div class="linea-superior"></div>
+            <div class="card-body">
+
+                <!-- FORMULARIO DE LOGIN -->
+                <div id="formulario-login" class="animar-entrada">
+                    <div class="etiqueta-seccion">Iniciar sesión</div>
+
+                    <div class="mensaje-error" id="error-login">
+                        <span>⚠</span>
+                        <span id="texto-error-login">Correo o contraseña incorrectos</span>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="f-correo">Correo institucional</label>
+                        <input type="email" id="f-correo" placeholder="usuario@correo.edu" autocomplete="email">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="f-contrasena">Contraseña</label>
+                        <div class="campo-password">
+                            <input type="password" id="f-contrasena" placeholder="Tu contraseña"
+                                autocomplete="current-password">
+                            <button type="button" class="btn-ver-password" id="btn-toggle-password"
+                                aria-label="Mostrar contraseña">
+                                <span id="icono-ojo">👁</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="btn-ingresar" id="btn-login" onclick="iniciarSesion()">
+                        <span id="btn-login-texto">Ingresar</span>
+                        <span id="btn-login-spinner" class="spinner" style="display:none;"></span>
+                    </button>
+                </div>
+
+                <!-- PANTALLA DE REDIRECCION -->
+                <div id="pantalla-exito" style="display:none;" class="animar-entrada">
+                    <div class="pantalla-redireccion">
+                        <span class="icono-redireccion" id="icono-redireccion">✅</span>
+                        <div class="texto-redireccion" id="texto-redireccion">Bienvenido/a</div>
+                        <div class="subtexto-redireccion" id="subtexto-redireccion">Preparando tu entorno</div>
+                        <div class="barra-progreso">
+                            <div class="relleno-barra" id="relleno-barra"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PIE -->
+        <div class="portal-footer">
+            Sistema de Solicitudes Académicas &copy; 2024
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+
+</html>
