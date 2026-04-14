@@ -14,6 +14,10 @@ from app.routes.auth_routes import router as auth_routes
 
 app = FastAPI(title="Sistema de Gestión de Solicitudes Académicas — CUL")
 
+@app.get("/")
+def root():
+    return {"message": "API funcionando 🚀"}
+
 # CORS — permite peticiones desde Live Server (:5500) y otros puertos locales
 app.add_middleware(
     CORSMiddleware,
