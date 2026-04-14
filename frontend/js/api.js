@@ -4,9 +4,9 @@
 // ══════════════════════════════════════════════════════════════
 
 // Dirección base de la API
-const DIRECCION_API = window.location.hostname.includes("localhost")
-    ? "http://127.0.0.1:8000"
-    : "https://solicitudes-academicas.onrender.com";
+const DIRECCION_API = "https://solicitudes-academicas.onrender.com";
+
+console.log("USANDO RENDER API");
 
 // ── CABECERAS ──
 // Genera las cabeceras para cada petición, incluyendo el token JWT si existe.

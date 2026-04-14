@@ -3,8 +3,6 @@
 //  El rol viene del backend (JWT), NO se selecciona en el frontend.
 // ══════════════════════════════════════════════════════════════
 
-const DIRECCION_LOGIN = "http://127.0.0.1:8000";
-
 const iconosPorRol = {
     estudiante: '🎓',
     admin: '⚡',
