@@ -755,6 +755,13 @@ table.dataTable thead th {
     gap: 8px;
 }
 
+.nb-logo {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
 .nb-right {
     display: flex;
     align-items: center;
@@ -813,8 +820,9 @@ table.dataTable thead th {
     padding: 18px 16px 14px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
 }
 
 .sb-brand-icon {
@@ -827,6 +835,13 @@ table.dataTable thead th {
     justify-content: center;
     font-size: 1.1rem;
     flex-shrink: 0;
+}
+
+.sb-brand-logo {
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    object-fit: contain;
 }
 
 .sb-brand-text {

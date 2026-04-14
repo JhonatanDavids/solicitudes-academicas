@@ -31,17 +31,18 @@ body {
     margin-bottom: 2rem;
 }
 
-.portal-logo {
-    width: 64px;
-    height: 64px;
-    background: var(--navy);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.portal-logo-img {
+    max-width: 200px;
+    height: auto;
+    display: block;
     margin: 0 auto 1.2rem;
-    font-size: 1.8rem;
-    box-shadow: 0 8px 20px rgba(26, 35, 64, 0.2);
+    object-fit: contain;
+}
+
+@media (max-width: 480px) {
+    .portal-logo-img {
+        max-width: 150px;
+    }
 }
 
 .portal-header h1 {

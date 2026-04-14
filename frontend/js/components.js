@@ -20,6 +20,7 @@ class AppNavbar extends HTMLElement {
         this.innerHTML = `
             <div class="nb-wrap">
                 <div class="nb-title">
+                    <img src="../assets/img/logo-ul-horizontal.png" alt="Logo" class="nb-logo">
                     <span id="topbar-section-name">${title}</span>
                 </div>
                 <div class="nb-right">
@@ -102,7 +103,7 @@ class AppSidebar extends HTMLElement {
         this.innerHTML = `
             <div class="sb-wrap">
                 <div class="sb-brand">
-                    <div class="sb-brand-icon">🎓</div>
+                    <img src="../assets/img/logo-ul-horizontal.png" alt="Logo Universidad" class="sb-brand-logo">
                     <div class="sb-brand-text">
                         <span class="sb-brand-name">Admin Panel</span>
                         <span class="sb-brand-sub">Solicitudes Académicas</span>
