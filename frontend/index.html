@@ -4,87 +4,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal — Solicitudes Académicas</title>
-    <meta name="description" content="Portal de acceso al sistema de solicitudes académicas universitarias">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Solicitudes Académicas — Corporación Universitaria Latinoamericana</title>
+    <meta name="description"
+        content="Plataforma institucional centralizada para la gestión de solicitudes académicas de la Corporación Universitaria Latinoamericana">
     <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/landing.css">
 </head>
 
 <body>
 
-    <div class="portal-wrap">
+    <div id="landing">
 
-        <!-- ENCABEZADO -->
-        <div class="portal-header">
-            <img src="assets/img/logo-ul-horizontal.png" alt="Logo Universidad" class="portal-logo-img">
-            <h1>Solicitudes Académicas</h1>
-            <p>PORTAL DE ACCESO</p>
-        </div>
-
-        <!-- TARJETA PRINCIPAL -->
-        <div class="portal-card">
-            <div class="linea-superior"></div>
-            <div class="card-body">
-
-                <!-- FORMULARIO DE LOGIN -->
-                <div id="formulario-login" class="animar-entrada">
-                    <div class="etiqueta-seccion">Iniciar sesión</div>
-
-                    <div class="mensaje-error" id="error-login">
-                        <span>⚠</span>
-                        <span id="texto-error-login">Correo o contraseña incorrectos</span>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="f-correo">Correo institucional</label>
-                        <input type="email" id="f-correo" placeholder="usuario@correo.edu" autocomplete="email">
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="f-contrasena">Contraseña</label>
-                        <div class="campo-password">
-                            <input type="password" id="f-contrasena" placeholder="Tu contraseña"
-                                autocomplete="current-password">
-                            <button type="button" class="btn-ver-password" id="btn-toggle-password"
-                                aria-label="Mostrar contraseña">
-                                <span id="icono-ojo">👁</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <button class="btn-ingresar" id="btn-login" onclick="iniciarSesion()">
-                        <span id="btn-login-texto">Ingresar</span>
-                        <span id="btn-login-spinner" class="spinner" style="display:none;"></span>
-                    </button>
+        <!-- ═══════════════════════════════════════════════════════
+             NAVBAR
+             ═══════════════════════════════════════════════════════ -->
+        <nav class="land-nav">
+            <div class="land-nav-brand">
+                <div class="land-nav-logo-wrap">
+                    <img src="assets/img/logo-cul.jpg" alt="Logo CUL">
                 </div>
-
-                <!-- PANTALLA DE REDIRECCION -->
-                <div id="pantalla-exito" style="display:none;" class="animar-entrada">
-                    <div class="pantalla-redireccion">
-                        <span class="icono-redireccion" id="icono-redireccion">✅</span>
-                        <div class="texto-redireccion" id="texto-redireccion">Bienvenido/a</div>
-                        <div class="subtexto-redireccion" id="subtexto-redireccion">Preparando tu entorno</div>
-                        <div class="barra-progreso">
-                            <div class="relleno-barra" id="relleno-barra"></div>
-                        </div>
-                    </div>
+                <div>
+                    <div class="land-nav-title">Solicitudes Académicas</div>
+                    <div class="land-nav-sub">Corporación Universitaria Latinoamericana</div>
                 </div>
-
             </div>
-        </div>
+            <div class="land-nav-links">
+                <a href="#features" class="land-nav-link">Funcionalidades</a>
+                <a href="#roles" class="land-nav-link">Roles</a>
+                <a href="login.html" class="land-nav-cta">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    Iniciar Sesión
+                </a>
+            </div>
+        </nav>
 
-        <!-- PIE -->
-        <div class="portal-footer">
-            Sistema de Solicitudes Académicas &copy; 2024
-        </div>
+        <!-- ═══════════════════════════════════════════════════════
+             HERO
+             ═══════════════════════════════════════════════════════ -->
+        <section class="land-hero">
+            <div class="land-hero-bg"></div>
+
+            <div class="land-hero-left">
+                <div class="land-hero-badge">
+                    <div class="land-hero-badge-dot"></div>
+                    Sistema Institucional · CUL 2024
+                </div>
+                <h1 class="land-hero-headline">
+                    Gestiona tus<br>
+                    solicitudes<br>
+                    <em>académicas</em><br>
+                    con precisión.
+                </h1>
+                <p class="land-hero-desc">
+                    Una plataforma institucional centralizada que conecta estudiantes, funcionarios, coordinadores y
+                    administradores en un solo flujo de trabajo eficiente y transparente.
+                </p>
+                <div class="land-hero-actions">
+                    <a href="login.html" class="land-btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+                            <polyline points="10 17 15 12 10 7" />
+                            <line x1="15" y1="12" x2="3" y2="12" />
+                        </svg>
+                        Acceder al Portal
+                    </a>
+                    <a href="#features" class="land-btn-secondary">
+                        Ver funcionalidades
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7v10" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="land-hero-stats">
+                    <div class="land-stat-item">
+                        <div class="land-stat-num">4<span>+</span></div>
+                        <div class="land-stat-label">Roles de acceso</div>
+                    </div>
+                    <div class="land-stat-item">
+                        <div class="land-stat-num">100<span>%</span></div>
+                        <div class="land-stat-label">Trámites digitales</div>
+                    </div>
+                    <div class="land-stat-item">
+                        <div class="land-stat-num">24<span>/7</span></div>
+                        <div class="land-stat-label">Disponibilidad</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="land-hero-right" id="roles">
+                <div class="land-hero-visual">
+                    <div class="land-visual-header">
+                        <div class="land-vh-label">Panel de control</div>
+                        <div class="land-vh-title">Sistema CUL</div>
+                        <div class="land-vh-sub">Solicitudes Académicas · 2024</div>
+                        <div class="land-vh-badge">ACTIVO</div>
+                    </div>
+                    <div class="land-role-cards">
+                        <div class="land-role-card">
+                            <div class="land-rc-icon land-admin">🛡️</div>
+                            <div class="land-rc-title">Administrador</div>
+                            <div class="land-rc-desc">Control total del sistema y usuarios</div>
+                        </div>
+                        <div class="land-role-card">
+                            <div class="land-rc-icon land-student">🎓</div>
+                            <div class="land-rc-title">Estudiante</div>
+                            <div class="land-rc-desc">Radicación y seguimiento de solicitudes</div>
+                        </div>
+                        <div class="land-role-card">
+                            <div class="land-rc-icon land-official">🏛️</div>
+                            <div class="land-rc-title">Funcionario</div>
+                            <div class="land-rc-desc">Gestión y procesamiento de trámites</div>
+                        </div>
+                        <div class="land-role-card">
+                            <div class="land-rc-icon land-coord">📋</div>
+                            <div class="land-rc-title">Coordinador</div>
+                            <div class="land-rc-desc">Supervisión y aprobación académica</div>
+                        </div>
+                    </div>
+                    <div class="land-visual-footer">
+                        <div class="land-vf-dot-row">
+                            <div class="land-vf-dot land-green"></div>
+                            <div class="land-vf-dot land-blue"></div>
+                            <div class="land-vf-dot land-gold"></div>
+                            <span class="land-vf-text">Servicios activos</span>
+                        </div>
+                        <div class="land-vf-time" id="live-time">--:--:--</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             FEATURES
+             ═══════════════════════════════════════════════════════ -->
+        <section class="land-features" id="features">
+            <div class="land-section-label">Funcionalidades</div>
+            <h2 class="land-section-title">Todo lo que necesitas,<br>en un solo lugar.</h2>
+            <p class="land-section-desc">
+                Diseñado para simplificar la gestión académica institucional con flujos claros y transparentes para
+                todos los actores.
+            </p>
+            <div class="land-features-grid">
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">📄</div>
+                    <div class="land-feat-title">Radicación Digital</div>
+                    <div class="land-feat-desc">Envía y radica solicitudes académicas en línea con soporte de documentos
+                        adjuntos y seguimiento en tiempo real.</div>
+                </div>
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">🔄</div>
+                    <div class="land-feat-title">Flujo de Aprobación</div>
+                    <div class="land-feat-desc">Proceso estructurado con revisión por funcionarios y aprobación final por
+                        coordinadores académicos.</div>
+                </div>
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">🔔</div>
+                    <div class="land-feat-title">Notificaciones</div>
+                    <div class="land-feat-desc">Alertas instantáneas sobre cambios de estado, respuestas y
+                        observaciones en tus solicitudes activas.</div>
+                </div>
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">📊</div>
+                    <div class="land-feat-title">Panel de Analytics</div>
+                    <div class="land-feat-desc">Dashboards con métricas de solicitudes, tiempos de respuesta y
+                        estadísticas institucionales en tiempo real.</div>
+                </div>
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">👥</div>
+                    <div class="land-feat-title">Gestión de Usuarios</div>
+                    <div class="land-feat-desc">Control centralizado de roles, permisos y accesos con administración
+                        avanzada de cuentas institucionales.</div>
+                </div>
+                <div class="land-feat-card">
+                    <div class="land-feat-icon">🔒</div>
+                    <div class="land-feat-title">Seguridad Institucional</div>
+                    <div class="land-feat-desc">Acceso mediante correo institucional con autenticación segura y control
+                        de roles por perfil académico.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             CTA
+             ═══════════════════════════════════════════════════════ -->
+        <section class="land-cta">
+            <div class="land-cta-content">
+                <h2 class="land-cta-title">¿Listo para digitalizar<br>tu gestión académica?</h2>
+                <p class="land-cta-desc">Accede con tu correo institucional CUL y gestiona todos tus trámites
+                    académicos en un solo lugar.</p>
+                <a href="login.html" class="land-btn-gold">
+                    Ingresar al Sistema
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             FOOTER
+             ═══════════════════════════════════════════════════════ -->
+        <footer class="land-footer">
+            <div class="land-footer-copy">© 2024 Corporación Universitaria Latinoamericana — Sistema de Solicitudes
+                Académicas</div>
+            <div class="land-footer-links">
+                <a href="#" class="land-footer-link">Soporte</a>
+                <a href="#" class="land-footer-link">Política de Privacidad</a>
+                <a href="#" class="land-footer-link">Términos</a>
+            </div>
+        </footer>
+
     </div>
 
-    <script src="js/utils/helpers.js"></script>
-    <script src="js/utils/auth.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/utils/ui.js"></script>
-    <script src="js/login.js"></script>
+    <script>
+        function updateClock() {
+            var el = document.getElementById('live-time');
+            if (el) el.textContent = new Date().toLocaleTimeString('es-CO');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 
 </html>

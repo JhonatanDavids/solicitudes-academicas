@@ -1,0 +1,821 @@
+/* 
+   LANDING.CSS — Página principal (landing page)
+   Layout: Navbar + Hero + Features + CTA + Footer
+   Prefijos: land- (sin conflictos con global.css ni login.css)
+   Colores acento: --land-gold (locals, NO contaminan global.css)
+*/
+
+/* ─── Variables locales ─────────────────────────────────────── */
+:root {
+    --land-navy: #0D1B3E;
+    --land-navy-mid: #1A2F5A;
+    --land-navy-light: #243B6E;
+    --land-gold: #E8A820;
+    --land-gold-light: #F5C842;
+    --land-gold-pale: #FDF3D7;
+    --land-white: #FFFFFF;
+    --land-surface: #F8FAFC;
+    --land-surface-2: #F1F5F9;
+    --land-border: #E2E8F0;
+    --land-border-2: #CBD5E1;
+    --land-text-primary: #0F172A;
+    --land-text-secondary: #475569;
+    --land-text-muted: #94A3B8;
+    --land-shadow-sm: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+    --land-shadow-md: 0 4px 16px rgba(0, 0, 0, .08), 0 2px 6px rgba(0, 0, 0, .04);
+    --land-shadow-lg: 0 20px 60px rgba(13, 27, 62, .12), 0 8px 24px rgba(13, 27, 62, .06);
+    --land-radius-sm: 8px;
+    --land-radius-md: 14px;
+    --land-radius-lg: 20px;
+    --land-radius-xl: 28px;
+    --land-transition: all .22s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ─── Reset landing body ────────────────────────────────────── */
+#landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVBAR
+   ═══════════════════════════════════════════════════════════════ */
+.land-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    background: rgba(255, 255, 255, .88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(226, 232, 240, .6);
+    box-shadow: 0 1px 0 rgba(226, 232, 240, .5);
+}
+
+.land-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.land-nav-logo-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.land-nav-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.land-nav-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--land-navy);
+    line-height: 1.2;
+}
+
+.land-nav-sub {
+    font-size: 11px;
+    color: var(--land-text-muted);
+    font-weight: 500;
+}
+
+.land-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.land-nav-link {
+    padding: 7px 14px;
+    border-radius: var(--land-radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--land-text-secondary);
+    cursor: pointer;
+    transition: var(--land-transition);
+    text-decoration: none;
+    border: none;
+    background: none;
+    font-family: var(--font-sans);
+}
+
+.land-nav-link:hover {
+    background: var(--land-surface-2);
+    color: var(--land-navy);
+}
+
+.land-nav-cta {
+    padding: 9px 22px;
+    border-radius: var(--land-radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--land-navy);
+    color: var(--land-white);
+    border: none;
+    cursor: pointer;
+    transition: var(--land-transition);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    font-family: var(--font-sans);
+}
+
+.land-nav-cta:hover {
+    background: var(--land-navy-mid);
+    box-shadow: 0 4px 14px rgba(13, 27, 62, .25);
+    transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════════════ */
+.land-hero {
+    padding-top: 68px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+}
+
+.land-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(13, 27, 62, .04) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 80% 20%, rgba(232, 168, 32, .06) 0%, transparent 60%),
+        var(--land-surface);
+}
+
+.land-hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(13, 27, 62, .06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 70% 80% at 15% 50%, black 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 15% 50%, black 0%, transparent 70%);
+}
+
+/* ─── Hero Left ──────────────────────────────────────────────── */
+.land-hero-left {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 64px 80px 80px;
+    animation: landFadeUp .6s ease both;
+}
+
+.land-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--land-gold-pale);
+    border: 1px solid rgba(232, 168, 32, .3);
+    border-radius: 99px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #D97706;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    width: fit-content;
+}
+
+.land-hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--land-gold);
+    animation: landPulse 2s infinite;
+}
+
+.land-hero-headline {
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--land-navy);
+    margin-bottom: 20px;
+    letter-spacing: -1.5px;
+    font-family: var(--font-display);
+}
+
+.land-hero-headline em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--land-gold) 0%, #F0A500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.land-hero-desc {
+    font-size: 17px;
+    color: var(--land-text-secondary);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.land-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 56px;
+}
+
+.land-btn-primary {
+    padding: 14px 28px;
+    border-radius: var(--land-radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--land-navy);
+    color: var(--land-white);
+    border: none;
+    cursor: pointer;
+    transition: var(--land-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    box-shadow: 0 4px 16px rgba(13, 27, 62, .2);
+    text-decoration: none;
+    font-family: var(--font-sans);
+}
+
+.land-btn-primary:hover {
+    background: var(--land-navy-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(13, 27, 62, .28);
+}
+
+.land-btn-primary:active {
+    transform: translateY(0);
+}
+
+.land-btn-secondary {
+    padding: 14px 24px;
+    border-radius: var(--land-radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--land-navy);
+    border: 1.5px solid var(--land-border-2);
+    cursor: pointer;
+    transition: var(--land-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: var(--font-sans);
+}
+
+.land-btn-secondary:hover {
+    background: var(--land-surface-2);
+    border-color: var(--land-navy);
+}
+
+.land-hero-stats {
+    display: flex;
+    gap: 36px;
+    padding-top: 36px;
+    border-top: 1px solid var(--land-border);
+}
+
+.land-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.land-stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--land-navy);
+    letter-spacing: -1px;
+    font-family: var(--font-display);
+}
+
+.land-stat-num span {
+    color: var(--land-gold);
+}
+
+.land-stat-label {
+    font-size: 12px;
+    color: var(--land-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+/* ─── Hero Right ─────────────────────────────────────────────── */
+.land-hero-right {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 80px 80px 40px;
+}
+
+.land-hero-visual {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: landFloatUp .8s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.land-visual-header {
+    background: var(--land-navy);
+    border-radius: var(--land-radius-xl) var(--land-radius-xl) var(--land-radius-sm) var(--land-radius-sm);
+    padding: 28px 28px 24px;
+    color: var(--land-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.land-visual-header::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(232, 168, 32, .12);
+}
+
+.land-visual-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 40px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .04);
+}
+
+.land-vh-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .5);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.land-vh-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    margin-bottom: 4px;
+    font-family: var(--font-display);
+}
+
+.land-vh-sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .6);
+}
+
+.land-vh-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(232, 168, 32, .2);
+    border: 1px solid rgba(232, 168, 32, .4);
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--land-gold-light);
+    letter-spacing: .5px;
+}
+
+.land-role-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.land-role-card {
+    background: var(--land-white);
+    border: 1px solid var(--land-border);
+    border-radius: var(--land-radius-md);
+    padding: 18px 16px;
+    transition: var(--land-transition);
+    cursor: default;
+}
+
+.land-role-card:hover {
+    border-color: var(--land-gold);
+    box-shadow: 0 4px 20px rgba(232, 168, 32, .12);
+    transform: translateY(-2px);
+}
+
+.land-rc-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--land-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.land-rc-icon.land-admin {
+    background: rgba(13, 27, 62, .08);
+}
+
+.land-rc-icon.land-student {
+    background: rgba(5, 150, 105, .1);
+}
+
+.land-rc-icon.land-official {
+    background: rgba(217, 119, 6, .1);
+}
+
+.land-rc-icon.land-coord {
+    background: rgba(124, 58, 237, .1);
+}
+
+.land-rc-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--land-text-primary);
+    margin-bottom: 3px;
+}
+
+.land-rc-desc {
+    font-size: 11px;
+    color: var(--land-text-muted);
+    line-height: 1.5;
+}
+
+.land-visual-footer {
+    background: var(--land-white);
+    border: 1px solid var(--land-border);
+    border-radius: var(--land-radius-sm) var(--land-radius-sm) var(--land-radius-xl) var(--land-radius-xl);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.land-vf-dot-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.land-vf-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.land-vf-dot.land-green {
+    background: #10B981;
+    animation: landBlink 2s infinite;
+}
+
+.land-vf-dot.land-blue {
+    background: #3B82F6;
+    animation: landBlink 2s .4s infinite;
+}
+
+.land-vf-dot.land-gold {
+    background: var(--land-gold);
+    animation: landBlink 2s .8s infinite;
+}
+
+.land-vf-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--land-text-secondary);
+}
+
+.land-vf-time {
+    font-size: 11px;
+    color: var(--land-text-muted);
+    font-family: var(--font-mono);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURES
+   ═══════════════════════════════════════════════════════════════ */
+.land-features {
+    padding: 100px 80px;
+    background: var(--land-white);
+    border-top: 1px solid var(--land-border);
+}
+
+.land-section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--land-navy);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.land-section-label::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--land-gold);
+    border-radius: 2px;
+}
+
+.land-section-title {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 800;
+    color: var(--land-navy);
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+}
+
+.land-section-desc {
+    font-size: 16px;
+    color: var(--land-text-secondary);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+}
+
+.land-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.land-feat-card {
+    background: var(--land-surface);
+    border: 1px solid var(--land-border);
+    border-radius: var(--land-radius-lg);
+    padding: 28px 24px;
+    transition: var(--land-transition);
+    cursor: default;
+}
+
+.land-feat-card:hover {
+    background: var(--land-white);
+    box-shadow: var(--land-shadow-md);
+    transform: translateY(-4px);
+    border-color: rgba(13, 27, 62, .15);
+}
+
+.land-feat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--land-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+    background: rgba(13, 27, 62, .06);
+}
+
+.land-feat-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--land-text-primary);
+    margin-bottom: 8px;
+}
+
+.land-feat-desc {
+    font-size: 13.5px;
+    color: var(--land-text-secondary);
+    line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CTA
+   ═══════════════════════════════════════════════════════════════ */
+.land-cta {
+    padding: 80px;
+    background: linear-gradient(135deg, var(--land-navy) 0%, var(--land-navy-light) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.land-cta::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(232, 168, 32, .08);
+}
+
+.land-cta::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: 10%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .03);
+}
+
+.land-cta-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.land-cta-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--land-white);
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+}
+
+.land-cta-desc {
+    font-size: 16px;
+    color: rgba(255, 255, 255, .65);
+    margin-bottom: 36px;
+}
+
+.land-btn-gold {
+    padding: 15px 32px;
+    border-radius: var(--land-radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--land-gold);
+    color: var(--land-navy);
+    border: none;
+    cursor: pointer;
+    transition: var(--land-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 24px rgba(232, 168, 32, .35);
+    text-decoration: none;
+    font-family: var(--font-sans);
+}
+
+.land-btn-gold:hover {
+    background: var(--land-gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba(232, 168, 32, .45);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+.land-footer {
+    background: var(--land-navy);
+    padding: 32px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.land-footer-copy {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .4);
+}
+
+.land-footer-links {
+    display: flex;
+    gap: 24px;
+}
+
+.land-footer-link {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .4);
+    text-decoration: none;
+    transition: color .15s;
+}
+
+.land-footer-link:hover {
+    color: var(--land-gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMACIONES
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes landPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(.7); }
+}
+
+@keyframes landFloatUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+    .land-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .land-hero-right {
+        display: none;
+    }
+
+    .land-hero-left {
+        padding: 60px 32px;
+    }
+
+    .land-nav {
+        padding: 0 24px;
+    }
+
+    .land-features {
+        padding: 60px 32px;
+    }
+
+    .land-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .land-cta {
+        padding: 60px 32px;
+    }
+
+    .land-footer {
+        padding: 28px 32px;
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .land-hero-left {
+        padding: 48px 20px;
+    }
+
+    .land-hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .land-hero-stats {
+        gap: 20px;
+    }
+
+    .land-nav {
+        padding: 0 16px;
+    }
+
+    .land-nav-links .land-nav-link {
+        display: none;
+    }
+
+    .land-features {
+        padding: 48px 20px;
+    }
+
+    .land-cta {
+        padding: 48px 20px;
+    }
+
+    .land-cta-title {
+        font-size: 28px;
+    }
+}

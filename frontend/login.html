@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal — Solicitudes Académicas</title>
+    <meta name="description" content="Portal de acceso al sistema de solicitudes académicas universitarias">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <div class="login-layout">
+
+        <!-- ═══ PANEL IZQUIERDO — Branding institucional ═══ -->
+        <div class="login-left">
+            <div class="ll-circle1"></div>
+            <div class="ll-circle2"></div>
+            <div class="ll-circle3"></div>
+            <div class="ll-dots"></div>
+
+            <div class="ll-top">
+                <div class="ll-brand">
+                    <img src="assets/img/logo-cul.jpg" alt="Logo CUL" class="ll-logo-img">
+                    <div>
+                        <div class="ll-name">Solicitudes Académicas</div>
+                        <div class="ll-tagline">Corporación Universitaria Latinoamericana</div>
+                    </div>
+                </div>
+
+                <h2 class="ll-headline">
+                    Tu gestión<br>académica,<br>
+                    ahora <em>100% digital.</em>
+                </h2>
+
+                <p class="ll-subdesc">
+                    Accede a tu portal institucional y gestiona solicitudes, documentos y trámites académicos de forma
+                    segura y eficiente.
+                </p>
+
+                <div class="ll-features">
+                    <div class="ll-feat">
+                        <div class="ll-feat-icon">✅</div>
+                        <div class="ll-feat-text">
+                            <div class="ll-feat-title">Seguimiento en tiempo real</div>
+                            <div class="ll-feat-desc">Monitorea el estado de tus solicitudes al instante</div>
+                        </div>
+                    </div>
+                    <div class="ll-feat">
+                        <div class="ll-feat-icon">🔐</div>
+                        <div class="ll-feat-text">
+                            <div class="ll-feat-title">Acceso seguro institucional</div>
+                            <div class="ll-feat-desc">Autenticación con credenciales protegidas</div>
+                        </div>
+                    </div>
+                    <div class="ll-feat">
+                        <div class="ll-feat-icon">⚡</div>
+                        <div class="ll-feat-text">
+                            <div class="ll-feat-title">Respuestas más rápidas</div>
+                            <div class="ll-feat-desc">Flujo digital sin filas ni papeleo físico</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ll-bottom">
+                <div class="ll-copy">© 2024 CUL · Sistema de Solicitudes</div>
+                <div class="ll-status">
+                    <div class="ll-status-dot"></div>
+                    <div class="ll-status-text">Sistema operativo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ PANEL DERECHO — Formulario de acceso ═══ -->
+        <div class="login-right">
+            <div class="login-form-wrap">
+
+                <!-- Brand mobile (visible solo en pantallas pequeñas) -->
+                <div class="lf-mobile-brand">
+                    <img src="assets/img/logo-cul.jpg" alt="Logo CUL" class="lf-mobile-brand-img">
+                    <div>
+                        <div class="lf-mobile-brand-name">Solicitudes Académicas</div>
+                        <div class="lf-mobile-brand-tag">Corporación Universitaria Latinoamericana</div>
+                    </div>
+                </div>
+
+                <div class="lf-eyebrow">
+                    <div class="lf-step">1</div>
+                    <div class="lf-eye-text">Portal de acceso</div>
+                    <div class="lf-eye-bar"></div>
+                </div>
+
+                <h1 class="lf-title">Bienvenido de vuelta</h1>
+                <p class="lf-sub">Ingresa con tus credenciales institucionales para continuar.</p>
+
+                <!-- ═══ FORMULARIO DE LOGIN ═══ -->
+                <div id="formulario-login" class="animar-entrada">
+
+                    <div class="mensaje-error" id="error-login">
+                        <span>⚠</span>
+                        <span id="texto-error-login">Correo o contraseña incorrectos</span>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="f-correo" class="lf-field-label">Correo institucional</label>
+                        <div class="lf-field-wrap">
+                            <svg class="lf-field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                <path d="M2 7l10 7 10-7" />
+                            </svg>
+                            <input type="email" id="f-correo" class="lf-field-input" placeholder="usuario@correo.edu"
+                                autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="f-contrasena" class="lf-field-label">Contraseña</label>
+                        <div class="campo-password">
+                            <svg class="lf-field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            <input type="password" id="f-contrasena" class="lf-field-input" placeholder="Tu contraseña"
+                                autocomplete="current-password">
+                            <button type="button" class="btn-ver-password" id="btn-toggle-password"
+                                aria-label="Mostrar contraseña">
+                                <span id="icono-ojo">👁</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="btn-ingresar" id="btn-login" onclick="iniciarSesion()">
+                        <span id="btn-login-texto">Ingresar</span>
+                        <span id="btn-login-spinner" class="spinner" style="display:none;"></span>
+                    </button>
+
+                </div>
+
+                <!-- ═══ PANTALLA DE REDIRECCIÓN ═══ -->
+                <div id="pantalla-exito" style="display:none;" class="animar-entrada">
+                    <div class="pantalla-redireccion">
+                        <span class="icono-redireccion" id="icono-redireccion">✅</span>
+                        <div class="texto-redireccion" id="texto-redireccion">Bienvenido/a</div>
+                        <div class="subtexto-redireccion" id="subtexto-redireccion">Preparando tu entorno</div>
+                        <div class="barra-progreso">
+                            <div class="relleno-barra" id="relleno-barra"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ AYUDA ═══ -->
+                <div class="lf-help">
+                    <p class="lf-help-text">
+                        ¿Problemas para acceder? <a href="#" class="lf-help-link">Contacta soporte TI</a>
+                    </p>
+                </div>
+
+                <div class="lf-footer">
+                    Sistema de Solicitudes Académicas &copy; 2024
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/utils/ui.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>
