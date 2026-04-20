@@ -103,22 +103,9 @@ function renderUsuarios(lista) {
     // PASO 8 / requisito profesor: sin columna ID visible
     const { tabla, tbody } = crearTabla(['Nombre', 'Correo', 'Cédula', 'Rol', 'Acciones']);
 
+    // Render con avatar, nombre jerarquico e ID sub via buildFilaUsuario (ui.js)
     lista.forEach(u => {
-        const tr = crearNodo('tr', { dataset: { id: u.id_usuario } });
-
-        tr.appendChild(crearNodo('td', { className: 'td-nombre' },
-            [`${u.nombre || ''} ${u.apellido || ''}`]));
-
-        tr.appendChild(crearNodo('td', {}, [u.correo || '–']));
-        tr.appendChild(crearNodo('td', { className: 'td-mono' }, [u.cedula || '–']));
-
-        const conf = getRolConfig(u.rol);
-        const badge = crearNodo('span', { className: `badge-rol ${conf.clase}` },
-            [`${conf.icon} ${u.rol || '–'}`]);
-        tr.appendChild(crearNodo('td', {}, [badge]));
-
-        tr.appendChild(_buildAccionesUsuario(u));
-        tbody.appendChild(tr);
+        tbody.appendChild(buildFilaUsuario(u, _buildAccionesUsuario));
     });
 
     contenedor.appendChild(tabla);
@@ -127,19 +114,24 @@ function renderUsuarios(lista) {
 
 function _buildAccionesUsuario(u) {
     const td = crearNodo('td', { className: 'td-actions' });
+    const acciones = crearNodo('div', { className: 'ad-actions' });
 
-    const btnEdit = crearNodo('button', { className: 'btn-sm yellow' }, ['✎ Editar']);
+    const btnEdit = crearNodo('button', { className: 'btn-sm btn-edit', title: 'Editar Usuario' });
+    btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i> Editar';
     btnEdit.addEventListener('click', () => openCrud('usuario', 'edit', u.id_usuario));
 
-    const btnVer = crearNodo('button', { className: 'btn-sm blue' }, ['{ }']);
+    const btnVer = crearNodo('button', { className: 'btn-sm btn-json', title: 'Ver Detalle' }, ['👁 Detalle']);
     btnVer.addEventListener('click', () => verJsonObj(u.id_usuario, 'usuario'));
 
-    const btnDel = crearNodo('button', { className: 'btn-sm red' }, ['✕ Eliminar']);
+    const btnDel = crearNodo('button', { className: 'btn-sm btn-danger btn-icon-sm', title: 'Eliminar Usuario' });
+    btnDel.innerHTML = '<i class="fa-solid fa-trash"></i>';
     btnDel.addEventListener('click', () => eliminarUsuario(u.id_usuario));
 
-    td.appendChild(btnEdit);
-    td.appendChild(btnVer);
-    td.appendChild(btnDel);
+    acciones.appendChild(btnEdit);
+    acciones.appendChild(btnVer);
+    acciones.appendChild(btnDel);
+    
+    td.appendChild(acciones);
     return td;
 }
 
@@ -188,27 +180,37 @@ function renderSolicitudes(lista) {
 
 function _buildAccionesSolicitudAdmin(sol) {
     const td = crearNodo('td', { className: 'td-actions' });
+    const acciones = crearNodo('div', { className: 'ad-actions' });
 
-    const btnEdit = crearNodo('button', { className: 'btn-sm yellow' }, ['✎ Estado']);
-    btnEdit.addEventListener('click', () => openCrud('solicitud', 'edit', sol.id_solicitud));
-
-    const btnReview = crearNodo('button', { className: 'btn-sm green' }, ['✓ Revisar']);
+    // Acción principal (verde)
+    const btnReview = crearNodo('button', { className: 'btn-sm btn-success btn-icon-sm', title: 'Revisar Solicitud' });
+    btnReview.innerHTML = '<i class="fa-solid fa-check"></i>';
     btnReview.addEventListener('click', () => openCrud('revision', 'create', sol.id_solicitud));
 
-    const btnDocs = crearNodo('button', { className: 'btn-sm blue' }, ['📄 Docs']);
+    // Acción secundaria (amarillo)
+    const btnEdit = crearNodo('button', { className: 'btn-sm btn-edit btn-icon-sm', title: 'Editar Estado' });
+    btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i>';
+    btnEdit.addEventListener('click', () => openCrud('solicitud', 'edit', sol.id_solicitud));
+
+    // Otras acciones
+    const btnDocs = crearNodo('button', { className: 'btn-sm btn-info btn-icon-sm', title: 'Ver Documentos' });
+    btnDocs.innerHTML = '<i class="fa-solid fa-file-lines"></i>';
     btnDocs.addEventListener('click', () => verDocumentosSolicitud(sol.id_solicitud));
 
-    const btnVer = crearNodo('button', { className: 'btn-sm blue' }, ['{ }']);
+    const btnVer = crearNodo('button', { className: 'btn-sm btn-json', title: 'Ver Detalle' }, ['👁 Detalle']);
     btnVer.addEventListener('click', () => verJsonObj(sol.id_solicitud, 'solicitud'));
 
-    const btnDel = crearNodo('button', { className: 'btn-sm red' }, ['✕ Eliminar']);
+    const btnDel = crearNodo('button', { className: 'btn-sm btn-danger btn-icon-sm', title: 'Eliminar' });
+    btnDel.innerHTML = '<i class="fa-solid fa-trash"></i>';
     btnDel.addEventListener('click', () => eliminarSolicitud(sol.id_solicitud));
 
-    td.appendChild(btnEdit);
-    td.appendChild(btnReview);
-    td.appendChild(btnDocs);
-    td.appendChild(btnVer);
-    td.appendChild(btnDel);
+    acciones.appendChild(btnReview);
+    acciones.appendChild(btnEdit);
+    acciones.appendChild(btnDocs);
+    acciones.appendChild(btnVer);
+    acciones.appendChild(btnDel);
+    
+    td.appendChild(acciones);
     return td;
 }
 
@@ -241,7 +243,7 @@ function _renderRoles(contenedor) {
 
     if (!listaRoles.length) { mostrarVacio(contenedor, 'No hay roles'); return; }
 
-    const { tabla, tbody } = crearTabla(['Nombre', 'Descripción', 'Acciones']);
+    const { tabla, tbody } = crearTabla(['Nombre', 'Descripción', 'Usuarios', 'Acciones']);
 
     listaRoles.forEach(r => {
         const tr = crearNodo('tr', { dataset: { id: r.id_rol } });
@@ -251,7 +253,25 @@ function _renderRoles(contenedor) {
         const badge = crearNodo('span', { className: `badge-rol ${rc.clase}` },
             [`${rc.icon} ${rolNombre}`]);
         tr.appendChild(crearNodo('td', {}, [badge]));
-        tr.appendChild(crearNodo('td', { className: 'td-muted' }, [r.descripcion || '–']));
+
+        const descripcionesSaaS = {
+            'Administrador': 'Administrador del sistema con control total',
+            'Estudiante': 'Usuario estudiante que genera solicitudes académicas',
+            'Funcionario': 'Funcionario administrativo que revisa solicitudes',
+            'Coordinador': 'Coordinador académico con aprobación final de solicitudes'
+        };
+        const textoDesc = descripcionesSaaS[rolNombre] || r.descripcion || '–';
+        tr.appendChild(crearNodo('td', { className: 'td-muted' }, [textoDesc]));
+
+        let userCount = 0;
+        if (typeof listaUsuarios !== 'undefined' && listaUsuarios.length > 0) {
+            const rNormalizado = rolNombre.toLowerCase();
+            userCount = listaUsuarios.filter(u => 
+                u.id_rol === r.id_rol || (u.rol && u.rol.toLowerCase() === rNormalizado)
+            ).length;
+        }
+        tr.appendChild(crearNodo('td', { className: 'td-count' }, [userCount]));
+
         tr.appendChild(_buildAccionesRol(r));
         tbody.appendChild(tr);
     });
@@ -262,19 +282,24 @@ function _renderRoles(contenedor) {
 
 function _buildAccionesRol(r) {
     const td = crearNodo('td', { className: 'td-actions' });
+    const acciones = crearNodo('div', { className: 'ad-actions' });
 
-    const btnEdit = crearNodo('button', { className: 'btn-sm yellow' }, ['✎ Editar']);
+    const btnEdit = crearNodo('button', { className: 'btn-sm btn-edit', title: 'Editar Rol' });
+    btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i> Editar';
     btnEdit.addEventListener('click', () => openCrud('rol', 'edit', r.id_rol));
 
-    const btnVer = crearNodo('button', { className: 'btn-sm blue' }, ['{ }']);
+    const btnVer = crearNodo('button', { className: 'btn-sm btn-json', title: 'Ver Detalle' }, ['👁 Detalle']);
     btnVer.addEventListener('click', () => verJsonObj(r.id_rol, 'rol'));
 
-    const btnDel = crearNodo('button', { className: 'btn-sm red' }, ['✕ Eliminar']);
+    const btnDel = crearNodo('button', { className: 'btn-sm btn-danger btn-icon-sm', title: 'Eliminar Rol' });
+    btnDel.innerHTML = '<i class="fa-solid fa-trash"></i>';
     btnDel.addEventListener('click', () => eliminarRol(r.id_rol));
 
-    td.appendChild(btnEdit);
-    td.appendChild(btnVer);
-    td.appendChild(btnDel);
+    acciones.appendChild(btnEdit);
+    acciones.appendChild(btnVer);
+    acciones.appendChild(btnDel);
+    
+    td.appendChild(acciones);
     return td;
 }
 
@@ -325,19 +350,24 @@ function _renderTipos(contenedor) {
 function _buildAccionesTipo(t) {
     const id = t.id_tipo_solicitud || t.id;
     const td = crearNodo('td', { className: 'td-actions' });
+    const acciones = crearNodo('div', { className: 'ad-actions' });
 
-    const btnEdit = crearNodo('button', { className: 'btn-sm yellow' }, ['✎ Editar']);
+    const btnEdit = crearNodo('button', { className: 'btn-sm btn-edit', title: 'Editar Tipo' });
+    btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i> Editar';
     btnEdit.addEventListener('click', () => openCrud('tipo', 'edit', id));
 
-    const btnVer = crearNodo('button', { className: 'btn-sm blue' }, ['{ }']);
+    const btnVer = crearNodo('button', { className: 'btn-sm btn-json', title: 'Ver Detalle' }, ['👁 Detalle']);
     btnVer.addEventListener('click', () => verJsonObj(id, 'tipo'));
 
-    const btnDel = crearNodo('button', { className: 'btn-sm red' }, ['✕ Eliminar']);
+    const btnDel = crearNodo('button', { className: 'btn-sm btn-danger btn-icon-sm', title: 'Eliminar Tipo' });
+    btnDel.innerHTML = '<i class="fa-solid fa-trash"></i>';
     btnDel.addEventListener('click', () => eliminarTipo(id));
 
-    td.appendChild(btnEdit);
-    td.appendChild(btnVer);
-    td.appendChild(btnDel);
+    acciones.appendChild(btnEdit);
+    acciones.appendChild(btnVer);
+    acciones.appendChild(btnDel);
+    
+    td.appendChild(acciones);
     return td;
 }
 
@@ -348,25 +378,37 @@ function _buildAccionesTipo(t) {
 
 function consultarDocumentos() {
     const cedulaInput = document.getElementById('input-cedula-doc');
-    const tabla = document.getElementById('tabla-documentos');
-    if (!cedulaInput || !tabla) return;
+    const tablaContainer = document.getElementById('tabla-documentos');
+    if (!cedulaInput || !tablaContainer) return;
 
     const cedula = cedulaInput.value.trim();
-    tabla.textContent = '';
+
+    // Validar y crear contenedor de cards una sola vez
+    let cardsContainer = document.getElementById('documentos-cards');
+    if (!cardsContainer) {
+        cardsContainer = crearNodo('div', { id: 'documentos-cards', className: 'docs-grid' });
+        tablaContainer.parentNode.insertBefore(cardsContainer, tablaContainer);
+    }
+
+    // Ocultar visualmente la tabla, pero mantener paginador y buscador de DataTables
+    tablaContainer.classList.add('docs-hidden-table');
+
+    tablaContainer.textContent = '';
+    cardsContainer.innerHTML = '';
 
     if (!cedula) {
-        tabla.appendChild(crearNodo('p', { className: 'empty-hint' }, ['Ingrese una cédula']));
+        cardsContainer.innerHTML = '<p class="empty-hint" style="grid-column: 1/-1;">Ingrese una cédula</p>';
         return;
     }
 
     const resultados = documentosMock.filter(doc => doc.cedula === cedula);
 
     if (!resultados.length) {
-        tabla.appendChild(crearNodo('p', { className: 'empty-hint' }, ['No hay documentos para esta cédula']));
+        cardsContainer.innerHTML = '<p class="empty-hint" style="grid-column: 1/-1;">No hay documentos para esta cédula</p>';
         return;
     }
 
-    // Sin columna ID (requisito del profesor)
+    // Construir tabla invisible para procesar en DataTables
     const { tabla: tbl, tbody } = crearTabla(['Nombre', 'Tipo', 'Fecha', 'Estado']);
     resultados.forEach(doc => {
         const tr = crearNodo('tr');
@@ -376,7 +418,79 @@ function consultarDocumentos() {
         tr.appendChild(crearNodo('td', {}, [doc.estado]));
         tbody.appendChild(tr);
     });
-    tabla.appendChild(tbl);
+    tablaContainer.appendChild(tbl);
+
+    // Inicializar DataTables y sincronizar el dibujado a nuestras Cards
+    initDataTable(tbl, {
+        initComplete: function(settings, json) {
+            const dtApi = this.api();
+            dtApi.off('draw.dt').on('draw.dt', function() {
+                renderDocumentCards(dtApi);
+            });
+            // Forzar render inicial
+            renderDocumentCards(dtApi);
+        }
+    });
+}
+
+function renderDocumentCards(dt) {
+    const container = document.getElementById('documentos-cards');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Obtener SOLO la página actual con búsquedas/filtros aplicados
+    const data = dt.rows({ search: 'applied', page: 'current' }).data().toArray();
+    
+    if (data.length === 0) {
+        container.innerHTML = '<p class="empty-hint" style="grid-column: 1/-1; text-align: center;">No hay documentos consistentes con la búsqueda.</p>';
+        return;
+    }
+
+    data.forEach(row => {
+        const nombre = row[0];
+        const tipo = row[1];
+        const fecha = row[2];
+        const estado = row[3];
+        
+        let iconType = 'fa-file';
+        let iconColor = 'var(--ad-text-3)';
+        
+        const tipoStr = String(tipo).toLowerCase();
+        if (tipoStr.includes('pdf')) {
+            iconType = 'fa-file-pdf';
+            iconColor = 'var(--ad-red)';
+        } else if (tipoStr.includes('imagen') || tipoStr.includes('png') || tipoStr.includes('jpg')) {
+            iconType = 'fa-file-image';
+            iconColor = 'var(--ad-blue)';
+        }
+
+        const eStr = String(estado).toLowerCase();
+        const badgeClass = eStr.includes('válido') ? 'badge-aprobada' : (eStr.includes('pendiente') ? 'badge-pendiente' : 'badge-cancelada');
+
+        const card = document.createElement('div');
+        card.className = 'doc-card';
+        card.innerHTML = `
+            <div class="doc-card-header">
+                <i class="fa-solid ${iconType}" style="color: ${iconColor}; font-size: 30px; line-height: 1;"></i>
+                <div class="doc-card-titles">
+                    <h4>${nombre}</h4>
+                    <p>${tipo} • ${fecha}</p>
+                </div>
+            </div>
+            <div class="doc-card-body">
+                <span class="badge ${badgeClass}">
+                    <span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;margin-right:4px;"></span>
+                    ${estado.charAt(0).toUpperCase() + estado.slice(1)}
+                </span>
+            </div>
+            <div class="doc-card-footer ad-actions" style="justify-content: flex-end; width: 100%; border-top: 1px solid var(--ad-border); padding-top: 12px;">
+                <button class="btn-sm btn-info"><i class="fa-solid fa-eye"></i> Ver</button>
+                <button class="btn-sm btn-danger btn-icon-sm" title="Eliminar Documento"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
 }
 
 async function loadRevisiones() {
@@ -431,7 +545,7 @@ function renderRevisiones(lista = listaRevisiones) {
         const tr = crearNodo('tr', { dataset: { id: rev.id_revision } });
 
         tr.appendChild(crearNodo('td', { className: 'td-nombre' }, [rev.estudiante || '–']));
-        tr.appendChild(crearNodo('td', {}, [rev.tipo_solicitud || '–']));
+        tr.appendChild(crearNodo('td', { className: 'td-tipo' }, [rev.tipo_solicitud || '–']));
 
         const estado = rev.estado_revision || '–';
         const estadoActual = rev.estado_actual || '–';
@@ -439,19 +553,39 @@ function renderRevisiones(lista = listaRevisiones) {
         tdEstado.appendChild(crearBadgeEstado(estado));
         tdEstado.appendChild(
             crearNodo('small', {
-                className: 'td-muted',
-                style: 'display:block; opacity:0.7;'
-            }, [`Actual: ${estadoActual}`])
+                className: 'td-muted rev-final',
+                style: 'display:block; opacity:0.6; margin-top: 3px; font-family: var(--ad-mono); font-size: 0.72rem; text-transform: lowercase;'
+            }, [estadoActual])
         );
         tr.appendChild(tdEstado);
 
-        tr.appendChild(crearNodo('td', { className: 'td-muted' }, [rev.comentario || 'Sin comentario']));
-        tr.appendChild(crearNodo('td', {}, [rev.revisor || '–']));
+        const comentarioStr = rev.comentario || 'Sin comentario...';
+        const divComentario = crearNodo('div', { className: 'rev-comment-box' }, [comentarioStr]);
+        tr.appendChild(crearNodo('td', {}, [divComentario]));
+
+        const revisor = rev.revisor || '–';
+        let revisorTd;
+        if (revisor !== '–') {
+            const parts = revisor.trim().split(' ');
+            const nom = parts[0] || 'U';
+            const ape = parts[1] || 'U';
+            const initials = (nom[0] + ape[0]).toUpperCase();
+            const avatarNum = (nom.charCodeAt(0) + ape.charCodeAt(0)) % 8;
+            
+            const avatarEl = crearNodo('div', { className: `td-avatar td-avatar-${avatarNum}` }, [initials]);
+            const nameEl = crearNodo('div', { className: 'td-user-name' }, [revisor]);
+            const cellWrap = crearNodo('div', { className: 'td-user-cell' }, [avatarEl, nameEl]);
+            
+            revisorTd = crearNodo('td', {}, [cellWrap]);
+        } else {
+            revisorTd = crearNodo('td', { className: 'td-muted' }, [revisor]);
+        }
+        tr.appendChild(revisorTd);
 
         const fecha = rev.fecha_creacion
-            ? new Date(rev.fecha_creacion).toLocaleString('es-CO')
+            ? new Date(rev.fecha_creacion).toLocaleString('es-CO', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'})
             : '–';
-        tr.appendChild(crearNodo('td', { className: 'td-fecha' }, [fecha]));
+        tr.appendChild(crearNodo('td', { className: 'td-fecha', style: 'font-size: 12px;' }, [fecha]));
 
         tbody.appendChild(tr);
     });
@@ -553,10 +687,101 @@ function filterTable(seccion, valor) {
 }
 
 function filterByEstado() {
-    const estado = document.getElementById('filter-estado')?.value;
-    renderSolicitudes(
-        estado ? listaSolicitudes.filter(s => s.estado_actual === estado) : listaSolicitudes
-    );
+    const estado = document.getElementById('filter-estado')?.value || '';
+    const $tabla = $('#data-solicitudes table');
+    if ($tabla.length && $.fn.DataTable.isDataTable($tabla)) {
+        const dt = $tabla.DataTable();
+        let colIdx = -1;
+        dt.columns().every(function() {
+            if (this.header().textContent.trim().toLowerCase() === 'estado') {
+                colIdx = this.index();
+            }
+        });
+        if (colIdx !== -1) {
+            dt.column(colIdx).search(estado, false, false).draw();
+        }
+    }
+}
+
+/**
+ * Actualiza el texto del contador de registros para una tabla
+ * @param {DataTables.Api} dt - instancia de DataTables
+ * @param {string} counterId - ID del elemento DOM donde se mostrará el texto
+ */
+function _updateCounter(dt, counterId) {
+    const info = dt.page.info();
+    const counter = document.getElementById(counterId);
+    if (counter) {
+        counter.textContent = `${info.recordsDisplay} de ${info.recordsTotal} registros`;
+    }
+}
+
+/**
+ * Oculta la paginacion de DataTables cuando los resultados filtrados
+ * caben en una sola pagina. Evita mostrar controles de pagina vacios.
+ * @param {DataTables.Api} dt - instancia de DataTables
+ */
+function _togglePaginate(dt) {
+    const total   = dt.rows({ filter: 'applied' }).count();
+    const pageLen = dt.page.len();
+    const $pag    = $(dt.table().container()).find('.dataTables_paginate');
+    $pag.toggle(total > pageLen);
+}
+
+/**
+ * Resalta el texto buscado dentro de las celdas visibles de la tabla.
+ * Inserta etiquetas <mark> alrededor de cada coincidencia (regex, case-insensitive)
+ * y las elimina antes de aplicar un nuevo resaltado.
+ * @param {DataTables.Api} dt - instancia de DataTables
+ */
+function _highlightSearch(dt) {
+    const body   = $(dt.table().body());
+    const search = dt.search();
+
+    // Limpiar highlights anteriores preservando el HTML interno
+    body.find('mark').each(function () {
+        $(this).replaceWith(this.childNodes);
+    });
+
+    if (!search) return;
+
+    const escSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // (?![^<]*>) garantiza que no estemos dentro de una etiqueta HTML < ... >
+    const regex = new RegExp(`(${escSearch})(?![^<]*>)`, 'gi');
+
+    body.find('td').each(function () {
+        const html = $(this).html();
+        $(this).html(html.replace(regex, '<mark>$1</mark>'));
+    });
+}
+
+/**
+ * Filtra la tabla de usuarios por el rol de la columna 3.
+ * Búsqueda simple (sin regex, permite coincidencias parciales).
+ * Pasar valor vacío limpia el filtro de columna.
+ * @param {DataTables.Api} dt
+ * @param {string} valor - nombre del rol o "" para mostrar todos
+ */
+function _filterByRol(dt, valor) {
+    const map = {
+        "Administrador": "admin",
+        "Coordinador": "coordinador",
+        "Estudiante": "estudiante",
+        "Funcionario": "funcionario"
+    };
+
+    const searchValue = map[valor] || "";
+    
+    let colIdx = -1;
+    dt.columns().every(function() {
+        if (this.header().textContent.trim().toLowerCase() === 'rol') {
+            colIdx = this.index();
+        }
+    });
+
+    if (colIdx !== -1) {
+        dt.column(colIdx).search(searchValue, false, false).draw();
+    }
 }
 
 
@@ -571,32 +796,14 @@ function setView(seccion, modo, boton) {
         boton.classList.add('active');
     }
 
-    const contenedor = document.getElementById('data-' + seccion);
-    if (!contenedor) return;
-
-    if (modo === 'json') {
-        const mapaListas = {
-            usuarios: listaUsuarios,
-            solicitudes: listaSolicitudes,
-            roles: listaRoles,
-            tipos: listaTipos,
-            revisiones: listaRevisiones,
-        };
-        contenedor.textContent = '';
-        const pre = crearNodo('pre', { className: 'json-view-inline' });
-        pre.textContent = JSON.stringify(mapaListas[seccion] || [], null, 2);
-        contenedor.appendChild(pre);
-    } else {
-        // Re-render desde datos locales — sin nueva petición al backend
-        const mapaRender = {
-            usuarios: () => renderUsuarios(listaUsuarios),
-            solicitudes: () => renderSolicitudes(listaSolicitudes),
-            roles: renderRoles,
-            tipos: renderTipos,
-            revisiones: () => renderRevisiones(listaRevisiones),
-        };
-        mapaRender[seccion]?.();
-    }
+    const mapaRender = {
+        usuarios: () => renderUsuarios(listaUsuarios),
+        solicitudes: () => renderSolicitudes(listaSolicitudes),
+        roles: renderRoles,
+        tipos: renderTipos,
+        revisiones: () => renderRevisiones(listaRevisiones),
+    };
+    mapaRender[seccion]?.();
 }
 
 
@@ -882,7 +1089,7 @@ async function saveCrud() {
 
 
 /* ============================================================
-   MODAL JSON
+   MODAL DETALLE
 ============================================================ */
 
 function verJsonObj(id, tipo) {
@@ -1090,15 +1297,7 @@ function verJsonObj(id, tipo) {
     document.getElementById('modal-json').classList.add('show');
 }
 
-// Compatibilidad con llamadas antiguas sin tipo
-function verJson(jsonString) {
-    try {
-        const datos = JSON.parse(jsonString);
-        document.getElementById('modal-json-title').textContent = 'JSON';
-        document.getElementById('modal-json-content').textContent = JSON.stringify(datos, null, 2);
-        document.getElementById('modal-json').classList.add('show');
-    } catch { /* silenciar */ }
-}
+
 
 
 /* ============================================================
@@ -1254,21 +1453,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Usuarios
     bind('btn-crud-usuario-create', 'click', () => openCrud('usuario', 'create'));
     bind('btn-load-usuarios', 'click', loadUsuarios);
-    bind('input-filter-usuarios', 'input', e => filterTable('usuarios', e.target.value));
+    bind('input-filter-usuarios', 'input', e => { const dt = $('#data-usuarios table').DataTable(); dt.search(e.target.value).draw(); });
+
+    // Enlazar los chips de roles para usuarios
+    document.querySelectorAll('#section-usuarios .ad-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            document.querySelectorAll('#section-usuarios .ad-chip').forEach(c => c.classList.remove('active'));
+            const target = e.currentTarget;
+            target.classList.add('active');
+            const sel = document.getElementById('filter-rol');
+            if (sel) {
+                sel.value = target.dataset.rol;
+                const $tabla = $('#data-usuarios table');
+                if ($tabla.length && $.fn.DataTable.isDataTable($tabla)) {
+                    _filterByRol($tabla.DataTable(), sel.value);
+                }
+            }
+        });
+    });
 
     // Roles
     bind('btn-crud-rol-create', 'click', () => openCrud('rol', 'create'));
     bind('btn-load-roles', 'click', loadRoles);
+    bind('input-filter-roles', 'input', e => { const dt = $('#data-roles table').DataTable(); dt.search(e.target.value).draw(); });
 
     // Solicitudes
     bind('btn-crud-solicitud-create', 'click', () => openCrud('solicitud', 'create'));
+    // Enlazar los chips de estados para solicitudes
+    document.querySelectorAll('#section-solicitudes .ad-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            document.querySelectorAll('#section-solicitudes .ad-chip').forEach(c => c.classList.remove('active'));
+            const target = e.currentTarget;
+            target.classList.add('active');
+            
+            const sel = document.getElementById('filter-estado');
+            if (sel) sel.value = target.dataset.estado;
+            
+            filterByEstado();
+        });
+    });
     bind('filter-estado', 'change', filterByEstado);
     bind('btn-load-solicitudes', 'click', loadSolicitudes);
-    bind('input-filter-solicitudes', 'input', e => filterTable('solicitudes', e.target.value));
+    bind('input-filter-solicitudes', 'input', e => { const dt = $('#data-solicitudes table').DataTable(); dt.search(e.target.value).draw(); });
 
     // Tipos
     bind('btn-crud-tipo-create', 'click', () => openCrud('tipo', 'create'));
     bind('btn-load-tipos', 'click', loadTipos);
+    bind('input-filter-tipos', 'input', e => { const dt = $('#data-tipos table').DataTable(); dt.search(e.target.value).draw(); });
 
     // Documentos
     bind('btn-crud-doc-create', 'click', () => openCrud('documento', 'create'));
@@ -1287,19 +1518,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('[data-action="close-crud"]')
         .forEach(btn => btn.addEventListener('click', () => closeModal('modal-crud')));
 
-    // Modal JSON
+    // Modal Detalle
     bind('btn-copy-json', 'click', copyJsonModal);
     document.querySelectorAll('[data-action="close-json"]')
         .forEach(btn => btn.addEventListener('click', () => closeModal('modal-json')));
 
-    // Toggle tabla / JSON
-    document.querySelectorAll('[data-view]').forEach(btn => {
-        btn.addEventListener('click', () =>
-            setView(btn.getAttribute('data-entity'), btn.getAttribute('data-view'), btn)
-        );
-    });
+    // Paginación y contadores locales por sección en cada redraw
+    const setupTableEvents = (containerId, counterId) => {
+        $(`#${containerId}`).on('draw.dt', 'table', function () { 
+            if (!$.fn.DataTable.isDataTable(this)) return;
+            const dt = $(this).DataTable(); 
+            _togglePaginate(dt); 
+            _highlightSearch(dt); 
+            _updateCounter(dt, counterId);
+        });
+    };
 
-    // Backdrop modales
+    setupTableEvents('data-usuarios', 'usuarios-counter');
+    setupTableEvents('data-roles', 'roles-counter');
+    setupTableEvents('data-solicitudes', 'sol-counter');
+    setupTableEvents('data-tipos', 'tipos-counter');
+    setupTableEvents('data-revisiones', 'revisiones-counter');
+    // Para documentos, como su wrapper podría llamarse tabla-documentos, se asegura:
+    setupTableEvents('tabla-documentos', 'documentos-counter');
+
     initModalBackdrop();
 
     // Auto-refresh cada 60 s - DESACTIVADO para mejorar UX

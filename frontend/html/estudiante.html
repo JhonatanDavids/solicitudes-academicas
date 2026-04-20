@@ -4,95 +4,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudiante — Solicitudes Académicas</title>
+    <title>Panel Estudiante — CUL</title>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/estudiante.css">
     <link rel="stylesheet" href="../css/datatables.css">
+    <link rel="stylesheet" href="../css/student-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
 
+    <!-- ═══════════════════════════════════════════════════════════════
+     APP SHELL
+     ═══════════════════════════════════════════════════════════════ -->
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sb-brand">
+                <div class="sb-logo" style="display:flex;align-items:center;">
+                    <img src="../assets/img/logo-cul.jpg" alt="Logo CUL" class="logo-img">
+                </div>
+                <div>
+                    <div class="sb-name">Solicitudes Acad.</div>
+                    <div class="sb-sub">Portal Estudiantil</div>
+                </div>
+            </div>
+            <div class="sb-user">
+                <div class="sb-avatar" id="sb-avatar-leter">U</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="sb-user-name" id="sb-user-name">Estudiante</div>
+                    <div class="sb-role-badge">Estudiante</div>
+                </div>
+            </div>
+            <nav class="sb-nav">
+                <div class="sb-section-label">Mi Panel</div>
+                <a class="sb-item-nav active" data-section="solicitudes">
+                    <span class="sb-icon">▦</span>
+                    <span>Mis Solicitudes</span>
+                </a>
+                <a class="sb-item-nav" data-section="documentos">
+                    <span class="sb-icon">📄</span>
+                    <span>Mis Documentos</span>
+                </a>
+                <a class="sb-item-nav" data-section="notificaciones">
+                    <span class="sb-icon">🔔</span>
+                    <span>Notificaciones</span>
+                </a>
+            </nav>
+            <div class="sb-bottom">
+                <a class="sb-bottom-item">
+                    <span>⚙</span><span>Configuración</span>
+                </a>
+                <a class="sb-bottom-item danger" id="sb-logout">
+                    <span>⬡</span><span>Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="app-topbar">
+                <div class="tb-breadcrumb">
+                    <span class="tb-crumb-root">Panel</span>
+                    <span class="tb-crumb-sep">›</span>
+                    <span class="tb-crumb-current">Panel Estudiante</span>
+                </div>
+                <div class="tb-right">
+                    <div class="tb-search">
+                        <span style="color:var(--text-4);font-size:13px;">🔍</span>
+                        <input type="text" placeholder="Buscar solicitudes...">
+                    </div>
+                    <div class="tb-notif-btn">
+                        🔔
+                        <div class="tb-notif-dot"></div>
+                    </div>
+                    <div class="tb-user-pill">
+                        <div class="tb-user-av" id="tb-avatar-leter">U</div>
+                        <span class="tb-user-email" id="topbar-nombre">usuario@universidad.edu.co</span>
+                    </div>
+                    <button class="tb-exit" id="tb-logout-btn">Salir</button>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="page-content">
+
+                <!-- ========================================
+                 SECCIÓN: MIS SOLICITUDES
+                 ======================================== -->
+                <div class="section-content active" id="section-solicitudes">
+
+                    <!-- HERO BANNER -->
+                    <div class="hero-banner">
+                        <div class="hb-left">
+                            <div class="hb-eyebrow">Portal Estudiantil · CUL 2026</div>
+                            <div class="hb-title">Bienvenido, <span id="welcome-name"></span></div>
+                            <div class="hb-sub">Aquí puedes radicar, hacer seguimiento y gestionar todas tus solicitudes
+                                académicas de forma rápida y segura.</div>
+                        </div>
+                        <div class="hb-right">
+                            <button class="btn-new-solicitud" id="btn-nueva-solicitud">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                Nueva Solicitud
+                            </button>
+                            <div class="hb-stats-mini">
+                                <div class="hb-stat-mini">
+                                    <div class="hb-stat-mini-num" id="h-total">0</div>
+                                    <div class="hb-stat-mini-lbl">Total</div>
+                                </div>
+                                <div class="hb-stat-mini">
+                                    <div class="hb-stat-mini-num" style="color:var(--gold)" id="h-pendientes">0</div>
+                                    <div class="hb-stat-mini-lbl">Pendientes</div>
+                                </div>
+                                <div class="hb-stat-mini">
+                                    <div class="hb-stat-mini-num" style="color:#6EE7B7" id="h-aprobadas">0</div>
+                                    <div class="hb-stat-mini-lbl">Aprobadas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STAT CARDS -->
+                    <div class="stats-row">
+                        <div class="stat-card sc-total">
+                            <div class="stat-icon">📋</div>
+                            <div class="stat-num" id="stat-total">0</div>
+                            <div class="stat-lbl">Total</div>
+                        </div>
+                        <div class="stat-card sc-pending">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-num" id="stat-pendientes">0</div>
+                            <div class="stat-lbl">Pendientes</div>
+                        </div>
+                        <div class="stat-card sc-approved">
+                            <div class="stat-icon">✓</div>
+                            <div class="stat-num" id="stat-aprobadas">0</div>
+                            <div class="stat-lbl">Aprobadas</div>
+                        </div>
+                        <div class="stat-card sc-review">
+                            <div class="stat-icon">🔍</div>
+                            <div class="stat-num" id="stat-revision">0</div>
+                            <div class="stat-lbl">En revisión</div>
+                        </div>
+                    </div>
+
+                    <!-- SOLICITUDES LIST -->
+                    <div class="section-hd">
+                        <div class="section-title">
+                            <div class="section-dot"></div>
+                            Mis Solicitudes
+                        </div>
+                        <div class="filter-tabs">
+                            <button class="filter-tab filter-chip active" data-filter="todas">Todas</button>
+                            <button class="filter-tab filter-chip" data-filter="pendiente">Pendientes</button>
+                            <button class="filter-tab filter-chip" data-filter="en_revision">En revisión</button>
+                            <button class="filter-tab filter-chip" data-filter="aprobada">Aprobadas</button>
+                            <button class="filter-tab filter-chip" data-filter="rechazada">Rechazadas</button>
+                        </div>
+                    </div>
+
+                    <div class="requests-list" id="lista-solicitudes">
+                        <div class="empty-state">
+                            <div style="font-size:1.5rem;margin-bottom:0.5rem;">⟳</div>
+                            Cargando solicitudes...
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ========================================
+                 SECCIÓN: MIS DOCUMENTOS (vacía)
+                 ======================================== -->
+                <div class="section-content" id="section-documentos" style="display:none;">
+                    <div class="empty-state-v2">
+                        <div class="empty-icon-v2">📁</div>
+                        <div class="empty-title-v2">Mis Documentos</div>
+                        <div class="empty-sub-v2">Los documentos asociados a tus solicitudes aparecerán aquí.</div>
+                    </div>
+                </div>
+
+                <!-- ========================================
+                 SECCIÓN: NOTIFICACIONES (vacía)
+                 ======================================== -->
+                <div class="section-content" id="section-notificaciones" style="display:none;">
+                    <div class="empty-state-v2">
+                        <div class="empty-icon-v2">🔔</div>
+                        <div class="empty-title-v2">Sin notificaciones</div>
+                        <div class="empty-sub-v2">Recibirás alertas cuando cambie el estado de tus solicitudes.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+     ELEMENTOS FUERA DE .APP (position:fixed necesita estar fuera)
+     ═══════════════════════════════════════════════════════════════ -->
+
     <div class="toast" id="toast"></div>
-
-    <!-- TOPBAR -->
-    <app-navbar title="PANEL ESTUDIANTE"></app-navbar>
-
-    <div class="hero">
-        <div class="hero-inner">
-            <div class="hero-box">
-                <h2>Bienvenido a tu panel estudiantil</h2>
-                <p style="margin-top:5px; display:inline-block; font-size:14px; color:rgba(255, 255, 255, 0.7);">
-                    Bienvenido(a), <span id="welcome-name" style="font-weight:600; color:#fff;"></span>. Aquí puedes ver
-                    y gestionar tus solicitudes.</p>
-            </div>
-            <button class="btn-nueva" id="btn-nueva-solicitud">+ Nueva Solicitud</button>
-        </div>
-    </div>
-
-    <!-- MAIN -->
-    <div class="main">
-
-        <!-- STAT CARDS -->
-        <div class="stat-grid">
-            <div class="stat-box c-blue">
-                <div class="stat-icon">📄</div>
-                <div>
-                    <div class="stat-num" id="stat-total">–</div>
-                    <div class="stat-lbl">Total</div>
-                </div>
-            </div>
-            <div class="stat-box c-yellow">
-                <div class="stat-icon">⏳</div>
-                <div>
-                    <div class="stat-num" id="stat-pendientes">–</div>
-                    <div class="stat-lbl">Pendientes</div>
-                </div>
-            </div>
-            <div class="stat-box c-green">
-                <div class="stat-icon">✓</div>
-                <div>
-                    <div class="stat-num" id="stat-aprobadas">–</div>
-                    <div class="stat-lbl">Aprobadas</div>
-                </div>
-            </div>
-            <div class="stat-box c-cyan">
-                <div class="stat-icon">🔍</div>
-                <div>
-                    <div class="stat-num" id="stat-revision">–</div>
-                    <div class="stat-lbl">En revisión</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SOLICITUDES -->
-        <div class="panel">
-            <div class="panel-head">
-                <h3>
-                    <div class="panel-head-dot"></div> solicitudes
-                </h3>
-            </div>
-
-            <div class="filter-bar">
-                <button class="filter-chip active" data-filter="todas">Todas</button>
-                <button class="filter-chip" data-filter="pendiente">Pendientes</button>
-                <button class="filter-chip" data-filter="en_revision">En revisión</button>
-                <button class="filter-chip" data-filter="aprobada">Aprobadas</button>
-                <button class="filter-chip" data-filter="rechazada">Rechazadas</button>
-            </div>
-
-            <div id="lista-solicitudes">
-                <div class="empty-state">
-                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">⟳</div>
-                    Cargando solicitudes...
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL NUEVA SOLICITUD -->
     <div class="modal-overlay" id="modal-nueva">
@@ -103,11 +225,12 @@
             </div>
             <div class="modal-body">
 
-                <div class="user-info"
-                    style="background:var(--primary-soft);border:1px solid rgba(29, 78, 216, 0.15);padding:12px;border-radius:10px;margin-bottom:1rem;color:var(--text);display:flex;flex-direction:column;gap:2px;">
-                    <strong id="usuario-nombre" style="font-size:0.85rem;"></strong>
-                    <small id="usuario-correo"
-                        style="color:var(--muted);font-family:var(--font-mono, monospace);font-size:0.75rem;"></small>
+                <div class="modal-user-info">
+                    <div class="mui-av" id="mui-avatar">U</div>
+                    <div>
+                        <div class="mui-name" id="usuario-nombre"></div>
+                        <div class="mui-email" id="usuario-correo"></div>
+                    </div>
                 </div>
 
                 <div class="form-row2">
@@ -148,14 +271,50 @@
                 <h4 id="modal-detalle-title">Detalle</h4>
                 <button class="modal-close" id="btn-cerrar-detalle-1">✕</button>
             </div>
-            <div class="modal-body" style="padding:0;">
-                <div class="json-view">
-                    <pre id="modal-detalle-content"></pre>
-                </div>
+            <div class="modal-body">
+                <div id="modal-detalle-content"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn-sm blue" id="btn-copiar-detalle">⎘ Copiar JSON</button>
+                <button class="btn-sm blue" id="btn-copiar-detalle">⎘ Copiar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAR ELIMINACIÓN -->
+    <div class="modal-overlay" id="modal-confirmar">
+        <div class="modal modal-confirm-pro">
+
+            <div class="modal-body confirm-body">
+
+                <div class="confirm-icon">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+
+                <div class="confirm-title">
+                    ¿Confirmar eliminación?
+                </div>
+
+                <div class="confirm-sub">
+                    ¿Seguro que deseas eliminar esta solicitud?
+                    <br>
+                    Esta acción no se puede deshacer.
+                </div>
+
+                <div class="confirm-actions">
+                    <button class="btn btn-outline" id="btn-cancelar-eliminar">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-danger" id="btn-confirmar-eliminar">
+                        ✕ Eliminar
+                    </button>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
@@ -189,6 +348,59 @@
 
     <!-- MÓDULO (CAMBIA SEGÚN PÁGINA) -->
     <script src="../js/estudiante.js"></script>
+
+    <!-- SIDEBAR + TOPBAR LOGIC (after estudiante.js loads session data) -->
+    <script>
+        (function () {
+            var u = JSON.parse(sessionStorage.getItem('portalUser') || '{}');
+            var nombre = (u.nombre || '') + ' ' + (u.apellido || '');
+            var correo = u.correo || '';
+            var inicial = (u.nombre || u.correo || 'U').charAt(0).toUpperCase();
+
+            var sbName = document.getElementById('sb-user-name');
+            if (sbName) sbName.textContent = nombre || correo;
+
+            var sbAvatar = document.getElementById('sb-avatar-leter');
+            if (sbAvatar) sbAvatar.textContent = inicial;
+
+            var tbAvatar = document.getElementById('tb-avatar-leter');
+            if (tbAvatar) tbAvatar.textContent = inicial;
+
+            var tbNombre = document.getElementById('topbar-nombre');
+            if (tbNombre) tbNombre.textContent = correo;
+
+            var logoutBtn = document.getElementById('sb-logout');
+            if (logoutBtn) logoutBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                sessionStorage.removeItem('portalUser');
+                sessionStorage.removeItem('token');
+                window.location.href = '../index.html';
+            });
+
+            var tbLogout = document.getElementById('tb-logout-btn');
+            if (tbLogout) tbLogout.addEventListener('click', function () {
+                sessionStorage.removeItem('portalUser');
+                sessionStorage.removeItem('token');
+                window.location.href = '../index.html';
+            });
+
+            document.querySelectorAll('.sb-item-nav').forEach(function (item) {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var section = this.getAttribute('data-section');
+                    if (!section) return;
+
+                    document.querySelectorAll('.sb-item-nav').forEach(function (i) { i.classList.remove('active'); });
+                    this.classList.add('active');
+
+                    document.querySelectorAll('.section-content').forEach(function (s) { s.style.display = 'none'; s.classList.remove('active'); });
+                    var target = document.getElementById('section-' + section);
+                    if (target) { target.style.display = ''; target.classList.add('active'); }
+                });
+            });
+        })();
+    </script>
+
 </body>
 
 </html>

@@ -376,6 +376,7 @@ textarea {
 .toast.show {
     transform: translateX(0);
     opacity: 1;
+    animation: toastSlideIn 0.3s ease both;
 }
 
 .toast.success {
@@ -503,8 +504,9 @@ textarea {
 }
 
 .rol-admin {
-    background: var(--danger-soft);
-    color: var(--danger-text);
+    background: rgba(232, 168, 32, .12);
+    color: #B8860B;
+    border: 1px solid rgba(232, 168, 32, .25);
 }
 
 .rol-coordinador {
@@ -629,6 +631,28 @@ textarea {
     to {
         transform: rotate(360deg);
     }
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.row-highlight-green {
+    background: rgba(5, 150, 105, 0.08) !important;
+    transition: background 0.3s ease;
+}
+
+.row-highlight-red {
+    background: rgba(220, 38, 38, 0.08) !important;
+    transition: background 0.3s ease;
 }
 
 .anim-fade {
@@ -1507,10 +1531,9 @@ table.dataTable tbody tr td {
 
 /* ── FIX — Bordes laterales oscuros del modal ───────────────── */
 
-/* 1 + 4. Sin padding ni fondo en el contenedor del modal */
+/* 1 + 4. Contenedor del modal visual */
 #modal-json-content {
-    padding: 0 !important;
-    background: transparent !important;
+    background: transparent;
 }
 
 /* 2. La tarjeta ocupa todo el ancho disponible */
@@ -1520,13 +1543,10 @@ table.dataTable tbody tr td {
     border-radius: 12px;
 }
 
-/* 3. Cualquier div hijo directo también ocupa el 100% */
-#modal-json-content>div {
-    width: 100%;
-}
+/* 3. Eliminado: #modal-json-content>div { width: 100% } rompía el grid */
 
 #modal-json .modal-body {
-    padding: 0 !important;
+    padding: 1.4rem;
 }
 
 .md-header {
@@ -1539,16 +1559,6 @@ table.dataTable tbody tr td {
     padding: 0 !important;
     overflow: hidden;
     border-radius: 12px;
-}
-
-#modal-json .modal-body {
-    padding: 0 !important;
-    background: transparent !important;
-}
-
-#modal-json-content {
-    padding: 0 !important;
-    margin: 0 !important;
 }
 
 .md-card {
@@ -1671,4 +1681,325 @@ table.dataTable tbody tr td {
 .doc-file {
     background: #e5e7eb;
     color: #374151;
+}
+
+/* ── DETAIL VIEW (Modal visual de solicitudes) ────────────── */
+
+.detail-container {
+    font-family: inherit;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.detail-item.full {
+    grid-column: 1 / -1;
+    /* ocupa todo el ancho */
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-item.full {
+    margin-top: 16px;
+}
+
+.detail-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--text-muted, #6b7a95);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.detail-item strong {
+    font-size: 0.95rem;
+    color: var(--text-strong, #1a2340);
+}
+
+.desc-box {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.9rem;
+    color: var(--text, #3d4d6a);
+    line-height: 1.5;
+}
+
+.badge {
+    display: inline-flex;
+    width: fit-content;
+    font-size: 0.72rem;
+    padding: 3px 9px;
+    border-radius: 99px;
+    align-items: center;
+    font-weight: 600;
+}
+
+#modal-json .json-view {
+    display: none;
+}
+
+.detail-student {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.estado-resumen-card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.estado-opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.estado-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface, #fff);
+    color: var(--text, #3d4d6a);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: inherit;
+}
+
+.estado-btn:hover {
+    border-color: var(--border2);
+    background: var(--surface2, #f8fafc);
+}
+
+.estado-btn.active {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+    color: var(--blue);
+}
+
+.estado-btn-aprobar.active {
+    border-color: #059669;
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.estado-btn-rechazar.active {
+    border-color: #DC2626;
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.estado-btn-revision.active {
+    border-color: #2563EB;
+    background: #EFF6FF;
+    color: #2563EB;
+}
+
+#modal-estado .form-textarea-new {
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.9rem;
+}
+
+#modal-estado .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+#modal-estado .status-aprobada {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+}
+
+#modal-estado .status-rechazada {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+}
+
+#modal-estado .status-en-revision {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+}
+
+#modal-estado .priority-media {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+}
+
+#modal-estado .priority-alta {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+}
+
+#modal-estado .priority-baja {
+    background: rgba(107, 114, 128, 0.15);
+    color: #4b5563;
+}
+
+.btn-estado.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.decision-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.choice-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface, #fff);
+    color: var(--text, #3d4d6a);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.choice-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.choice-btn:not(.selected) {
+    opacity: 0.65;
+}
+
+.choice-btn.selected {
+    transform: scale(1.03);
+    opacity: 1;
+}
+
+.choice-btn-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.choice-btn.approve-choice.selected {
+    border-color: var(--success);
+    background: var(--success-soft);
+    color: var(--success-text);
+}
+
+.choice-btn.reject-choice.selected {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+    color: var(--danger-text);
+}
+
+.funcionario-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ov-main {
+    min-width: 0;
+}
+
+.alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: var(--warning-soft);
+    border: 1px solid var(--warning);
+    color: var(--warning-text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.alert-banner .ab-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.alert-banner .ab-text {
+    flex: 1;
+}
+
+.alert-banner .btn-sm {
+    flex-shrink: 0;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-outline:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+    background: var(--navy-soft, rgba(26, 35, 64, 0.06));
+}
+
+.filter-bar {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: var(--surface2);
+}
+
+.filter-chip {
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filter-chip:hover {
+    background: var(--blue-soft);
+    color: var(--info);
+    border-color: var(--blue);
+}
+
+.filter-chip.active {
+    background: var(--navy);
+    color: #ffffff;
+    border-color: var(--navy);
 }

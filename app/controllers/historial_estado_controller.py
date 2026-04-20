@@ -11,12 +11,14 @@ class HistorialEstadoController:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO historial_estados (id_solicitud, estado_anterior, estado_nuevo)
-                VALUES (%s, %s, %s)
+                INSERT INTO historial_estados (id_solicitud, estado_anterior, estado_nuevo, id_usuario, comentario)
+                VALUES (%s, %s, %s, %s, %s)
             """, (
                 historial.id_solicitud,
                 historial.estado_anterior,
-                historial.estado_nuevo
+                historial.estado_nuevo,
+                historial.id_usuario,
+                historial.comentario
             ))
             conn.commit()
             return {"resultado": "Historial de estado registrado"}
@@ -39,7 +41,9 @@ class HistorialEstadoController:
                     'id_solicitud':    result[1],
                     'estado_anterior': result[2],
                     'estado_nuevo':    result[3],
-                    'fecha_cambio':    str(result[4])
+                    'fecha_cambio':    str(result[4]),
+                    'id_usuario':      result[5] if len(result) > 5 else None,
+                    'comentario':      result[6] if len(result) > 6 else None
                 }
                 return jsonable_encoder(content)
             else:
@@ -64,7 +68,9 @@ class HistorialEstadoController:
                     'id_solicitud':    data[1],
                     'estado_anterior': data[2],
                     'estado_nuevo':    data[3],
-                    'fecha_cambio':    str(data[4])
+                    'fecha_cambio':    str(data[4]),
+                    'id_usuario':      data[5] if len(data) > 5 else None,
+                    'comentario':      data[6] if len(data) > 6 else None
                 }
                 payload.append(content)
             if result:
@@ -97,7 +103,9 @@ class HistorialEstadoController:
                     'id_solicitud':    data[1],
                     'estado_anterior': data[2],
                     'estado_nuevo':    data[3],
-                    'fecha_cambio':    str(data[4])
+                    'fecha_cambio':    str(data[4]),
+                    'id_usuario':      data[5] if len(data) > 5 else None,
+                    'comentario':      data[6] if len(data) > 6 else None
                 }
                 payload.append(content)
             return {"resultado": jsonable_encoder(payload)}

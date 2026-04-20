@@ -33,6 +33,17 @@
                     <div>
                         <div class="section-title">Overview</div>
                     </div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <button class="btn-sm btn-outline" id="btn-exportar">↓ Exportar</button>
+                        <button class="btn-sm c-purple" onclick="showSection('solicitudes')">Gestionar Aprobaciones</button>
+                    </div>
+                </div>
+                <div class="alert-banner" id="alert-pendientes">
+                    <div class="ab-icon">⏳</div>
+                    <div class="ab-text">
+                        Tienes <strong id="pendientes-count">0 solicitudes pendientes</strong> que requieren tu atención.
+                    </div>
+                    <button class="btn-sm c-purple" onclick="showSection('solicitudes')">Ver pendientes →</button>
                 </div>
                 <div class="stats-row">
                     <div class="stat-box c-purple">
@@ -67,6 +78,13 @@
                             <div class="panel-head-dot"></div> Últimas Solicitudes
                         </h3>
                     </div>
+                    <div class="filter-bar" id="ov-filter-bar">
+                        <div class="filter-chip active" data-estado="">Todas</div>
+                        <div class="filter-chip" data-estado="pendiente">Pendientes</div>
+                        <div class="filter-chip" data-estado="en_revision">En revisión</div>
+                        <div class="filter-chip" data-estado="aprobada">Aprobadas</div>
+                        <div class="filter-chip" data-estado="rechazada">Rechazadas</div>
+                    </div>
                     <div id="overview-recent">
                         <div class="loading-state">
                             <div class="spinner"></div><br>Cargando...
@@ -100,6 +118,13 @@
                     </div>
                     <div class="search-bar"><input class="search-input" id="input-buscar-solicitudes"
                             placeholder="Buscar solicitudes..."></div>
+                    <div class="filter-bar" id="aprobaciones-filters">
+                        <div class="filter-chip active" data-filter="all">Todas</div>
+                        <div class="filter-chip" data-filter="pendiente">Pendientes</div>
+                        <div class="filter-chip" data-filter="en_revision">En revisión</div>
+                        <div class="filter-chip" data-filter="aprobada">Aprobadas</div>
+                        <div class="filter-chip" data-filter="rechazada">Rechazadas</div>
+                    </div>
                     <div id="data-solicitudes">
                         <div class="loading-state">
                             <div class="spinner"></div><br>Cargando...
@@ -111,17 +136,50 @@
         </main>
     </div>
 
-    <!-- MODAL JSON -->
+    <!-- MODAL DECISIÓN -->
+    <div class="modal-overlay" id="modal-decision">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h4 id="modal-decision-title">Decisión de Solicitud</h4>
+                <button class="modal-close" id="btn-cerrar-decision-1">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-decision-info"></div>
+                <div class="form-field">
+                    <label>Seleccione una acción</label>
+                    <div class="decision-choice">
+                        <button class="choice-btn approve-choice" id="choice-approve">
+                            <div class="choice-btn-icon">✓</div>
+                            Aprobar
+                        </button>
+                        <button class="choice-btn reject-choice" id="choice-reject">
+                            <div class="choice-btn-icon">✕</div>
+                            Rechazar
+                        </button>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Comentario (obligatorio al rechazar)</label>
+                    <textarea id="decision-comentario" class="form-textarea-new" rows="3"
+                        placeholder="Observaciones sobre esta solicitud..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm cancel" style="padding:7px 18px;" id="btn-cerrar-decision-2">Cancelar</button>
+                <button class="btn-sm green" style="padding:7px 18px;" id="btn-confirmar-decision">Confirmar Decisión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE -->
     <div class="modal-overlay" id="modal-json">
         <div class="modal-box wide">
             <div class="modal-head">
-                <h4 id="modal-json-title">JSON</h4>
+                <h4 id="modal-json-title">Detalle de Solicitud</h4>
                 <button class="modal-close" id="btn-cerrar-json-1">✕</button>
             </div>
-            <div class="modal-body" style="padding:0;">
-                <div class="json-view">
-                    <pre id="modal-json-content"></pre>
-                </div>
+            <div class="modal-body">
+                <div id="modal-json-content"></div>
             </div>
             <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copiar-json">⎘
                     Copiar</button></div>

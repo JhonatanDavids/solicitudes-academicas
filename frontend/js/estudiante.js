@@ -10,6 +10,7 @@ if (!_usuario || !_token) {
 
 let todasLasSolicitudes = [];
 let solicitudAbierta = null;
+let solicitudAEliminar = null;
 let idUsuarioActual = null;
 let timerToast;
 
@@ -96,7 +97,10 @@ function mostrarSolicitudes(lista) {
         tarjeta.datos = sol;
 
         tarjeta.addEventListener('ver-detalle', (e) => verDetalle(e.detail.id_solicitud));
-        tarjeta.addEventListener('eliminar-sol', (e) => eliminarSolicitud(e.detail.id_solicitud));
+        tarjeta.addEventListener('eliminar-sol', (e) => {
+            solicitudAEliminar = e.detail;
+            document.getElementById("modal-confirmar").classList.add("show");
+        });
 
         contenedor.appendChild(tarjeta);
     });
@@ -159,7 +163,6 @@ async function crearSolicitud() {
 ============================================================ */
 
 async function eliminarSolicitud(id) {
-    if (!confirm(`¿Eliminar solicitud #` + id + `?`)) return;
 
     try {
         await api.eliminarSolicitud(id);
@@ -183,10 +186,48 @@ function verDetalle(id) {
 
     solicitudAbierta = sol;
 
-    document.getElementById('modal-detalle-title').textContent = `// Solicitud #` + id;
+    document.getElementById('modal-detalle-title').textContent = `Solicitud #${id}`;
 
     const content = document.getElementById('modal-detalle-content');
-    content.textContent = JSON.stringify(sol, null, 2);
+    
+    const estadoClass = (sol.estado_actual || 'pendiente').toLowerCase().replace(/\s+/g, '_');
+    
+    content.innerHTML = `
+<div class="detail-container">
+
+  <div class="detail-grid">
+
+    <div class="detail-item">
+      <span class="detail-label">Tipo</span>
+      <strong>${sol.tipo || 'N/A'}</strong>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Estado</span>
+      <span class="badge status-${estadoClass}">${(sol.estado_actual || 'pendiente').toUpperCase()}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Prioridad</span>
+      <span class="badge priority-${sol.prioridad || 'baja'}">${(sol.prioridad || 'baja').toUpperCase()}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Fecha</span>
+      <strong>${sol.fecha_creacion ? new Date(sol.fecha_creacion).toLocaleDateString('es-CO') : 'N/A'}</strong>
+    </div>
+
+  </div>
+
+  <div class="detail-description">
+    <span class="detail-label">Descripción</span>
+    <div class="desc-box">
+      ${sol.descripcion || 'Sin descripción'}
+    </div>
+  </div>
+
+</div>
+`;
 
     document.getElementById('modal-detalle').classList.add('show');
 }
@@ -203,7 +244,7 @@ function closeModal(id) {
 function copyDetalle() {
     const texto = document.getElementById('modal-detalle-content').textContent;
     navigator.clipboard.writeText(texto).then(() => {
-        mostrarToast('✓ JSON copiado', 'success');
+        mostrarToast('✓ Copiado', 'success');
     });
 }
 
@@ -214,6 +255,10 @@ async function abrirModal() {
         (usuarioPortal.nombre || '') + ' ' + (usuarioPortal.apellido || '');
     document.getElementById('usuario-correo').textContent =
         usuarioPortal.correo || '';
+
+    const inicial = (usuarioPortal.nombre || usuarioPortal.correo || 'U').charAt(0).toUpperCase();
+    const avatar = document.getElementById('mui-avatar');
+    if (avatar) avatar.textContent = inicial;
 
     const fTipo = document.getElementById('f-tipo');
     fTipo.textContent = '';
@@ -278,6 +323,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const bCop = document.getElementById('btn-copiar-detalle');
     if (bCop) bCop.addEventListener('click', copyDetalle);
+
+    const btnCancelarEliminar = document.getElementById("btn-cancelar-eliminar");
+    if (btnCancelarEliminar) {
+        btnCancelarEliminar.onclick = () => {
+            document.getElementById("modal-confirmar").classList.remove("show");
+            solicitudAEliminar = null;
+        };
+    }
+
+    const btnConfirmarEliminar = document.getElementById("btn-confirmar-eliminar");
+    if (btnConfirmarEliminar) {
+        btnConfirmarEliminar.onclick = async () => {
+            if (!solicitudAEliminar) return;
+            await eliminarSolicitud(solicitudAEliminar.id_solicitud);
+            document.getElementById("modal-confirmar").classList.remove("show");
+            solicitudAEliminar = null;
+        };
+    }
+
+    const btnCerrarConfirm = document.getElementById("btn-cerrar-confirm");
+    if (btnCerrarConfirm) {
+        btnCerrarConfirm.onclick = () => {
+            document.getElementById("modal-confirmar").classList.remove("show");
+            solicitudAEliminar = null;
+        };
+    }
 
     // Cerrar modal auto
     document.addEventListener('click', (e) => {

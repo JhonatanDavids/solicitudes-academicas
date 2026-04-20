@@ -15,18 +15,31 @@ class AppNavbar extends HTMLElement {
         const title = this.getAttribute('title') || 'PANEL';
         const usuarioPortal = JSON.parse(sessionStorage.getItem('portalUser') || '{}');
         const correo = usuarioPortal.correo || 'usuario@universidad.edu.co';
+        const inicial = (correo.charAt(0) || 'U').toUpperCase();
 
         this.style.display = 'block';
         this.innerHTML = `
             <div class="nb-wrap">
                 <div class="nb-title">
-                    <img src="../assets/img/logo-ul-horizontal.png" alt="Logo" class="nb-logo">
-                    <span id="topbar-section-name">${title}</span>
+                    <img src="../assets/img/logo-cul.jpg" alt="Logo" class="nb-logo">
+                    <div class="nb-separator"></div>
+                    <div class="nb-breadcrumb">
+                        <span class="nb-crumb-root">Panel</span>
+                        <span class="nb-crumb-sep">/</span>
+                        <span class="nb-crumb-current" id="topbar-section-name">${title}</span>
+                    </div>
                 </div>
                 <div class="nb-right">
-                    <span class="nb-user" id="topbar-user">${correo}</span>
-                    <button class="nb-btn" id="nb-refresh-btn">⟳ Actualizar</button>
-                    <button class="nb-btn nb-btn--danger" id="nb-logout-btn">⬡ Salir</button>
+                    <div class="nb-search">
+                        <span class="nb-search-icon">🔍</span>
+                        <input type="text" placeholder="Buscar...">
+                    </div>
+                    <button class="nb-notif-btn" id="nb-refresh-btn" title="Actualizar datos">⟳</button>
+                    <div class="nb-user-pill">
+                        <div class="nb-user-av">${inicial}</div>
+                        <span class="nb-user-email" id="topbar-user">${correo}</span>
+                    </div>
+                    <button class="nb-btn nb-btn--danger" id="nb-logout-btn">Salir</button>
                 </div>
             </div>
         `;
@@ -51,6 +64,9 @@ class AppSidebar extends HTMLElement {
     connectedCallback() {
         const rol = this.getAttribute('rol') || 'admin';
         const seccionActiva = this.getAttribute('seccion') || 'overview';
+        const usuarioPortal = JSON.parse(sessionStorage.getItem('portalUser') || '{}');
+        const nombre = (usuarioPortal.nombre || usuarioPortal.correo || 'U').split(' ')[0];
+        const avatarInicial = nombre.charAt(0).toUpperCase();
 
         const navAdmin = [
             { id: 'overview', icon: '◈', label: 'Overview', badge: null },
@@ -103,20 +119,34 @@ class AppSidebar extends HTMLElement {
         this.innerHTML = `
             <div class="sb-wrap">
                 <div class="sb-brand">
-                    <img src="../assets/img/logo-ul-horizontal.png" alt="Logo Universidad" class="sb-brand-logo">
+                    <img src="../assets/img/logo-cul.jpg" alt="Logo Universidad" class="sb-brand-logo">
                     <div class="sb-brand-text">
                         <span class="sb-brand-name">Admin Panel</span>
                         <span class="sb-brand-sub">Solicitudes Académicas</span>
                     </div>
                 </div>
-                <span class="sb-rol-pill" style="color:${cfg.colorVar};background:color-mix(in srgb,${cfg.colorVar} 12%,transparent)">
-                    ${cfg.label}
-                </span>
+                <div class="sb-user">
+                    <div class="sb-avatar">${avatarInicial}</div>
+                    <div class="sb-user-info">
+                        <div class="sb-user-name">${nombre}</div>
+                        <span class="sb-rol-pill" style="color:${cfg.colorVar};background:color-mix(in srgb,${cfg.colorVar} 12%,transparent)">
+                            ${cfg.label}
+                        </span>
+                    </div>
+                </div>
                 <nav class="sb-nav">
                     <div class="sb-section-label">Dashboard</div>
                     ${nav1Html}
                     ${nav2Html}
                 </nav>
+                <div class="sb-bottom">
+                    <a href="#" class="sb-bottom-item">
+                        <span>⚙️</span><span>Configuración</span>
+                    </a>
+                    <a href="#" class="sb-bottom-item danger" id="sb-logout-bottom">
+                        <span>⬡</span><span>Cerrar sesión</span>
+                    </a>
+                </div>
             </div>
         `;
 
@@ -133,6 +163,16 @@ class AppSidebar extends HTMLElement {
                 if (typeof showSection === 'function') showSection(seccion, item);
             });
         });
+
+        // Logout bottom
+        const logoutBottom = this.querySelector('#sb-logout-bottom');
+        if (logoutBottom) {
+            logoutBottom.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof doLogout === 'function') doLogout();
+                else { sessionStorage.clear(); window.location.href = '../index.html'; }
+            });
+        }
     }
 }
 customElements.define('app-sidebar', AppSidebar);
@@ -186,32 +226,86 @@ class SolicitudCard extends HTMLElement {
         const sol = this._datos;
         if (!sol) return;
 
-        // PASO 8 / requisito profesor: NO mostrar id_solicitud al usuario
+        const estado = sol.estado_actual || 'pendiente';
+        const estadoClass = sanitizarClase(estado);
+        const prio = sol.prioridad || 'baja';
+
+        const tipoIconos = {
+            'Homologación': '📚',
+            'Validación': '✔',
+            'Cancelación': '✕',
+            'Certificado': '📄',
+            'Reintegro': '🔄',
+            'Transferencia': '➡',
+            'Recurso': '📋',
+            'Reserva de cupo': '🔖',
+            'Paz y salvo': '📑',
+            'Doble titulación': '🎓'
+        };
+
+        const icono = tipoIconos[sol.tipo] || '📋';
+
+        const iconBgMap = {
+            'Homologación': 'var(--amber-bg)',
+            'Validación': 'var(--blue-bg)'
+        };
+
         this.innerHTML = `
-            <div class="sc-item">
-                <div class="sc-top">
-                    <div class="sc-header-left">
-                        <span class="sc-tipo">${sol.tipo || 'Sin tipo'}</span>
+            <div class="req-card st-${estadoClass}" data-status="${estadoClass}">
+                <div class="req-card-inner">
+
+                    <div class="req-card-top">
+                        <div class="req-left">
+
+                            <div class="req-type-icon" style="background:${iconBgMap[sol.tipo] || 'var(--surface-2)'}">
+                                ${icono}
+                            </div>
+
+                            <div>
+                                <div class="req-title">${sol.tipo || 'Sin tipo'}</div>
+                                <div class="req-desc">${sol.descripcion || 'Sin descripción'}</div>
+                            </div>
+
+                        </div>
+
+                        <span class="req-status-badge status-${estadoClass}">
+                            ${estado.toUpperCase()}
+                        </span>
                     </div>
-                    <span class="badge badge-${sol.estado_actual || 'cancelada'}">
-                        ${sol.estado_actual || '–'}
-                    </span>
+
                 </div>
-                <div class="sc-desc">${sol.descripcion || 'Sin descripción'}</div>
-                <div class="sc-meta">
-                    <span>📅 ${this._formatFecha(sol.fecha_creacion)}</span>
-                    <span class="badge-prio prio-${sol.prioridad || 'baja'}">${sol.prioridad || '–'}</span>
-                </div>
-                <div class="sc-actions">
-                    <button class="sc-btn btn-json">{ } Ver detalle</button>
-                    <button class="sc-btn sc-btn--danger btn-eliminar">✕ Eliminar</button>
+
+                <div class="req-card-footer">
+
+                    <div class="req-meta">
+                        <div class="req-meta-item">
+                            📅 <strong>${this._formatFecha(sol.fecha_creacion)}</strong>
+                        </div>
+
+                        <span class="priority priority-${prio}">
+                            ${prio.toUpperCase()}
+                        </span>
+                    </div>
+
+                    <div class="req-actions">
+                        <button class="btn btn-outline btn-sm sc-btn-view">
+                            👁 Ver detalle
+                        </button>
+
+                        <button class="btn btn-danger btn-sm sc-btn-delete">
+                            ✕ Eliminar
+                        </button>
+                    </div>
+
                 </div>
             </div>
         `;
 
-        this.querySelector('.btn-json').onclick = () =>
+        // EVENTOS (mantener)
+        this.querySelector('.sc-btn-view').onclick = () =>
             this.dispatchEvent(new CustomEvent('ver-detalle', { bubbles: true, detail: sol }));
-        this.querySelector('.btn-eliminar').onclick = () =>
+
+        this.querySelector('.sc-btn-delete').onclick = () =>
             this.dispatchEvent(new CustomEvent('eliminar-sol', { bubbles: true, detail: sol }));
     }
 
@@ -282,13 +376,13 @@ class ActionButton extends HTMLElement {
     connectedCallback() {
         const tipo = this.getAttribute('tipo') || 'json';
         const label = this.getAttribute('label') || '';
-        const iconos = { edit: '✎', json: '{ }', delete: '✕', estado: '✎' };
+        const iconos = { edit: '✎', json: '👁 Ver', delete: '✕', estado: '✎' };
         // Clases btn-sm.* definidas en global.css
         const claseVariante = { edit: 'yellow', json: 'blue', delete: 'red', estado: 'yellow' };
 
         this.innerHTML = `
             <button class="btn-sm ${claseVariante[tipo] || 'blue'}">
-                ${iconos[tipo] || '{ }'} ${label}
+                ${iconos[tipo] || '👁 Ver'} ${label}
             </button>
         `;
     }

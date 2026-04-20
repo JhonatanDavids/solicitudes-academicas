@@ -1,6 +1,7 @@
 import os
+import bcrypt
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -9,19 +10,50 @@ from app.config.db_config import get_db_connection
 from app.models.auth_model import LoginRequest, TokenResponse, TokenData
 
 load_dotenv()
-# Configuracion JWT 
-CLAVE_SECRETA = os.getenv("JWT_SECRET", "solicitudes_cul_2024_clave_secreta")
-ALGORITMO      = "HS256"
-MINUTOS_EXPIRA = 480  # 8 horas de sesion
 
-# Extrae el token del header Authorization: Bearer {token}
+CLAVE_SECRETA = os.getenv("JWT_SECRET", "fallback_dev_only_change_in_production")
+ALGORITMO      = "HS256"
+MINUTOS_EXPIRA = 480
+
 esquema_bearer = HTTPBearer()
+
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    try:
+        return bcrypt.checkpw(password.encode(), hashed.encode())
+    except Exception:
+        return False
+
+
+def _is_bcrypt_hash(s: str) -> bool:
+    return s.startswith("$2b$") or s.startswith("$2a$") or s.startswith("$2y$")
+
+
+def _migrate_password(id_usuario: int, plain_password: str):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        new_hash = hash_password(plain_password)
+        cursor.execute(
+            "UPDATE usuarios SET contrasena = %s WHERE id_usuario = %s",
+            (new_hash, id_usuario)
+        )
+        conn.commit()
+    except Exception:
+        pass
+    finally:
+        if cursor: cursor.close()
+        if conn:   conn.close()
 
 
 def generar_token(datos: dict) -> str:
     """Crea un JWT firmado con los datos del usuario y fecha de expiración."""
     payload = datos.copy()
-    payload["exp"] = datetime.utcnow() + timedelta(minutes=MINUTOS_EXPIRA)
+    payload["exp"] = datetime.now(timezone.utc) + timedelta(minutes=MINUTOS_EXPIRA)
     return jwt.encode(payload, CLAVE_SECRETA, algorithm=ALGORITMO)
 
 def verificar_token(token: str) -> TokenData:
@@ -108,9 +140,14 @@ class AuthController:
             if estado != "activo":
                 raise HTTPException(status_code=403, detail="La cuenta está inactiva o suspendida")
 
-            # Nota académica: en producción usar bcrypt para hashear contraseñas.
-            # En este proyecto las contraseñas están en texto plano (admin123).
-            if datos.contrasena != contrasena_bd:
+            valid = False
+            if _is_bcrypt_hash(contrasena_bd) and verify_password(datos.contrasena, contrasena_bd):
+                valid = True
+            elif datos.contrasena == contrasena_bd:
+                valid = True
+                _migrate_password(id_usuario, datos.contrasena)
+
+            if not valid:
                 raise HTTPException(status_code=401, detail="Correo o contraseña incorrectos")
 
             token = generar_token({

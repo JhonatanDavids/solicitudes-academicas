@@ -179,6 +179,7 @@ CREATE TABLE historial_estados (
     estado_nuevo estado_solicitud_enum NOT NULL,
     fecha_cambio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     id_usuario INTEGER,
+    comentario TEXT,
     FOREIGN KEY (id_solicitud) REFERENCES solicitudes(id_solicitud)
 );
 

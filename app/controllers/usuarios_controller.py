@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from app.config.db_config import get_db_connection
 from app.models.usuarios_model import Usuario
 from fastapi.encoders import jsonable_encoder
+from app.controllers.auth_controller import hash_password
 
 
 class UsuarioController:
@@ -10,6 +11,7 @@ class UsuarioController:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
+            hashed_pw = hash_password(usuario.contrasena)
             cursor.execute(
                 """INSERT INTO usuarios (nombre, apellido, correo, contrasena, cedula, programa, semestre, estado, id_rol) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
@@ -17,7 +19,7 @@ class UsuarioController:
                     usuario.nombre,
                     usuario.apellido,
                     usuario.correo,
-                    usuario.contrasena,
+                    hashed_pw,
                     usuario.cedula,
                     usuario.programa,
                     usuario.semestre,

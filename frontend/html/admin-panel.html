@@ -207,26 +207,31 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">Overview</div>
+                        <div class="section-sub">Resumen general del sistema</div>
                     </div>
                 </div>
                 <div class="stats-row">
                     <div class="stat-box c-blue">
                         <div class="stat-box-icon">👥</div>
+                        <div class="stat-trend">+2 nuevo</div>
                         <div class="stat-box-num" id="ov-usuarios">–</div>
                         <div class="stat-box-label">Usuarios</div>
                     </div>
                     <div class="stat-box c-purple">
                         <div class="stat-box-icon">📄</div>
+                        <div class="stat-trend">+5 hoy</div>
                         <div class="stat-box-num" id="ov-solicitudes">–</div>
                         <div class="stat-box-label">Solicitudes</div>
                     </div>
                     <div class="stat-box c-yellow">
                         <div class="stat-box-icon">⏳</div>
+                        <div class="stat-trend">pendientes</div>
                         <div class="stat-box-num" id="ov-pendientes">–</div>
                         <div class="stat-box-label">Pendientes</div>
                     </div>
                     <div class="stat-box c-green">
                         <div class="stat-box-icon">✅</div>
+                        <div class="stat-trend">+3 hoy</div>
                         <div class="stat-box-num" id="ov-aprobadas">–</div>
                         <div class="stat-box-label">Aprobadas</div>
                     </div>
@@ -236,22 +241,106 @@
                         <div class="stat-box-label">Rechazadas</div>
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> Últimas Solicitudes
-                        </h3>
+                <div class="ov-grid">
+                    <div class="panel">
+                        <div class="panel-head">
+                            <h3>
+                                <div class="panel-head-dot"></div> Últimas Solicitudes
+                            </h3>
+                        </div>
+                        <div id="overview-recent">
+                            <div class="loading-state">
+                                <div class="spinner"></div><br>Cargando...
+                            </div>
+                        </div>
                     </div>
-                    <div id="overview-recent">
-                        <div class="loading-state">
-                            <div class="spinner"></div><br>Cargando...
+                    <div>
+                        <div class="panel" style="margin-bottom:14px;">
+                            <div class="panel-head">
+                                <h3>
+                                    <div class="panel-head-dot"></div> Resumen Rápido
+                                </h3>
+                            </div>
+                            <div style="padding:16px;">
+                                <div class="quick-stat-list">
+                                    <div class="qs-item">
+                                        <div class="qs-icon" style="background:rgba(37,99,235,.1);color:#2563EB;">👥</div>
+                                        <div class="qs-info">
+                                            <div class="qs-label">Usuarios activos</div>
+                                            <div class="qs-val" id="ov-qs-usuarios">–</div>
+                                            <div class="qs-bar-wrap"><div class="qs-bar" id="qs-bar-usuarios" style="width:0%;background:#2563EB;"></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="qs-item">
+                                        <div class="qs-icon" style="background:rgba(232,168,32,.1);color:#D97706;">⏳</div>
+                                        <div class="qs-info">
+                                            <div class="qs-label">Tasa pendientes</div>
+                                            <div class="qs-val" id="ov-qs-pendientes">–</div>
+                                            <div class="qs-bar-wrap"><div class="qs-bar" id="qs-bar-pendientes" style="width:0%;background:#D97706;"></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="qs-item">
+                                        <div class="qs-icon" style="background:rgba(5,150,105,.1);color:#059669;">✅</div>
+                                        <div class="qs-info">
+                                            <div class="qs-label">Tasa aprobación</div>
+                                            <div class="qs-val" id="ov-qs-aprobadas">–</div>
+                                            <div class="qs-bar-wrap"><div class="qs-bar" id="qs-bar-aprobadas" style="width:0%;background:#059669;"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h3>
+                                    <div class="panel-head-dot"></div> Actividad Reciente
+                                </h3>
+                            </div>
+                            <div style="padding:8px 16px;">
+                                <div class="activity-list">
+                                    <div class="activity-item">
+                                        <div class="act-dot-wrap"><div class="act-dot green"></div></div>
+                                        <div class="act-content">
+                                            <div class="act-text"><strong>Solicitud aprobada</strong> — #12</div>
+                                            <div class="act-time">hace 2 min</div>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="act-dot-wrap"><div class="act-dot amber"></div></div>
+                                        <div class="act-content">
+                                            <div class="act-text"><strong>Nuevo usuario registrado</strong></div>
+                                            <div class="act-time">hace 15 min</div>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="act-dot-wrap"><div class="act-dot blue"></div></div>
+                                        <div class="act-content">
+                                            <div class="act-text"><strong>Solicitud en revisión</strong> — #9</div>
+                                            <div class="act-time">hace 1 hora</div>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="act-dot-wrap"><div class="act-dot red"></div></div>
+                                        <div class="act-content">
+                                            <div class="act-text"><strong>Solicitud rechazada</strong> — #7</div>
+                                            <div class="act-time">hace 3 horas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ANALÍTICA -->
-            <section id="section-analitica" class="section" style="padding:20px;">
+            <section id="section-analitica" class="section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Analítica</div>
+                        <div class="section-sub">Dashboard estadístico Power BI</div>
+                    </div>
+                </div>
                 <div class="panel">
                     <div class="panel-head">
                         <h3>
@@ -268,95 +357,132 @@
                 </div>
             </section>
 
-            <!-- USUARIOS -->
-            <section class="section" id="section-usuarios">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">Usuarios</div>
+        <!-- USUARIOS -->
+        <section class="section" id="section-usuarios">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">Usuarios</div>
+                    <div class="section-sub">Gestión de cuentas del sistema</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>
+                        <div class="panel-head-dot"></div> usuarios
+                    </h3>
+                </div>
+                <select id="filter-rol" class="ad-filter-select" style="display: none;">
+                    <option value="">Todos los roles</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Coordinador">Coordinador</option>
+                    <option value="Funcionario">Funcionario</option>
+                    <option value="Estudiante">Estudiante</option>
+                </select>
+                <div class="ad-toolbar">
+                    <div class="ad-toolbar-left">
+                        <div class="search-bar" style="margin: 0;">
+                            <input class="search-input" placeholder="Buscar usuarios..." id="input-filter-usuarios">
+                        </div>
+                        <div class="ad-filter-chips">
+                            <button class="ad-chip active" data-rol="">Todos</button>
+                            <button class="ad-chip" data-rol="Administrador">Administradores</button>
+                            <button class="ad-chip" data-rol="Coordinador">Coordinadores</button>
+                            <button class="ad-chip" data-rol="Funcionario">Funcionarios</button>
+                            <button class="ad-chip" data-rol="Estudiante">Estudiantes</button>
+                        </div>
+                        <span id="usuarios-counter" class="ad-counter"></span>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="ad-toolbar-actions">
                         <button class="btn-sm green" id="btn-crud-usuario-create">+ Nuevo Usuario</button>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="usuarios">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="usuarios">{ } JSON</button>
-                        </div>
+                        <button class="btn-sm blue" id="btn-load-usuarios">↻ Recargar</button>
+                        
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> usuarios
-                        </h3><button class="btn-sm blue" id="btn-load-usuarios">↻ Recargar</button>
-                    </div>
-                    <div class="search-bar"><input class="search-input" placeholder="Buscar usuarios..."
-                            id="input-filter-usuarios"></div>
-                    <div id="data-usuarios">
-                        <div class="loading-state">
-                            <div class="spinner"></div><br>Cargando...
-                        </div>
+                <div id="data-usuarios">
+                    <div class="loading-state">
+                        <div class="spinner"></div><br>Cargando...
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- ROLES -->
-            <section class="section" id="section-roles">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">Roles</div>
+        <!-- ROLES -->
+        <section class="section" id="section-roles">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">Roles</div>
+                    <div class="section-sub">Permisos y roles disponibles</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>
+                        <div class="panel-head-dot"></div> roles
+                    </h3>
+                </div>
+                <div class="ad-toolbar">
+                    <div class="ad-toolbar-left">
+                        <div class="search-bar" style="margin: 0;">
+                            <input class="search-input" placeholder="Buscar roles..." id="input-filter-roles">
+                        </div>
+                        <span id="roles-counter" class="ad-counter"></span>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="ad-toolbar-actions">
                         <button class="btn-sm green" id="btn-crud-rol-create">+ Nuevo Rol</button>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="roles">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="roles">{ } JSON</button>
-                        </div>
+                        <button class="btn-sm blue" id="btn-load-roles">↻ Recargar</button>
+                        
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> roles
-                        </h3><button class="btn-sm blue" id="btn-load-roles">↻ Recargar</button>
-                    </div>
-                    <div id="data-roles">
-                        <div class="loading-state">
-                            <div class="spinner"></div><br>Cargando...
-                        </div>
+                <div id="data-roles">
+                    <div class="loading-state">
+                        <div class="spinner"></div><br>Cargando...
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
             <!-- SOLICITUDES -->
             <section class="section" id="section-solicitudes">
                 <div class="section-header">
                     <div>
                         <div class="section-title">Solicitudes</div>
+                        <div class="section-sub">Todas las solicitudes académicas</div>
                     </div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                        <button class="btn-sm green" id="btn-crud-solicitud-create">+ Nueva</button>
-                        <select id="filter-estado"
-                            style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:6px;font-size:0.72rem;font-family:var(--font-mono);outline:none;cursor:pointer;">
-                            <option value="">Todos los estados</option>
-                            <option value="pendiente">Pendiente</option>
-                            <option value="en_revision">En revisión</option>
-                            <option value="aprobada">Aprobada</option>
-                            <option value="rechazada">Rechazada</option>
-                            <option value="cancelada">Cancelada</option>
-                        </select>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="solicitudes">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="solicitudes">{ } JSON</button>
-                        </div>
-                    </div>
+                    <select id="filter-estado" class="ad-filter-select" style="display: none;">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en_revision">En revisión</option>
+                        <option value="aprobada">Aprobada</option>
+                        <option value="rechazada">Rechazada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
                 </div>
                 <div class="panel">
                     <div class="panel-head">
                         <h3>
                             <div class="panel-head-dot"></div> solicitudes
-                        </h3><button class="btn-sm blue" id="btn-load-solicitudes">↻ Recargar</button>
+                        </h3>
                     </div>
-                    <div class="search-bar"><input class="search-input" placeholder="Buscar solicitudes..."
-                            id="input-filter-solicitudes"></div>
+                    <div class="ad-toolbar">
+                        <div class="ad-toolbar-left" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <div class="search-bar" style="margin: 0;">
+                                <input class="search-input" placeholder="Buscar solicitudes..." id="input-filter-solicitudes">
+                            </div>
+                            <div class="ad-filter-chips">
+                                <button class="ad-chip active" data-estado="">Todas</button>
+                                <button class="ad-chip" data-estado="aprobada">Aprobadas</button>
+                                <button class="ad-chip" data-estado="pendiente">Pendientes</button>
+                                <button class="ad-chip" data-estado="en_revision">En Revisión</button>
+                                <button class="ad-chip" data-estado="rechazada">Rechazadas</button>
+                            </div>
+                            <span id="sol-counter" class="ad-counter" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; font-family: var(--font-mono);"></span>
+                        </div>
+                        <div class="ad-toolbar-actions" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <button class="btn-sm green" id="btn-crud-solicitud-create">+ Nueva</button>
+                            <button class="btn-sm blue" id="btn-load-solicitudes">↻ Recargar</button>
+                            
+                        </div>
+                    </div>
                     <div id="data-solicitudes">
                         <div class="loading-state">
                             <div class="spinner"></div><br>Cargando...
@@ -365,102 +491,108 @@
                 </div>
             </section>
 
-            <!-- TIPOS -->
-            <section class="section" id="section-tipos">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">Tipos de Solicitud</div>
+        <!-- TIPOS -->
+        <section class="section" id="section-tipos">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">Tipos de Solicitud</div>
+                    <div class="section-sub">Categorías y tipos disponibles</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>
+                        <div class="panel-head-dot"></div> tipos_solicitud
+                    </h3>
+                </div>
+                <div class="ad-toolbar">
+                    <div class="ad-toolbar-left">
+                        <div class="search-bar" style="margin: 0;">
+                            <input class="search-input" placeholder="Buscar tipos..." id="input-filter-tipos">
+                        </div>
+                        <span id="tipos-counter" class="ad-counter"></span>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="ad-toolbar-actions">
                         <button class="btn-sm green" id="btn-crud-tipo-create">+ Nuevo Tipo</button>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="tipos">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="tipos">{ } JSON</button>
-                        </div>
+                        <button class="btn-sm blue" id="btn-load-tipos">↻ Recargar</button>
+                        
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> tipos_solicitud
-                        </h3><button class="btn-sm blue" id="btn-load-tipos">↻ Recargar</button>
-                    </div>
-                    <div id="data-tipos">
-                        <div class="loading-state">
-                            <div class="spinner"></div><br>Cargando...
-                        </div>
+                <div id="data-tipos">
+                    <div class="loading-state">
+                        <div class="spinner"></div><br>Cargando...
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- DOCUMENTOS -->
-            <section class="section" id="section-documentos">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">Documentos</div>
+        <!-- DOCUMENTOS -->
+        <section class="section" id="section-documentos">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">Documentos</div>
+                    <div class="section-sub">Archivos y documentos adjuntos</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>
+                        <div class="panel-head-dot"></div> documentos
+                    </h3>
+                </div>
+                <div class="ad-toolbar">
+                    <div class="ad-toolbar-left">
+                        <div class="search-bar ad-search-doc" style="margin: 0;">
+                            <input class="search-input" id="input-cedula-doc" placeholder="Cédula del estudiante" type="text">
+                            <button class="btn-sm blue" id="btn-consultar-doc">→ Consultar</button>
+                        </div>
+                        <span id="documentos-counter" class="ad-counter"></span>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="ad-toolbar-actions">
                         <button class="btn-sm green" id="btn-crud-doc-create">+ Nuevo Doc</button>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="documentos">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="documentos">{ } JSON</button>
-                        </div>
+                        
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> documentos
-                        </h3>
-                    </div>
-                    <div class="search-bar" style="gap:10px;">
-                        <input class="search-input" id="input-cedula-doc" placeholder="Cédula del estudiante"
-                            type="text" style="max-width:220px;">
-                        <button class="btn-sm blue" id="btn-consultar-doc">→ Consultar</button>
-                    </div>
-                    <div id="doc-usuario-info"
-                        style="display:none;padding:6px 12px;font-family:var(--font-mono);font-size:0.72rem;color:var(--green);background:rgba(16,185,129,0.07);border-bottom:1px solid var(--border);">
-                    </div>
-                    <div id="tabla-documentos">
-                        <div class="loading-state" style="color:var(--muted);">Ingrese la cédula para consultar
-                            documentos (modo demostración)</div>
-                    </div>
+                <div id="doc-usuario-info" class="ad-info-banner ad-info-success" style="display:none;"></div>
+                <div id="tabla-documentos">
+                    <div class="loading-state" style="color:var(--muted);">Ingrese la cédula para consultar documentos (modo demostración)</div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- REVISIONES -->
-            <section class="section" id="section-revisiones">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">Revisiones</div>
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <button class="btn-sm green" id="btn-crud-rev-create">+ Nueva Revisión</button>
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="table" data-entity="revisiones">⊞ Tabla</button>
-                            <button class="vt-btn" data-view="json" data-entity="revisiones">{ } JSON</button>
+        <!-- REVISIONES -->
+        <section class="section" id="section-revisiones">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">Revisiones</div>
+                    <div class="section-sub">Historial de revisiones</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>
+                        <div class="panel-head-dot"></div> revisiones
+                    </h3>
+                </div>
+                <div class="ad-toolbar">
+                    <div class="ad-toolbar-left">
+                        <div class="search-bar ad-search-rev" style="margin: 0;">
+                            <input class="search-input" id="rev-solicitud-id" placeholder="ID solicitud (opcional)" type="number" min="1">
+                            <button class="btn-sm blue" id="btn-load-rev">↻ Consultar</button>
                         </div>
+                        <span id="revisiones-counter" class="ad-counter"></span>
+                    </div>
+                    <div class="ad-toolbar-actions">
+                        <button class="btn-sm green" id="btn-crud-rev-create">+ Nueva Revisión</button>
+                        
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> revisiones
-                        </h3>
-                    </div>
-                    <div class="search-bar" style="gap:10px;">
-                        <input class="search-input" id="rev-solicitud-id" placeholder="ID solicitud (opcional)"
-                            type="number" min="1" style="max-width:220px;">
-                        <button class="btn-sm blue" id="btn-load-rev">↻ Consultar</button>
-                    </div>
-                    <div id="rev-usuario-info"
-                        style="display:none;padding:6px 12px;font-family:var(--font-mono);font-size:0.72rem;color:var(--green);background:rgba(16,185,129,0.07);border-bottom:1px solid var(--border);">
-                    </div>
-                    <div id="data-revisiones">
-                        <div class="loading-state" style="color:var(--muted);">Cargando revisiones...</div>
-                    </div>
+                <div id="rev-usuario-info" class="ad-info-banner ad-info-success" style="display:none;"></div>
+                <div id="data-revisiones">
+                    <div class="loading-state" style="color:var(--muted);">Cargando revisiones...</div>
                 </div>
-            </section>
+            </div>
+        </section>
 
         </main>
     </div>
@@ -480,20 +612,17 @@
         </div>
     </div>
 
-    <!-- MODAL JSON -->
+    <!-- MODAL DETALLE -->
     <div class="modal-overlay" id="modal-json">
         <div class="modal-box wide">
             <div class="modal-head">
-                <h4 id="modal-json-title">JSON</h4>
+                <h4 id="modal-json-title">Detalle</h4>
                 <button class="modal-close" data-action="close-json">✕</button>
             </div>
-            <div class="modal-body" style="padding:0;">
-                <div class="json-view">
-                    <pre id="modal-json-content"></pre>
-                </div>
+            <div class="modal-body">
+                <div id="modal-json-content"></div>
             </div>
-            <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copy-json">⎘
-                    Copiar</button></div>
+            <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copy-json">⎘ Copiar</button></div>
         </div>
     </div>
 
@@ -512,6 +641,41 @@
 
     <!-- MÓDULO (CAMBIA SEGÚN PÁGINA) -->
     <script src="../js/admin.js"></script>
+
+    <!-- Extensión: quick-stats y activity del overview -->
+    <script>
+    (function () {
+        const _origOV = typeof actualizarOverview === 'function' ? actualizarOverview : null;
+        actualizarOverview = function () {
+            if (_origOV) _origOV();
+            setTimeout(function () {
+                const u = parseInt(document.getElementById('ov-usuarios')?.textContent) || 0;
+                const s = parseInt(document.getElementById('ov-solicitudes')?.textContent) || 0;
+                const p = parseInt(document.getElementById('ov-pendientes')?.textContent) || 0;
+                const a = parseInt(document.getElementById('ov-aprobadas')?.textContent) || 0;
+
+                const el = (id) => document.getElementById(id);
+                if (el('ov-qs-usuarios')) el('ov-qs-usuarios').textContent = u + ' activos';
+                var barU = el('qs-bar-usuarios');
+                if (barU) barU.style.width = Math.min(u / 50 * 100, 100) + '%';
+
+                if (s > 0) {
+                    var pctP = Math.round(p / s * 100);
+                    var pctA = Math.round(a / s * 100);
+                    if (el('ov-qs-pendientes')) el('ov-qs-pendientes').textContent = pctP + '%';
+                    if (el('ov-qs-aprobadas')) el('ov-qs-aprobadas').textContent = pctA + '%';
+                    var barP = el('qs-bar-pendientes');
+                    var barA = el('qs-bar-aprobadas');
+                    if (barP) barP.style.width = pctP + '%';
+                    if (barA) barA.style.width = pctA + '%';
+                } else {
+                    if (el('ov-qs-pendientes')) el('ov-qs-pendientes').textContent = '0%';
+                    if (el('ov-qs-aprobadas')) el('ov-qs-aprobadas').textContent = '0%';
+                }
+            }, 150);
+        };
+    })();
+    </script>
 </body>
 
 </html>

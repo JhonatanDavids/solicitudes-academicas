@@ -85,7 +85,7 @@ class SolicitudController:
             cursor.close()
             conn.close()
 
-    def get_solicitudes(self):
+    def get_solicitudes(self, limit: int = 50, offset: int = 0):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -97,7 +97,8 @@ class SolicitudController:
                 JOIN usuarios u ON s.id_usuario = u.id_usuario
                 JOIN tipos_solicitud ts ON s.id_tipo_solicitud = ts.id_tipo_solicitud
                 ORDER BY s.fecha_creacion DESC
-            """)
+                LIMIT %s OFFSET %s
+            """, (limit, offset))
 
             result = cursor.fetchall()
 
@@ -123,7 +124,11 @@ class SolicitudController:
                     }
                 )
 
-            return {"resultado": jsonable_encoder(payload)}
+            return {
+                "resultado": jsonable_encoder(payload),
+                "limit": limit,
+                "offset": offset
+            }
 
         except psycopg2.Error:
             raise HTTPException(
@@ -134,12 +139,43 @@ class SolicitudController:
             cursor.close()
             conn.close()
 
-    def update_estado(self, id_solicitud: int, nuevo_estado: str):
+    def update_estado(self, id_solicitud: int, nuevo_estado: str, id_usuario: int = None, comentario: str = None):
+        conn = None
+        cursor = None
         try:
             if nuevo_estado not in [e.value for e in EstadoSolicitudEnum]:
                 raise HTTPException(status_code=400, detail="Estado no válido")
             conn = get_db_connection()
+            conn.autocommit = False
             cursor = conn.cursor()
+
+            # ── VALIDACIÓN: estados finales (SELECT FOR UPDATE evita race condition) ──
+            ESTADOS_FINALES = {"aprobada", "rechazada", "cancelada"}
+
+            cursor.execute(
+                "SELECT estado_actual FROM solicitudes WHERE id_solicitud = %s FOR UPDATE",
+                (id_solicitud,),
+            )
+            row = cursor.fetchone()
+
+            if not row:
+                raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+
+            estado_anterior = row[0]
+
+            if estado_anterior in ESTADOS_FINALES:
+                raise HTTPException(
+                    status_code=403,
+                    detail=f"La solicitud ya está en estado final '{estado_anterior}' y no puede modificarse"
+                )
+
+            if estado_anterior == nuevo_estado:
+                raise HTTPException(
+                    status_code=409,
+                    detail=f"La solicitud ya está en estado '{estado_anterior}'"
+                )
+            # ── FIN VALIDACIÓN ──
+
             cursor.execute(
                 """
                 UPDATE solicitudes
@@ -155,26 +191,35 @@ class SolicitudController:
             if not result:
                 raise HTTPException(status_code=404, detail="Solicitud no encontrada")
 
+            # ── HISTORIAL AUTOMÁTICO ──
+            cursor.execute(
+                """
+                INSERT INTO historial_estados (
+                    id_solicitud, estado_anterior, estado_nuevo, id_usuario, comentario, fecha_cambio
+                ) VALUES (%s, %s, %s, %s, %s, NOW())
+            """,
+                (id_solicitud, estado_anterior, nuevo_estado, id_usuario, comentario),
+            )
+            # ── FIN HISTORIAL ──
+
             conn.commit()
 
             return {"resultado": "Estado actualizado correctamente"}
 
         except HTTPException as http_err:
+            if conn: conn.rollback()
             raise http_err
 
         except Exception as e:
-            conn.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
+            if conn: conn.rollback()
+            raise HTTPException(status_code=500, detail="Error interno al actualizar estado")
 
         finally:
-            cursor.close()
-            conn.close()
+            if cursor: cursor.close()
+            if conn:   conn.close()
 
-    def update_estado_solicitud(self, id_solicitud: int, nuevo_estado: str):
-        """
-        Alias para compatibilidad con solicitudes_routes.py
-        """
-        return self.update_estado(id_solicitud, nuevo_estado)
+    def update_estado_solicitud(self, id_solicitud: int, nuevo_estado: str, id_usuario: int = None, comentario: str = None):
+        return self.update_estado(id_solicitud, nuevo_estado, id_usuario, comentario)
 
     def delete_solicitud(self, id_solicitud: int):
         try:
@@ -200,7 +245,7 @@ class SolicitudController:
             cursor.close()
             conn.close()
 
-    def get_solicitudes_by_usuario(self, id_usuario: int):
+    def get_solicitudes_by_usuario(self, id_usuario: int, limit: int = 50, offset: int = 0):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -214,8 +259,9 @@ class SolicitudController:
                 JOIN tipos_solicitud ts ON s.id_tipo_solicitud = ts.id_tipo_solicitud
                 WHERE s.id_usuario = %s
                 ORDER BY s.fecha_creacion DESC
+                LIMIT %s OFFSET %s
             """,
-                (id_usuario,),
+                (id_usuario, limit, offset),
             )
 
             result = cursor.fetchall()
@@ -242,7 +288,11 @@ class SolicitudController:
                     }
                 )
 
-            return {"resultado": jsonable_encoder(payload)}
+            return {
+                "resultado": jsonable_encoder(payload),
+                "limit": limit,
+                "offset": offset
+            }
 
         except psycopg2.Error:
             raise HTTPException(
@@ -253,7 +303,7 @@ class SolicitudController:
             cursor.close()
             conn.close()
 
-    def get_solicitudes_by_estado(self, estado: str):
+    def get_solicitudes_by_estado(self, estado: str, limit: int = 50, offset: int = 0):
         try:
             if estado not in [e.value for e in EstadoSolicitudEnum]:
                 raise HTTPException(status_code=400, detail="Estado no válido")
@@ -269,8 +319,9 @@ class SolicitudController:
                 JOIN tipos_solicitud ts ON s.id_tipo_solicitud = ts.id_tipo_solicitud
                 WHERE s.estado_actual = %s
                 ORDER BY s.fecha_creacion DESC
+                LIMIT %s OFFSET %s
             """,
-                (estado,),
+                (estado, limit, offset),
             )
 
             result = cursor.fetchall()
@@ -297,7 +348,11 @@ class SolicitudController:
                     }
                 )
 
-            return {"resultado": jsonable_encoder(payload)}
+            return {
+                "resultado": jsonable_encoder(payload),
+                "limit": limit,
+                "offset": offset
+            }
 
         except psycopg2.Error:
             raise HTTPException(

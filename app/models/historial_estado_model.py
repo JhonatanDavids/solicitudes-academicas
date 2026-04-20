@@ -15,6 +15,8 @@ class HistorialEstadoBase(BaseModel):
     id_solicitud:    int
     estado_anterior: Optional[EstadoSolicitudEnum] = None
     estado_nuevo:    EstadoSolicitudEnum
+    id_usuario:      Optional[int] = None
+    comentario:      Optional[str] = None
 
 class HistorialEstadoCreate(HistorialEstadoBase):
     pass

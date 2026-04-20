@@ -34,44 +34,70 @@
                         <div class="section-title">Overview</div>
                     </div>
                 </div>
-                <div class="stats-row">
-                    <div class="stat-box c-purple">
-                        <div class="stat-box-icon">📄</div>
-                        <div class="stat-box-num" id="ov-solicitudes">–</div>
-                        <div class="stat-box-label">Solicitudes</div>
-                    </div>
-                    <div class="stat-box c-yellow">
-                        <div class="stat-box-icon">⏳</div>
-                        <div class="stat-box-num" id="ov-pendientes">–</div>
-                        <div class="stat-box-label">Pendientes</div>
-                    </div>
-                    <div class="stat-box c-blue">
-                        <div class="stat-box-icon">🔍</div>
-                        <div class="stat-box-num" id="ov-en-revision">–</div>
-                        <div class="stat-box-label">En Revisión</div>
-                    </div>
-                    <div class="stat-box c-green">
-                        <div class="stat-box-icon">✅</div>
-                        <div class="stat-box-num" id="ov-aprobadas">–</div>
-                        <div class="stat-box-label">Aprobadas</div>
-                    </div>
-                    <div class="stat-box c-red">
-                        <div class="stat-box-icon">❌</div>
-                        <div class="stat-box-num" id="ov-rechazadas">–</div>
-                        <div class="stat-box-label">Rechazadas</div>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3>
-                            <div class="panel-head-dot"></div> Últimas Solicitudes
-                        </h3>
-                    </div>
-                    <div id="overview-recent">
-                        <div class="loading-state">
-                            <div class="spinner"></div><br>Cargando...
+                <div class="ov-grid">
+                    <div class="ov-main">
+                        <div class="stats-row">
+                            <div class="stat-box c-purple">
+                                <div class="stat-box-icon">📄</div>
+                                <div class="stat-box-num" id="ov-solicitudes">–</div>
+                                <div class="stat-box-label">Solicitudes</div>
+                            </div>
+                            <div class="stat-box c-yellow">
+                                <div class="stat-box-icon">⏳</div>
+                                <div class="stat-box-num" id="ov-pendientes">–</div>
+                                <div class="stat-box-label">Pendientes</div>
+                            </div>
+                            <div class="stat-box c-blue">
+                                <div class="stat-box-icon">🔍</div>
+                                <div class="stat-box-num" id="ov-en-revision">–</div>
+                                <div class="stat-box-label">En Revisión</div>
+                            </div>
+                            <div class="stat-box c-green">
+                                <div class="stat-box-icon">✅</div>
+                                <div class="stat-box-num" id="ov-aprobadas">–</div>
+                                <div class="stat-box-label">Aprobadas</div>
+                            </div>
+                            <div class="stat-box c-red">
+                                <div class="stat-box-icon">❌</div>
+                                <div class="stat-box-num" id="ov-rechazadas">–</div>
+                                <div class="stat-box-label">Rechazadas</div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h3>
+                                    <div class="panel-head-dot"></div> Últimas Solicitudes
+                                </h3>
+                            </div>
+                            <div id="overview-recent">
+                                <div class="loading-state">
+                                    <div class="spinner"></div><br>Cargando...
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <aside class="funcionario-sidebar">
+                        <div class="panel" id="panel-distribucion">
+                            <div class="panel-head">
+                                <h3><div class="panel-head-dot"></div> Distribución</h3>
+                            </div>
+                            <div id="dist-content" style="padding:16px">
+                                <div class="loading-state">
+                                    <div class="spinner"></div><br>Cargando...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel" id="panel-actividad">
+                            <div class="panel-head">
+                                <h3><div class="panel-head-dot"></div> Actividad Reciente</h3>
+                            </div>
+                            <div id="act-content" style="padding:16px">
+                                <div class="loading-state">
+                                    <div class="spinner"></div><br>Cargando...
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </section>
 
@@ -115,43 +141,39 @@
     <div class="modal-overlay" id="modal-estado">
         <div class="modal-box">
             <div class="modal-head">
-                <h4 id="modal-estado-title">Cambiar Estado</h4>
+                <h4 id="modal-estado-title">Actualizar Estado</h4>
                 <button class="modal-close" id="btn-cerrar-estado-1">✕</button>
             </div>
             <div class="modal-body">
-                <div id="modal-estado-info"
-                    style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:0.78rem;">
-                </div>
+                <div id="modal-estado-info"></div>
                 <div class="form-field">
                     <label>Nuevo Estado</label>
-                    <select id="select-nuevo-estado">
-                        <option value="en_revision">🔍 En Revisión</option>
-                        <option value="aprobada">✓ Aprobada</option>
-                        <option value="rechazada">✕ Rechazada</option>
-                    </select>
+                    <div id="estado-opciones" class="estado-opciones"></div>
+                </div>
+                <div class="form-field">
+                    <label>Comentario</label>
+                    <textarea id="estado-comentario" class="form-textarea-new" rows="3"
+                        placeholder="Agrega observaciones sobre esta solicitud..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-sm cancel" style="padding:7px 18px;" id="btn-cerrar-estado-2">Cancelar</button>
-                <button class="btn-sm green" style="padding:7px 18px;" id="btn-confirmar-estado">→ Guardar</button>
+                <button class="btn-sm green" style="padding:7px 18px;" id="btn-confirmar-estado">Guardar revisión</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL JSON -->
+    <!-- MODAL DETALLE SOLICITUD -->
     <div class="modal-overlay" id="modal-json">
         <div class="modal-box wide">
             <div class="modal-head">
-                <h4 id="modal-json-title">JSON</h4>
+                <h4 id="modal-json-title">Detalle de Solicitud</h4>
                 <button class="modal-close" id="btn-cerrar-json-1">✕</button>
             </div>
-            <div class="modal-body" style="padding:0;">
-                <div class="json-view">
-                    <pre id="modal-json-content"></pre>
-                </div>
+            <div class="modal-body">
+                <div id="modal-json-content"></div>
             </div>
-            <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copiar-json">⎘
-                    Copiar</button></div>
+            <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copiar-json">⎘ Copiar</button></div>
         </div>
     </div>
 

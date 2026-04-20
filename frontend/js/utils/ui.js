@@ -90,7 +90,7 @@ function copyJsonModal() {
     const el = document.getElementById('modal-json-content');
     if (!el) return;
     navigator.clipboard.writeText(el.textContent)
-        .then(() => toast('JSON copiado al portapapeles'));
+        .then(() => toast('Copiado al portapapeles'));
 }
 
 /**
@@ -159,9 +159,14 @@ function initDataTable(tabla, opciones = {}) {
 function buildFilaSolicitud(sol, buildAcciones) {
     const tr = crearNodo('tr', { dataset: { id: sol.id_solicitud } });
 
-    // Estudiante
-    const tdEst = crearNodo('td', { className: 'td-nombre' },
+    // Estudiante with avatar
+    const initials = ((sol.nombre || 'A')[0] + (sol.apellido || 'A')[0]).toUpperCase();
+    const avatarNum = ((sol.nombre || 'A').charCodeAt(0) + (sol.apellido || 'A').charCodeAt(0)) % 8;
+    const avatarEl = crearNodo('div', { className: `td-avatar td-avatar-${avatarNum}` }, [initials]);
+    const nameEl = crearNodo('div', { className: 'td-user-name' },
         [`${sol.nombre || ''} ${sol.apellido || ''}`]);
+    const cellWrap = crearNodo('div', { className: 'td-user-cell' }, [avatarEl, nameEl]);
+    const tdEst = crearNodo('td', { className: 'td-nombre' }, [cellWrap]);
 
     // Tipo
     const tdTipo = crearNodo('td', { className: 'td-tipo' },
@@ -234,4 +239,60 @@ function crearTabla(headers) {
     const tbody = crearNodo('tbody');
     tabla.appendChild(tbody);
     return { tabla, tbody };
+}
+
+/**
+ * Construye una fila <tr> para la tabla de usuarios con:
+ *   - Avatar circular con iniciales y color rotativo
+ *   - Nombre en negrita + ID en texto secundario
+ *   - Correo, cedula, badge de rol y botones de accion
+ *
+ * Depende de: crearNodo() (api.js), getRolConfig() (helpers.js)
+ *
+ * @param {object}   u             - objeto usuario del backend
+ * @param {Function} buildAcciones - funcion(u) que retorna un <td> con botones
+ * @returns {HTMLTableRowElement}
+ */
+function buildFilaUsuario(u, buildAcciones) {
+    const tr = crearNodo('tr', { dataset: { id: u.id_usuario } });
+
+    // Columna Nombre: avatar + jerarquia de texto
+    const initials = (
+        (u.nombre   || 'U')[0] +
+        (u.apellido || 'U')[0]
+    ).toUpperCase();
+    const avatarNum = (
+        (u.nombre   || 'U').charCodeAt(0) +
+        (u.apellido || 'U').charCodeAt(0)
+    ) % 8;
+    const avatarEl  = crearNodo('div',
+        { className: `td-avatar td-avatar-${avatarNum}` },
+        [initials]
+    );
+    const nameEl  = crearNodo('div', { className: 'td-user-name' },
+        [`${u.nombre || ''} ${u.apellido || ''}`.trim()]);
+    const subEl   = crearNodo('div', { className: 'td-user-sub' },
+        [`ID: ${String(u.id_usuario || '').padStart(9, '0')}`]);
+    const infoEl  = crearNodo('div', {}, [nameEl, subEl]);
+    const cellWrap = crearNodo('div', { className: 'td-user-cell' }, [avatarEl, infoEl]);
+    tr.appendChild(crearNodo('td', { className: 'td-nombre' }, [cellWrap]));
+
+    // Correo
+    tr.appendChild(crearNodo('td', {}, [u.correo || '-']));
+
+    // Cedula
+    tr.appendChild(crearNodo('td', { className: 'td-mono' }, [u.cedula || '-']));
+
+    // Rol badge (getRolConfig viene de helpers.js, disponible globalmente)
+    const conf  = getRolConfig(u.rol);
+    const badge = crearNodo('span',
+        { className: `badge-rol ${conf.clase}` },
+        [`${conf.icon} ${u.rol || '-'}`]
+    );
+    tr.appendChild(crearNodo('td', {}, [badge]));
+
+    // Acciones
+    tr.appendChild(buildAcciones(u));
+
+    return tr;
 }
