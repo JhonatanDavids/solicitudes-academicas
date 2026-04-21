@@ -79,6 +79,7 @@ class AppSidebar extends HTMLElement {
             { id: 'tipos', icon: '🔖', label: 'Tipos', badge: 'badge-tipos' },
             { id: 'documentos', icon: '📁', label: 'Documentos', badge: null },
             { id: 'revisiones', icon: '✅', label: 'Revisiones', badge: null },
+            { id: 'reportes', icon: '📊', label: 'Reportes', badge: null },
         ];
         const navFuncionario = [
             { id: 'overview', icon: '◈', label: 'Overview', badge: null },

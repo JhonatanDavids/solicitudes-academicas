@@ -12,6 +12,7 @@ let listaSolicitudes = [];
 let listaRoles = [];
 let listaTipos = [];
 let listaRevisiones = [];
+let listaReportesFiltrada = [];
 
 const usuarioPortal = getUsuarioActual();
 
@@ -41,6 +42,13 @@ async function showSection(nombre, elemento) {
     if (nombre === 'overview') {
         await Promise.all([cargarUsuarios(), cargarSolicitudes()]);
         actualizarOverview();
+    }
+    if (nombre === 'reportes') {
+        if (!listaSolicitudes.length) {
+            cargarSolicitudes().then(() => renderReportes());
+        } else {
+            renderReportes();
+        }
     }
     // 🔥 FIX POWER BI (AQUÍ VA)
     if (nombre === 'analitica') {
@@ -1542,8 +1550,424 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Para documentos, como su wrapper podría llamarse tabla-documentos, se asegura:
     setupTableEvents('tabla-documentos', 'documentos-counter');
 
+    bind('btn-filtrar-reportes', 'click', filtrarReportes);
+    bind('btn-pdf-reportes', 'click', generarReportePDF);
+    bind('btn-reset-filtros', 'click', resetFiltros);
+
     initModalBackdrop();
 
     // Auto-refresh cada 60 s - DESACTIVADO para mejorar UX
     // setInterval(refreshAll, 60000);
 });
+
+
+/* ============================================================
+   REPORTES
+============================================================ */
+
+function renderReportes(lista) {
+    lista = lista || listaSolicitudes;
+    const contenedor = document.getElementById('data-reportes');
+    if (!contenedor) return;
+    contenedor.textContent = '';
+
+    if (!lista.length) {
+        mostrarVacio(contenedor, 'No hay solicitudes para los filtros seleccionados');
+        const counter = document.getElementById('reportes-counter');
+        if (counter) counter.textContent = '0 registros';
+        updateMiniStats(lista);
+        const cb = document.getElementById('count-badge');
+        if (cb) cb.textContent = '0';
+        return;
+    }
+
+    const { tabla, tbody } = crearTabla(['Estudiante', 'Tipo', 'Estado', 'Prioridad', 'Fecha']);
+
+    lista.forEach(sol => {
+        const tr = buildFilaSolicitud(sol, () => crearNodo('td'));
+        const celdas = tr.querySelectorAll('td');
+        if (celdas.length) celdas[celdas.length - 1].remove();
+        tbody.appendChild(tr);
+    });
+
+    contenedor.appendChild(tabla);
+    initDataTable(tabla);
+
+    const counter = document.getElementById('reportes-counter');
+    if (counter) counter.textContent = lista.length + ' registros';
+
+    const cb = document.getElementById('count-badge');
+    if (cb) cb.textContent = lista.length;
+
+    updateMiniStats(lista);
+}
+
+function updateMiniStats(data) {
+    data = data || (listaReportesFiltrada.length ? listaReportesFiltrada : listaSolicitudes);
+    const total = data.length;
+    const aprobadas = data.filter(function(s) { return s.estado_actual === 'aprobada'; }).length;
+    const pendientes = data.filter(function(s) { return s.estado_actual === 'pendiente' || s.estado_actual === 'en_revision'; }).length;
+    const rechazadas = data.filter(function(s) { return s.estado_actual === 'rechazada'; }).length;
+
+    const set = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
+    set('stat-total', total);
+    set('stat-aprobadas', aprobadas);
+    set('stat-pendientes', pendientes);
+    set('stat-rechazadas', rechazadas);
+}
+
+function updateActiveFiltersBar(estado, prioridad, desde, hasta) {
+    var bar = document.getElementById('active-filters');
+    if (!bar) return;
+
+    var hasFilters = estado || prioridad || desde || hasta;
+    bar.style.display = hasFilters ? 'flex' : 'none';
+
+    var afEstado = document.getElementById('af-estado');
+    var afPrioridad = document.getElementById('af-prioridad');
+    var afFechas = document.getElementById('af-fechas');
+
+    if (afEstado) {
+        afEstado.style.display = estado ? 'inline-flex' : 'none';
+        var spanE = afEstado.querySelector('span');
+        if (spanE) spanE.textContent = estado ? estado.replace(/_/g, ' ') : '';
+    }
+
+    if (afPrioridad) {
+        afPrioridad.style.display = prioridad ? 'inline-flex' : 'none';
+        var spanP = afPrioridad.querySelector('span');
+        if (spanP) spanP.textContent = prioridad;
+    }
+
+    if (afFechas) {
+        if (desde || hasta) {
+            afFechas.style.display = 'inline-flex';
+            var spanF = afFechas.querySelector('span');
+            if (spanF) spanF.textContent = (desde || '—') + ' hasta ' + (hasta || '—');
+        } else {
+            afFechas.style.display = 'none';
+        }
+    }
+}
+
+function resetFiltros() {
+    var selEstado = document.getElementById('filter-reporte-estado');
+    var selPrioridad = document.getElementById('filter-reporte-prioridad');
+    var inpDesde = document.getElementById('filter-reporte-desde');
+    var inpHasta = document.getElementById('filter-reporte-hasta');
+
+    if (selEstado) selEstado.value = '';
+    if (selPrioridad) selPrioridad.value = '';
+    if (inpDesde) inpDesde.value = '';
+    if (inpHasta) inpHasta.value = '';
+
+    listaReportesFiltrada = [];
+    renderReportes(listaSolicitudes);
+    updateActiveFiltersBar('', '', '', '');
+    toast('Filtros restablecidos', 'info');
+}
+
+function filtrarReportes() {
+    const estado = document.getElementById('filter-reporte-estado')?.value || '';
+    const prioridad = document.getElementById('filter-reporte-prioridad')?.value || '';
+    const desde = document.getElementById('filter-reporte-desde')?.value || '';
+    const hasta = document.getElementById('filter-reporte-hasta')?.value || '';
+
+    const data = listaSolicitudes.filter(sol => {
+        if (estado && sol.estado_actual !== estado) return false;
+        if (prioridad && sol.prioridad !== prioridad) return false;
+        if (desde) {
+            const fechaSol = sol.fecha_creacion ? new Date(sol.fecha_creacion) : null;
+            if (!fechaSol) return false;
+            if (fechaSol < new Date(desde + 'T00:00:00')) return false;
+        }
+        if (hasta) {
+            const fechaSol = sol.fecha_creacion ? new Date(sol.fecha_creacion) : null;
+            if (!fechaSol) return false;
+            if (fechaSol > new Date(hasta + 'T23:59:59')) return false;
+        }
+        return true;
+    });
+
+    listaReportesFiltrada = data;
+    renderReportes(data);
+    updateActiveFiltersBar(estado, prioridad, desde, hasta);
+}
+
+function generarReportePDF() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        toast('Error: jsPDF no est\u00e1 cargado', 'error');
+        console.error('jsPDF no disponible: window.jspdf =', window.jspdf);
+        return;
+    }
+
+    const data = listaReportesFiltrada.length ? listaReportesFiltrada : listaSolicitudes;
+
+    if (!data.length) {
+        toast('No hay datos para generar reporte', 'error');
+        return;
+    }
+
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+
+        if (typeof doc.autoTable !== 'function') {
+            toast('Error: autoTable no est\u00e1 disponible', 'error');
+            console.error('autoTable no cargado correctamente. doc.autoTable =', doc.autoTable);
+            return;
+        }
+
+        const dataOrdenada = [...data].sort(function(a, b) {
+            return new Date(b.fecha_creacion) - new Date(a.fecha_creacion);
+        });
+
+        const W = doc.internal.pageSize.getWidth();
+        const H = doc.internal.pageSize.getHeight();
+        const now = new Date();
+        const fechaStr = now.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' - ' + now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+        const estado = document.getElementById('filter-reporte-estado')?.value || '';
+        const prioridad = document.getElementById('filter-reporte-prioridad')?.value || '';
+        const desde = document.getElementById('filter-reporte-desde')?.value || '';
+        const hasta = document.getElementById('filter-reporte-hasta')?.value || '';
+
+        const estadoMap = { '': 'Todos', pendiente: 'Pendiente', en_revision: 'En Revisi\u00f3n', aprobada: 'Aprobada', rechazada: 'Rechazada', cancelada: 'Cancelada' };
+        const prioMap = { '': 'Todas', baja: 'Baja', media: 'Media', alta: 'Alta', urgente: 'Urgente' };
+
+        function getStatusColors(est) {
+            const map = {
+                aprobada:    { fg: [5, 150, 105],   bg: [209, 250, 229], label: 'APROBADA' },
+                rechazada:   { fg: [220, 38, 38],    bg: [254, 226, 226], label: 'RECHAZADA' },
+                pendiente:   { fg: [217, 119, 6],    bg: [254, 243, 199], label: 'PENDIENTE' },
+                en_revision: { fg: [8, 145, 178],    bg: [207, 250, 254], label: 'EN REVISION' },
+                cancelada:   { fg: [107, 114, 128],  bg: [243, 244, 246], label: 'CANCELADA' }
+            };
+            return map[est] || { fg: [107, 114, 128], bg: [243, 244, 246], label: (est || 'DESCONOCIDO').toUpperCase() };
+        }
+
+        function getPrioColors(prio) {
+            const map = {
+                urgente: { fg: [252, 165, 165], bg: [26, 0, 0] },
+                alta:    { fg: [220, 38, 38],    bg: [254, 226, 226] },
+                media:   { fg: [217, 119, 6],    bg: [254, 243, 199] },
+                baja:    { fg: [107, 114, 128],  bg: [243, 244, 246] }
+            };
+            return map[prio] || map.baja;
+        }
+
+        // ── 1. HEADER BLOCK (navy) ──
+        doc.setFillColor(13, 27, 62);
+        doc.rect(0, 0, W, 44, 'F');
+
+        doc.setFillColor(232, 168, 32, 0.12);
+        doc.circle(W - 18, -10, 30, 'F');
+
+        if (typeof LOGO_CUL_BASE64 === 'string' && LOGO_CUL_BASE64.length > 100) {
+            try { doc.addImage(LOGO_CUL_BASE64, 'PNG', 12, 10, 16, 16); } catch(e) { }
+        }
+
+        var textStartX = 35;
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Corporacion Universitaria Latinoamericana', textStartX, 18);
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(180, 190, 210);
+        doc.text('Sistema de Gestion Academica - CUL 2026', textStartX, 24);
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Reporte de Solicitudes Academicas', textStartX, 32);
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(160, 175, 200);
+        doc.text('Generado por el panel administrativo - Confidencial', textStartX, 38);
+
+        doc.setFillColor(232, 168, 32, 0.15);
+        doc.roundedRect(W - 58, 8, 48, 28, 2, 2, 'F');
+        doc.setTextColor(232, 168, 32);
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.text('GENERADO', W - 34, 15, { align: 'center' });
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.text(fechaStr, W - 34, 19.5, { align: 'center' });
+        doc.setFont('helvetica', 'bold');
+        doc.text('TOTAL: ' + data.length + ' registros', W - 34, 27, { align: 'center' });
+
+        // ── 2. FILTER SUMMARY BAR ──
+        doc.setFillColor(247, 249, 252);
+        doc.rect(0, 44, W, 9, 'F');
+        doc.setDrawColor(220, 227, 240);
+        doc.setLineWidth(0.3);
+        doc.line(0, 53, W, 53);
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(122, 139, 168);
+        doc.text('FILTROS:', 10, 49.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(15, 23, 42);
+        var filtroStr = 'Estado: ' + (estadoMap[estado] || estado) + '   Prioridad: ' + (prioMap[prioridad] || prioridad);
+        filtroStr += '   Periodo: ' + (desde && hasta ? 'desde ' + desde + ' hasta ' + hasta : desde ? 'desde ' + desde : hasta ? 'hasta ' + hasta : 'Sin rango');
+        doc.text(filtroStr, 28, 49.5);
+
+        // ── 3. STATS STRIP (navy) ──
+        doc.setFillColor(26, 47, 90);
+        doc.rect(0, 53, W, 14, 'F');
+
+        var total = data.length;
+        var aprobadas = data.filter(function(r) { return r.estado_actual === 'aprobada'; }).length;
+        var pendientes = data.filter(function(r) { return r.estado_actual === 'pendiente' || r.estado_actual === 'en_revision'; }).length;
+        var rechazadas = data.filter(function(r) { return r.estado_actual === 'rechazada'; }).length;
+
+        var stats = [
+            { label: 'TOTAL', val: total, color: [255, 255, 255] },
+            { label: 'APROBADAS', val: aprobadas, color: [110, 231, 183] },
+            { label: 'PENDIENTES', val: pendientes, color: [252, 211, 77] },
+            { label: 'RECHAZADAS', val: rechazadas, color: [252, 165, 165] }
+        ];
+        var colW = W / 4;
+        for (var si = 0; si < stats.length; si++) {
+            var s = stats[si];
+            var cx = colW * si + colW / 2;
+            doc.setTextColor(s.color[0], s.color[1], s.color[2]);
+            doc.setFontSize(13);
+            doc.setFont('helvetica', 'bold');
+            doc.text(String(s.val), cx, 61.5, { align: 'center' });
+            doc.setFontSize(5.5);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(160, 175, 200);
+            doc.text(s.label, cx, 64.5, { align: 'center' });
+            if (si > 0) {
+                doc.setDrawColor(255, 255, 255, 0.08);
+                doc.setLineWidth(0.2);
+                doc.line(colW * si, 55, colW * si, 66);
+            }
+        }
+
+        // ── 4. autoTable ──
+        doc.autoTable({
+            startY: 68,
+            head: [['#', 'Estudiante', 'Tipo', 'Estado', 'Prioridad', 'Fecha']],
+            body: dataOrdenada.map(function(r, i) {
+                return [
+                    String(i + 1).padStart(2, '0'),
+                    (r.nombre || '') + ' ' + (r.apellido || ''),
+                    r.tipo || r.nombre_tipo || '-',
+                    '',
+                    '',
+                    r.fecha_creacion ? r.fecha_creacion.slice(8, 10) + '/' + r.fecha_creacion.slice(5, 7) + '/' + r.fecha_creacion.slice(0, 4) : '-'
+                ];
+            }),
+            headStyles: {
+                fillColor: [247, 249, 252],
+                textColor: [122, 139, 168],
+                fontStyle: 'bold',
+                fontSize: 7,
+                cellPadding: 3.5,
+                lineColor: [220, 227, 240],
+                lineWidth: { bottom: 0.6 },
+                halign: 'left'
+            },
+            bodyStyles: {
+                fontSize: 8.5,
+                cellPadding: 3,
+                textColor: [15, 23, 42],
+                lineColor: [220, 227, 240],
+                lineWidth: { horizontal: 0.2 }
+            },
+            alternateRowStyles: {
+                fillColor: [250, 251, 253]
+            },
+            columnStyles: {
+                0: { cellWidth: 10, halign: 'center', fontStyle: 'normal', textColor: [122, 139, 168] },
+                1: { cellWidth: 42, fontStyle: 'bold' },
+                2: { cellWidth: 38 },
+                3: { cellWidth: 32 },
+                4: { cellWidth: 22 },
+                5: { cellWidth: 28 }
+            },
+            didDrawCell: function(cellData) {
+                if (cellData.section !== 'body') return;
+                var row = dataOrdenada[cellData.row.index];
+                if (!row) return;
+
+                if (cellData.column.index === 3) {
+                    var sc = getStatusColors(row.estado_actual);
+                    var cx = cellData.cell.x;
+                    var cy = cellData.cell.y;
+                    var cw = cellData.cell.width;
+                    var ch = cellData.cell.height;
+                    doc.setFillColor(sc.bg[0], sc.bg[1], sc.bg[2]);
+                    doc.roundedRect(cx + 1.5, cy + 1.5, cw - 3, ch - 3, 2, 2, 'F');
+                    doc.setFontSize(7);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(sc.fg[0], sc.fg[1], sc.fg[2]);
+                    doc.text(sc.label, cx + cw / 2, cy + ch / 2 + 1, { align: 'center' });
+                }
+
+                if (cellData.column.index === 4) {
+                    var pc = getPrioColors(row.prioridad);
+                    var px = cellData.cell.x;
+                    var py = cellData.cell.y;
+                    var pw = cellData.cell.width;
+                    var ph = cellData.cell.height;
+                    doc.setFillColor(pc.bg[0], pc.bg[1], pc.bg[2]);
+                    doc.roundedRect(px + 1, py + 2, pw - 2, ph - 4, 1.5, 1.5, 'F');
+                    doc.setFontSize(6.5);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(pc.fg[0], pc.fg[1], pc.fg[2]);
+                    doc.text((row.prioridad || 'baja').toUpperCase(), px + pw / 2, py + ph / 2 + 1, { align: 'center' });
+                }
+            },
+            margin: { top: 68, left: 14, right: 14, bottom: 14 },
+            showHead: 'everyPage',
+            tableLineColor: [220, 227, 240],
+            tableLineWidth: 0.2
+        });
+
+        // ── 5. FOOTER per page ──
+        var pageCount = doc.internal.getNumberOfPages();
+        for (var pi = 1; pi <= pageCount; pi++) {
+            doc.setPage(pi);
+            var pgH = doc.internal.pageSize.getHeight();
+            var pgW = doc.internal.pageSize.getWidth();
+
+            doc.setFillColor(247, 249, 252);
+            doc.rect(0, pgH - 12, pgW, 12, 'F');
+            doc.setDrawColor(13, 27, 62);
+            doc.setLineWidth(0.5);
+            doc.line(0, pgH - 12, pgW, pgH - 12);
+
+            doc.setFontSize(7);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(13, 27, 62);
+            doc.text('CUL - Sistema de Solicitudes Academicas', 10, pgH - 5.5);
+            doc.setFontSize(6);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(122, 139, 168);
+            doc.text('Corporacion Universidad del Litoral - Generado automaticamente - Confidencial', 10, pgH - 2);
+
+            doc.setFontSize(7);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(122, 139, 168);
+            doc.text('Pagina ' + pi + ' de ' + pageCount, pgW - 10, pgH - 4, { align: 'right' });
+        }
+
+        doc.save('reporte-solicitudes.pdf');
+
+        enviarNotificacion('Reporte PDF generado');
+    } catch (error) {
+        console.error('Error real PDF:', error.message, error.stack);
+        toast('Error al generar el PDF', 'error');
+    }
+}
+
+function enviarNotificacion(mensaje) {
+    console.log('\u{1F4E7} Notificacion:', mensaje);
+    toast('\u{1F4E7} ' + mensaje, 'info');
+}

@@ -3,12 +3,20 @@
 //  El rol viene del backend (JWT), NO se selecciona en el frontend.
 // ══════════════════════════════════════════════════════════════
 
-const iconosPorRol = {
-    estudiante: '🎓',
-    admin: '⚡',
-    funcionario: '🏛️',
-    coordinador: '📋'
-};
+function getRoleIconSVG(rol) {
+    switch (rol) {
+        case 'admin':
+            return `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`;
+        case 'estudiante':
+            return `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"></path></svg>`;
+        case 'coordinador':
+            return `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>`;
+        case 'funcionario':
+            return `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18"></path><path d="M5 10v10"></path><path d="M19 10v10"></path><path d="M9 10v10"></path><path d="M15 10v10"></path><path d="M2 10l10-6 10 6"></path></svg>`;
+        default:
+            return `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+    }
+}
 
 async function iniciarSesion() {
     const correo = document.getElementById('f-correo').value.trim();
@@ -77,10 +85,10 @@ function restaurarBoton() {
 }
 
 const rutasPorRol = {
-    estudiante: 'html/estudiante.html',
-    admin: 'html/admin-panel.html',
-    funcionario: 'html/funcionario.html',
-    coordinador: 'html/coordinador.html'
+    estudiante: 'estudiante.html',
+    admin: 'admin-panel.html',
+    funcionario: 'funcionario.html',
+    coordinador: 'coordinador.html'
 };
 
 const subtextoPorRol = {
@@ -94,7 +102,7 @@ function mostrarRedireccion(datos) {
     document.getElementById('formulario-login').style.display = 'none';
     document.getElementById('pantalla-exito').style.display = 'block';
 
-    document.getElementById('icono-redireccion').textContent = iconosPorRol[datos.rol] || '✅';
+    document.getElementById('icono-redireccion').innerHTML = getRoleIconSVG(datos.rol);
     document.getElementById('texto-redireccion').textContent = `Bienvenido/a, ${datos.nombre}`;
     document.getElementById('subtexto-redireccion').textContent = subtextoPorRol[datos.rol] || '// Cargando...';
 
@@ -103,7 +111,7 @@ function mostrarRedireccion(datos) {
     }, 100);
 
     setTimeout(() => {
-        window.location.href = rutasPorRol[datos.rol] || 'html/admin-panel.html';
+        window.location.href = rutasPorRol[datos.rol] || 'admin-panel.html';
     }, 2000);
 }
 

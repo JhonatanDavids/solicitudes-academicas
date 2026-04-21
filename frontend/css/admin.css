@@ -2160,3 +2160,458 @@ td mark {
 #data-revisiones table td:last-child {
     padding-right: 16px;
 }
+
+/* ─── REPORTES ─────────────────────────────── */
+.reporte-filtros {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.reporte-tabla {
+    margin-top: 15px;
+}
+
+.reporte-date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reporte-date-group label {
+    font-size: 12px;
+    color: var(--text-muted, #64748b);
+    font-family: var(--font-mono, monospace);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTES — Mini Stats
+   ═══════════════════════════════════════════════════════════════ */
+.mini-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mini-stat {
+    background: var(--ad-surface);
+    border: 1px solid var(--ad-border);
+    border-radius: var(--ad-r-lg);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all .18s var(--ad-ease);
+}
+
+.mini-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: var(--ad-r-lg) var(--ad-r-lg) 0 0;
+}
+
+.ms-total::before    { background: var(--ad-navy); }
+.ms-approved::before { background: var(--ad-green); }
+.ms-pending::before  { background: var(--ad-amber); }
+.ms-rejected::before { background: var(--ad-red); }
+
+.ms-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ad-r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.ms-total    .ms-icon { background: rgba(13,27,62,.06); }
+.ms-approved .ms-icon { background: var(--ad-green-bg); }
+.ms-pending  .ms-icon { background: var(--ad-amber-bg); }
+.ms-rejected .ms-icon { background: var(--ad-red-bg); }
+
+.ms-num {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+.ms-total    .ms-num { color: var(--ad-navy); }
+.ms-approved .ms-num { color: var(--ad-green); }
+.ms-pending  .ms-num { color: var(--ad-amber); }
+.ms-rejected .ms-num { color: var(--ad-red); }
+
+.ms-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ad-text-3);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-top: 2px;
+}
+
+.section.active .mini-stat {
+    animation: adStaggerIn .4s var(--ad-ease) both;
+}
+
+.section.active .mini-stat:nth-child(1) { animation-delay: .04s; }
+.section.active .mini-stat:nth-child(2) { animation-delay: .08s; }
+.section.active .mini-stat:nth-child(3) { animation-delay: .12s; }
+.section.active .mini-stat:nth-child(4) { animation-delay: .16s; }
+
+@media (max-width: 900px) {
+    .mini-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .mini-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTES — Filter Card
+   ═══════════════════════════════════════════════════════════════ */
+.filter-card {
+    background: var(--ad-surface);
+    border: 1px solid var(--ad-border);
+    border-radius: var(--ad-r-lg);
+    box-shadow: var(--ad-shadow-sm);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.filter-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ad-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ad-surface-2);
+}
+
+.filter-card-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ad-navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fc-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ad-gold);
+    flex-shrink: 0;
+}
+
+.filter-card-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ad-text-3);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--ad-border);
+    border-radius: var(--ad-r-sm);
+    font-size: 13px;
+    font-family: var(--ad-font);
+    color: var(--ad-text-1);
+    background: var(--ad-surface-2);
+    -webkit-appearance: none;
+    outline: none;
+    transition: all .18s var(--ad-ease);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A8BA8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+}
+
+.filter-select:focus {
+    border-color: var(--ad-navy);
+    background-color: var(--ad-surface);
+    box-shadow: 0 0 0 3px rgba(13,27,62,.06);
+}
+
+.filter-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--ad-border);
+    border-radius: var(--ad-r-sm);
+    font-size: 13px;
+    font-family: var(--ad-mono);
+    color: var(--ad-text-1);
+    background: var(--ad-surface-2);
+    outline: none;
+    transition: all .18s var(--ad-ease);
+}
+
+.filter-input:focus {
+    border-color: var(--ad-navy);
+    background: var(--ad-surface);
+    box-shadow: 0 0 0 3px rgba(13,27,62,.06);
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    grid-column: span 2;
+}
+
+.date-range-sep {
+    font-size: 12px;
+    color: var(--ad-text-4);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 22px;
+    text-transform: lowercase;
+}
+
+.date-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    grid-column: span 4;
+    justify-content: flex-end;
+    padding-top: 4px;
+    border-top: 1px solid var(--ad-border);
+    margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+    .filter-card-body {
+        grid-template-columns: 1fr 1fr;
+    }
+    .date-range {
+        grid-column: span 2;
+    }
+    .filter-actions {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-card-body {
+        grid-template-columns: 1fr;
+    }
+    .date-range {
+        grid-column: span 1;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .date-range-sep {
+        margin-top: 0;
+        text-align: center;
+    }
+    .filter-actions {
+        grid-column: span 1;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTES — Buttons (btn-gold, btn-pdf, btn-outline)
+   ═══════════════════════════════════════════════════════════════ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: var(--ad-r-sm);
+    font-size: 13px;
+    font-weight: 700;
+    border: 1.5px solid transparent;
+    transition: all .18s var(--ad-ease);
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: var(--ad-font);
+}
+
+.btn-pdf {
+    background: linear-gradient(135deg, var(--ad-navy) 0%, var(--ad-navy-light) 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 3px 12px rgba(13,27,62,.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-pdf::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,.08), transparent);
+    transform: translateX(-100%);
+    transition: transform .5s ease;
+}
+
+.btn-pdf:hover::before {
+    transform: translateX(100%);
+}
+
+.btn-pdf:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13,27,62,.32);
+}
+
+.btn-gold {
+    background: var(--ad-gold);
+    color: var(--ad-navy);
+    border-color: var(--ad-gold);
+    box-shadow: 0 2px 8px rgba(232,168,32,.25);
+}
+
+.btn-gold:hover {
+    background: var(--ad-gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(232,168,32,.35);
+}
+
+.btn-outline {
+    background: var(--ad-surface);
+    color: var(--ad-text-2);
+    border-color: var(--ad-border);
+}
+
+.btn-outline:hover {
+    border-color: var(--ad-border-2);
+    background: var(--ad-surface-2);
+    color: var(--ad-navy);
+}
+
+.btn-sm {
+    padding: 7px 14px;
+    font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTES — Results Card
+   ═══════════════════════════════════════════════════════════════ */
+.results-card {
+    background: var(--ad-surface);
+    border: 1px solid var(--ad-border);
+    border-radius: var(--ad-r-lg);
+    box-shadow: var(--ad-shadow-sm);
+    overflow: hidden;
+}
+
+.results-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ad-border);
+}
+
+.results-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ad-navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.results-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ad-navy);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 11px;
+    border-radius: 99px;
+    letter-spacing: .3px;
+}
+
+.results-count-lbl {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ad-text-3);
+}
+
+.results-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTES — Active Filters Bar
+   ═══════════════════════════════════════════════════════════════ */
+.active-filters {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ad-surface-2);
+    border-bottom: 1px solid var(--ad-border);
+    flex-wrap: wrap;
+}
+
+.af-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ad-text-3);
+}
+
+.af-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--ad-surface);
+    border: 1px solid var(--ad-border);
+    border-radius: 99px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ad-text-2);
+}
+
+.af-chip span {
+    color: var(--ad-navy);
+    font-weight: 800;
+}
