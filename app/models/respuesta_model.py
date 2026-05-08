@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from datetime import date, datetime
 from typing import Optional
-from datetime import datetime, date
+from pydantic import BaseModel, ConfigDict
 
 class RespuestaBase(BaseModel):
     id_solicitud:      int
@@ -14,9 +14,9 @@ class RespuestaBase(BaseModel):
 class RespuestaCreate(RespuestaBase):
     pass
 
-class Respuesta(RespuestaBase):
+class RespuestaResponse(RespuestaBase):
     id_respuesta:    int
     fecha_respuesta: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+Respuesta = RespuestaResponse

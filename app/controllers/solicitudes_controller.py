@@ -2,7 +2,7 @@ import psycopg2
 from fastapi import HTTPException
 from app.config.db_config import get_db_connection
 from app.models.solicitudes_model import Solicitud
-from app.models.historial_estado_model import EstadoSolicitudEnum
+from app.models.enums import EstadoSolicitud
 from fastapi.encoders import jsonable_encoder
 
 
@@ -143,7 +143,7 @@ class SolicitudController:
         conn = None
         cursor = None
         try:
-            if nuevo_estado not in [e.value for e in EstadoSolicitudEnum]:
+            if nuevo_estado not in [e.value for e in EstadoSolicitud]:
                 raise HTTPException(status_code=400, detail="Estado no válido")
             conn = get_db_connection()
             conn.autocommit = False
@@ -305,7 +305,7 @@ class SolicitudController:
 
     def get_solicitudes_by_estado(self, estado: str, limit: int = 50, offset: int = 0):
         try:
-            if estado not in [e.value for e in EstadoSolicitudEnum]:
+            if estado not in [e.value for e in EstadoSolicitud]:
                 raise HTTPException(status_code=400, detail="Estado no válido")
             conn = get_db_connection()
             cursor = conn.cursor()

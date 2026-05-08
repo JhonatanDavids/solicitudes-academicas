@@ -1,26 +1,24 @@
 from datetime import datetime
-from enum import Enum
 from typing import Optional
+from pydantic import BaseModel, ConfigDict
+from app.models.enums import DecisionRevision
 
-from pydantic import BaseModel
-
-
-class EstadoRevisionEnum(str, Enum):
-    aprobado = "aprobado"
-    rechazado = "rechazado"
-    observado = "observado"
-
-
-class RevisionCreate(BaseModel):
-    id_solicitud: int
-    comentario: Optional[str] = None
-    estado_revision: EstadoRevisionEnum
-
-
-class Revision(BaseModel):
-    id_revision: int
+class RevisionBase(BaseModel):
     id_solicitud: int
     id_usuario: int
+    id_paso: Optional[int] = None
+    decision: DecisionRevision
     comentario: Optional[str] = None
-    estado_revision: EstadoRevisionEnum
-    fecha_creacion: datetime
+    estado_revision: str
+
+class RevisionCreate(RevisionBase):
+    pass
+
+class RevisionResponse(RevisionBase):
+    id_revision: int
+    fecha_revision: Optional[datetime] = None
+    fecha_creacion: Optional[datetime] = None
+    fecha_actualizacion: Optional[datetime] = None
+    model_config = ConfigDict(from_attributes=True)
+
+Revision = RevisionResponse

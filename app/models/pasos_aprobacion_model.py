@@ -1,10 +1,18 @@
-from pydantic import BaseModel
 from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
-class PasoAprobacion(BaseModel):
-    id_paso: int | None = None
+class PasoAprobacionBase(BaseModel):
     id_tipo_solicitud: int
     orden: int
     id_rol_encargado: int
     es_obligatorio: bool = True
-    descripcion_paso: str | None = None
+    descripcion_paso: Optional[str] = None
+
+class PasoAprobacionCreate(PasoAprobacionBase):
+    pass
+
+class PasoAprobacionResponse(PasoAprobacionBase):
+    id_paso: int
+    model_config = ConfigDict(from_attributes=True)
+
+PasoAprobacion = PasoAprobacionResponse

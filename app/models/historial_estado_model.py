@@ -1,29 +1,21 @@
-from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
-from enum import Enum
-
-class EstadoSolicitudEnum(str, Enum):
-    pendiente            = "pendiente"
-    en_revision          = "en_revision"
-    aprobada             = "aprobada"
-    rechazada            = "rechazada"
-    cancelada            = "cancelada"
-    en_espera_documentos = "en_espera_documentos"
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+from app.models.enums import EstadoSolicitud
 
 class HistorialEstadoBase(BaseModel):
     id_solicitud:    int
-    estado_anterior: Optional[EstadoSolicitudEnum] = None
-    estado_nuevo:    EstadoSolicitudEnum
+    estado_anterior: Optional[EstadoSolicitud] = None
+    estado_nuevo:    EstadoSolicitud
     id_usuario:      Optional[int] = None
     comentario:      Optional[str] = None
 
 class HistorialEstadoCreate(HistorialEstadoBase):
     pass
 
-class HistorialEstado(HistorialEstadoBase):
+class HistorialEstadoResponse(HistorialEstadoBase):
     id_historial: int
     fecha_cambio: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+HistorialEstado = HistorialEstadoResponse

@@ -1,6 +1,6 @@
-from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
 class RegistroSistemaBase(BaseModel):
     accion:      str
@@ -10,9 +10,9 @@ class RegistroSistemaBase(BaseModel):
 class RegistroSistemaCreate(RegistroSistemaBase):
     pass
 
-class RegistroSistema(RegistroSistemaBase):
+class RegistroSistemaResponse(RegistroSistemaBase):
     id_registro: int
     fecha:       datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+RegistroSistema = RegistroSistemaResponse
