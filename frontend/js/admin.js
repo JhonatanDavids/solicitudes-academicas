@@ -18,9 +18,9 @@ const usuarioPortal = getUsuarioActual();
 
 // Datos mock para documentos (sección demostrativa — backend pendiente)
 const documentosMock = [
-    { id: 1, cedula: '1010202030', nombre: 'certificado_estudio.pdf', tipo: 'PDF', fecha: '2026-03-30', estado: 'válido' },
-    { id: 2, cedula: '1010202030', nombre: 'notas_semestre.png', tipo: 'Imagen', fecha: '2026-03-29', estado: 'pendiente' },
-    { id: 3, cedula: '1001234567', nombre: 'paz_y_salvo.pdf', tipo: 'PDF', fecha: '2026-03-28', estado: 'válido' },
+    { id: 1, cedula: '1010202030', nombre: 'certificado_estudio.pdf', tipo: 'PDF', fecha: '2026-03-30', estado: 'válido', ruta: '../assets/docs/certificado_estudio.pdf' },
+    { id: 2, cedula: '1010202030', nombre: 'notas_semestre.png', tipo: 'Imagen', fecha: '2026-03-29', estado: 'pendiente', ruta: '../assets/docs/notas_semestre.png' },
+    { id: 3, cedula: '1001234567', nombre: 'paz_y_salvo.pdf', tipo: 'PDF', fecha: '2026-03-28', estado: 'válido', ruta: '' },
 ];
 
 // Estado del modal CRUD
@@ -476,6 +476,9 @@ function renderDocumentCards(dt) {
         const eStr = String(estado).toLowerCase();
         const badgeClass = eStr.includes('válido') ? 'badge-aprobada' : (eStr.includes('pendiente') ? 'badge-pendiente' : 'badge-cancelada');
 
+        // Buscar el doc original para obtener id y ruta
+        const docOriginal = documentosMock.find(d => d.nombre === nombre);
+
         const card = document.createElement('div');
         card.className = 'doc-card';
         card.innerHTML = `
@@ -493,12 +496,107 @@ function renderDocumentCards(dt) {
                 </span>
             </div>
             <div class="doc-card-footer ad-actions" style="justify-content: flex-end; width: 100%; border-top: 1px solid var(--ad-border); padding-top: 12px;">
-                <button class="btn-sm btn-info"><i class="fa-solid fa-eye"></i> Ver</button>
+                <button class="btn-sm btn-info btn-ver-doc" data-doc-id="${docOriginal ? docOriginal.id : ''}"><i class="fa-solid fa-eye"></i> Ver</button>
                 <button class="btn-sm btn-danger btn-icon-sm" title="Eliminar Documento"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
+
+        // Wire up "Ver" button
+        const btnVer = card.querySelector('.btn-ver-doc');
+        if (btnVer && docOriginal) {
+            btnVer.addEventListener('click', () => abrirVisorDocumento(docOriginal.id));
+        } else if (btnVer) {
+            btnVer.addEventListener('click', () => abrirVisorDocumento(null));
+        }
+
         container.appendChild(card);
     });
+}
+
+function abrirVisorDocumento(docId) {
+    const modal = document.getElementById('modal-doc-viewer');
+    const titleEl = document.getElementById('doc-viewer-title');
+    const bodyEl = document.getElementById('doc-viewer-body');
+    if (!modal || !bodyEl) return;
+
+    // Find doc
+    const doc = docId ? documentosMock.find(d => d.id === docId) : null;
+
+    // Clear previous content
+    bodyEl.innerHTML = '';
+
+    if (!doc) {
+        // Fallback: documento no encontrado
+        bodyEl.innerHTML = `
+            <div class="doc-viewer-placeholder">
+                <div class="ph-icon">📄</div>
+                <p class="ph-title">Documento no disponible</p>
+                <p class="ph-sub">El archivo solicitado no se encuentra en el sistema de demostración.</p>
+            </div>`;
+        if (titleEl) titleEl.textContent = 'Documento no disponible';
+        modal.classList.add('show');
+        return;
+    }
+
+    if (titleEl) titleEl.textContent = doc.nombre;
+
+    // Check if file has a valid path
+    if (!doc.ruta) {
+        bodyEl.innerHTML = `
+            <div class="doc-viewer-placeholder">
+                <div class="ph-icon">📁</div>
+                <p class="ph-title">Archivo no disponible</p>
+                <p class="ph-sub">"${doc.nombre}" no tiene un archivo físico asociado en esta demostración.</p>
+            </div>`;
+        modal.classList.add('show');
+        return;
+    }
+
+    // Determine type and render
+    const tipoLower = String(doc.tipo).toLowerCase();
+    const esPDF = tipoLower.includes('pdf') || doc.ruta.toLowerCase().endsWith('.pdf');
+    const esImagen = tipoLower.includes('imagen') || tipoLower.includes('png') || tipoLower.includes('jpg') || tipoLower.includes('jpeg') || doc.ruta.toLowerCase().match(/\.(png|jpg|jpeg|gif|svg|webp)$/);
+
+    if (esPDF) {
+        const iframe = document.createElement('iframe');
+        iframe.src = doc.ruta;
+        iframe.title = doc.nombre;
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        bodyEl.appendChild(iframe);
+    } else if (esImagen) {
+        const img = document.createElement('img');
+        img.src = doc.ruta;
+        img.alt = doc.nombre;
+        img.className = 'doc-viewer-img';
+        img.onerror = () => {
+            bodyEl.innerHTML = `
+                <div class="doc-viewer-placeholder">
+                    <div class="ph-icon">🖼</div>
+                    <p class="ph-title">No se pudo cargar la imagen</p>
+                    <p class="ph-sub">El archivo "${doc.nombre}" no pudo ser renderizado.</p>
+                </div>`;
+        };
+        bodyEl.appendChild(img);
+    } else {
+        // Unknown type — fallback
+        bodyEl.innerHTML = `
+            <div class="doc-viewer-placeholder">
+                <div class="ph-icon">📎</div>
+                <p class="ph-title">Vista previa no disponible</p>
+                <p class="ph-sub">El tipo de archivo "${doc.tipo}" no tiene un visor configurado.</p>
+            </div>`;
+    }
+
+    modal.classList.add('show');
+}
+
+function cerrarVisorDocumento() {
+    const modal = document.getElementById('modal-doc-viewer');
+    const bodyEl = document.getElementById('doc-viewer-body');
+    if (!modal) return;
+    modal.classList.remove('show');
+    // Clear body to stop iframe loading
+    if (bodyEl) bodyEl.innerHTML = '';
 }
 
 async function loadRevisiones() {
@@ -1531,6 +1629,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     bind('btn-copy-json', 'click', copyJsonModal);
     document.querySelectorAll('[data-action="close-json"]')
         .forEach(btn => btn.addEventListener('click', () => closeModal('modal-json')));
+
+    // Modal Visor Documentos
+    bind('btn-close-doc-viewer', 'click', () => cerrarVisorDocumento());
+    const docViewerOverlay = document.getElementById('modal-doc-viewer');
+    if (docViewerOverlay) {
+        docViewerOverlay.addEventListener('click', (e) => {
+            if (e.target === docViewerOverlay) cerrarVisorDocumento();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && docViewerOverlay.classList.contains('show')) {
+                cerrarVisorDocumento();
+            }
+        });
+    }
 
     // Paginación y contadores locales por sección en cada redraw
     const setupTableEvents = (containerId, counterId) => {

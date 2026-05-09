@@ -2136,11 +2136,11 @@ td mark {
 /* Secondary badge — estado_actual in revisiones table (smaller, lighter) */
 .rev-sol-badge {
     display: inline-flex; align-items: center;
-    font-size: 9px; font-weight: 600;
-    padding: 1px 7px; border-radius: 99px;
-    letter-spacing: .3px; white-space: nowrap;
-    text-transform: lowercase;
-    opacity: 0.82;
+    font-size: 10.5px; font-weight: 600;
+    padding: 2px 9px; border-radius: 99px;
+    letter-spacing: .4px; white-space: nowrap;
+    text-transform: uppercase;
+    opacity: 0.85;
 }
 .rev-sol-badge.badge-aprobada,
 .rev-sol-badge.badge-aprobado { background: var(--ad-green-bg); color: var(--ad-green); }
@@ -2632,4 +2632,89 @@ td mark {
 .af-chip span {
     color: var(--ad-navy);
     font-weight: 800;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOCUMENT VIEWER MODAL
+   ═══════════════════════════════════════════════════════════════ */
+.doc-viewer-box {
+    max-width: 920px;
+    width: 95%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.doc-viewer-body {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+    max-height: 75vh;
+    overflow: auto;
+    background: #f8fafc;
+    border-radius: 0 0 var(--ad-r-md) var(--ad-r-md);
+}
+
+.doc-viewer-body iframe {
+    width: 100%;
+    height: 75vh;
+    max-height: 800px;
+    border: none;
+    display: block;
+}
+
+.doc-viewer-body img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
+}
+
+.doc-viewer-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 40px;
+    text-align: center;
+    color: var(--ad-text-3);
+    font-size: 15px;
+}
+
+.doc-viewer-placeholder .ph-icon {
+    font-size: 52px;
+    opacity: 0.35;
+    margin-bottom: 4px;
+}
+
+.doc-viewer-placeholder .ph-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ad-text-2);
+    margin: 0;
+}
+
+.doc-viewer-placeholder .ph-sub {
+    font-size: 13px;
+    color: var(--ad-text-4);
+    margin: 0;
+    max-width: 340px;
+}
+
+@media (max-width: 640px) {
+    .doc-viewer-box {
+        width: 98%;
+        max-height: 95vh;
+    }
+    .doc-viewer-body {
+        min-height: 280px;
+        max-height: 65vh;
+    }
+    .doc-viewer-body iframe {
+        height: 65vh;
+    }
 }
