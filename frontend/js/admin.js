@@ -558,12 +558,25 @@ function abrirVisorDocumento(docId) {
     const esImagen = tipoLower.includes('imagen') || tipoLower.includes('png') || tipoLower.includes('jpg') || tipoLower.includes('jpeg') || doc.ruta.toLowerCase().match(/\.(png|jpg|jpeg|gif|svg|webp)$/);
 
     if (esPDF) {
-        const iframe = document.createElement('iframe');
-        iframe.src = doc.ruta;
-        iframe.title = doc.nombre;
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-        bodyEl.appendChild(iframe);
+        bodyEl.innerHTML = `
+            <div class="doc-viewer-pdf-card">
+                <div class="pdf-card-icon">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <h3 class="pdf-card-name">${doc.nombre}</h3>
+                <p class="pdf-card-desc">Documento PDF · ${doc.fecha || '—'}</p>
+                <button class="btn-sm blue pdf-card-btn" id="btn-open-pdf">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir documento
+                </button>
+            </div>`;
+        // Wire up open button
+        const btnOpen = document.getElementById('btn-open-pdf');
+        if (btnOpen) {
+            btnOpen.addEventListener('click', () => window.open(doc.ruta, '_blank'));
+        }
     } else if (esImagen) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'doc-viewer-img-wrapper';
         const img = document.createElement('img');
         img.src = doc.ruta;
         img.alt = doc.nombre;
@@ -576,7 +589,8 @@ function abrirVisorDocumento(docId) {
                     <p class="ph-sub">El archivo "${doc.nombre}" no pudo ser renderizado.</p>
                 </div>`;
         };
-        bodyEl.appendChild(img);
+        wrapper.appendChild(img);
+        bodyEl.appendChild(wrapper);
     } else {
         // Unknown type — fallback
         bodyEl.innerHTML = `
