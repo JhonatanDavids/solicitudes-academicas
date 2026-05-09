@@ -507,16 +507,12 @@ async function loadRevisiones() {
 
     mostrarLoading(contenedor);
     try {
-        const inputSolicitud = document.getElementById('rev-solicitud-id');
-        const idSolicitud = inputSolicitud?.value?.trim();
+        const inputCedula = document.getElementById('rev-cedula-estudiante');
+        const cedula = inputCedula?.value?.trim();
 
         let datos;
-        if (idSolicitud) {
-            const parsedId = parseInt(idSolicitud, 10);
-            if (Number.isNaN(parsedId) || parsedId <= 0) {
-                throw new Error('El filtro debe ser un ID de solicitud válido');
-            }
-            datos = await api.obtenerRevisionesPorSolicitud(parsedId);
+        if (cedula) {
+            datos = await api.obtenerRevisionesPorCedula(cedula);
         } else {
             datos = await api.obtenerRevisiones();
         }
@@ -543,7 +539,8 @@ function renderRevisiones(lista = listaRevisiones) {
     const { tabla, tbody } = crearTabla([
         'Estudiante',
         'Tipo solicitud',
-        'Revisión',
+        'Decisión',
+        'Estado solicitud',
         'Comentario',
         'Quien reviso',
         'Fecha',
@@ -555,17 +552,21 @@ function renderRevisiones(lista = listaRevisiones) {
         tr.appendChild(crearNodo('td', { className: 'td-nombre' }, [rev.estudiante || '–']));
         tr.appendChild(crearNodo('td', { className: 'td-tipo' }, [rev.tipo_solicitud || '–']));
 
-        const estado = rev.estado_revision || '–';
-        const estadoActual = rev.estado_actual || '–';
-        const tdEstado = crearNodo('td');
-        tdEstado.appendChild(crearBadgeEstado(estado));
-        tdEstado.appendChild(
-            crearNodo('small', {
-                className: 'td-muted rev-final',
-                style: 'display:block; opacity:0.6; margin-top: 3px; font-family: var(--ad-mono); font-size: 0.72rem; text-transform: lowercase;'
-            }, [estadoActual])
-        );
-        tr.appendChild(tdEstado);
+        const decision = rev.estado_revision || '–';
+        tr.appendChild(crearNodo('td', {}, [crearBadgeEstado(decision)]));
+
+        const estadoSol = rev.estado_actual || '–';
+        const tdEstadoSol = crearNodo('td');
+        if (estadoSol !== '–') {
+            tdEstadoSol.appendChild(
+                crearNodo('span', {
+                    className: `rev-sol-badge badge-${sanitizarClase(estadoSol)}`
+                }, [estadoSol])
+            );
+        } else {
+            tdEstadoSol.appendChild(crearNodo('small', { className: 'td-muted' }, ['–']));
+        }
+        tr.appendChild(tdEstadoSol);
 
         const comentarioStr = rev.comentario || 'Sin comentario...';
         const divComentario = crearNodo('div', { className: 'rev-comment-box' }, [comentarioStr]);
@@ -1518,7 +1519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Revisiones
     bind('btn-crud-rev-create', 'click', () => openCrud('revision', 'create'));
     bind('btn-load-rev', 'click', loadRevisiones);
-    const revDoc = document.getElementById('rev-solicitud-id');
+    const revDoc = document.getElementById('rev-cedula-estudiante');
     if (revDoc) revDoc.addEventListener('keydown', e => { if (e.key === 'Enter') loadRevisiones(); });
 
     // Modal CRUD

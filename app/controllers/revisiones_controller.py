@@ -210,6 +210,62 @@ class RevisionController:
             if conn:
                 conn.close()
 
+    def get_revisiones_by_cedula(self, cedula: str):
+        conn = None
+        cursor = None
+        try:
+            cedula = cedula.strip()
+            if not cedula:
+                raise HTTPException(
+                    status_code=400, detail="La cédula no puede estar vacía"
+                )
+
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            self._asegurar_tabla_revisiones(cursor)
+            conn.commit()
+
+            cursor.execute(
+                """
+                SELECT
+                    r.id_revision,
+                    r.id_solicitud,
+                    r.estado_revision,
+                    r.comentario,
+                    r.fecha_creacion,
+                    s.estado_actual,
+                    ts.nombre AS tipo_solicitud,
+                    ue.nombre AS estudiante_nombre,
+                    ue.apellido AS estudiante_apellido,
+                    ur.nombre AS revisor_nombre,
+                    ur.apellido AS revisor_apellido,
+                    r.id_usuario
+                FROM revisiones r
+                JOIN solicitudes s ON s.id_solicitud = r.id_solicitud
+                JOIN tipos_solicitud ts ON ts.id_tipo_solicitud = s.id_tipo_solicitud
+                JOIN usuarios ue ON ue.id_usuario = s.id_usuario
+                JOIN usuarios ur ON ur.id_usuario = r.id_usuario
+                WHERE ue.cedula = %s
+                ORDER BY r.fecha_creacion DESC, r.id_revision DESC
+                """,
+                (cedula,),
+            )
+
+            payload = [self._serializar_revision(row) for row in cursor.fetchall()]
+            return {"resultado": jsonable_encoder(payload)}
+
+        except HTTPException:
+            raise
+        except psycopg2.Error:
+            raise HTTPException(
+                status_code=500, detail="Error al obtener las revisiones por cédula"
+            )
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
     def get_revisiones(self):
         conn = None
         cursor = None

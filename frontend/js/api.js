@@ -244,6 +244,11 @@ const api = {
             headers: obtenerCabeceras()
         }).then(parsearRespuesta),
 
+    obtenerRevisionesPorCedula: (cedula) =>
+        fetch(`${DIRECCION_API}/revisiones/by_cedula/${encodeURIComponent(cedula)}`, {
+            headers: obtenerCabeceras()
+        }).then(parsearRespuesta),
+
     crearRevision: ({ id_solicitud, comentario, estado_revision }) =>
         fetch(`${DIRECCION_API}/revisiones/create`, {
             method: "POST",

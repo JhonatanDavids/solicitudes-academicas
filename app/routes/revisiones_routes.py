@@ -21,6 +21,14 @@ async def get_revisiones_by_solicitud(
     return revision_ctrl.get_revisiones_by_solicitud(id_solicitud)
 
 
+@router.get("/by_cedula/{cedula}")
+async def get_revisiones_by_cedula(
+    cedula: str,
+    usuario: TokenData = Depends(staff_o_superior),
+):
+    return revision_ctrl.get_revisiones_by_cedula(cedula)
+
+
 @router.post("/create")
 async def create_revision(
     revision: RevisionCreate,

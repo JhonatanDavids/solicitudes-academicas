@@ -2133,6 +2133,24 @@ td mark {
 }
 .badge-observado::before { background: currentColor; }
 
+/* Secondary badge — estado_actual in revisiones table (smaller, lighter) */
+.rev-sol-badge {
+    display: inline-flex; align-items: center;
+    font-size: 9px; font-weight: 600;
+    padding: 1px 7px; border-radius: 99px;
+    letter-spacing: .3px; white-space: nowrap;
+    text-transform: lowercase;
+    opacity: 0.82;
+}
+.rev-sol-badge.badge-aprobada,
+.rev-sol-badge.badge-aprobado { background: var(--ad-green-bg); color: var(--ad-green); }
+.rev-sol-badge.badge-rechazada,
+.rev-sol-badge.badge-rechazado { background: var(--ad-red-bg); color: var(--ad-red); }
+.rev-sol-badge.badge-en_revision,
+.rev-sol-badge.badge-en-revision { background: var(--ad-blue-bg); color: var(--ad-blue); }
+.rev-sol-badge.badge-pendiente { background: var(--ad-amber-bg); color: var(--ad-amber); }
+.rev-sol-badge.badge-cancelada { background: var(--ad-surface-3); color: var(--ad-text-4); }
+
 /* Comentario jerarquizado en Tabla */
 .rev-comment-box {
     background: #f1f5f9;
