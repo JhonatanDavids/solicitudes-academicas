@@ -1,0 +1,346 @@
+/* ==========================================================================
+   ESTILOS DOCUMENTALES - CUL
+   Disenado para WeasyPrint (HTML -> PDF).
+   A4, margenes institucionales, tipografia profesional.
+   Single-page optimizado.
+   ========================================================================== */
+
+/* -- Página principal -- */
+
+@page {
+    size: A4 portrait;
+    margin: 18mm 16mm 16mm 16mm;
+
+    @bottom-center {
+        content: none;
+    }
+}
+
+/* -- Reset -- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* -- Tipografía -- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+
+html {
+    font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif;
+    font-size: 10pt;
+    line-height: 1.45;
+    color: #1e293b;
+}
+
+/* -- Colores institucionales -- */
+
+:root {
+    --cul-navy:        #0a1f44;
+    --cul-navy-light:  #142d5e;
+    --cul-gold:        #c8a44e;
+    --cul-gold-light:  #efe0b3;
+    --cul-white:       #ffffff;
+    --cul-gray-50:     #f8fafc;
+    --cul-gray-100:    #f1f5f9;
+    --cul-gray-200:    #e2e8f0;
+    --cul-gray-400:    #94a3b8;
+    --cul-gray-500:    #64748b;
+    --cul-gray-600:    #475569;
+    --cul-gray-700:    #334155;
+    --cul-gray-800:    #1e293b;
+    --cul-gray-900:    #0f172a;
+}
+
+/* -- Header institucional -- */
+
+.cul-header {
+    background: var(--cul-navy);
+    color: var(--cul-white);
+    padding: 16pt 24pt;
+    margin-bottom: 20pt;
+    position: relative;
+    overflow: hidden;
+}
+
+.cul-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4pt;
+    height: 100%;
+    background: var(--cul-gold);
+}
+
+.cul-header-top {
+    display: flex;
+    align-items: center;
+    gap: 16pt;
+}
+
+.cul-header-logo {
+    width: 34pt;
+    height: 34pt;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.cul-header-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.cul-header-logo-fallback {
+    width: 34pt;
+    height: 34pt;
+    border-radius: 50%;
+    background: var(--cul-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+    color: var(--cul-navy);
+    flex-shrink: 0;
+}
+
+.cul-header-text {
+    flex: 1;
+}
+
+.cul-header-text h1 {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 11.5pt;
+    letter-spacing: 0.3pt;
+    text-transform: uppercase;
+    color: var(--cul-white);
+    line-height: 1.2;
+}
+
+.cul-header-text .subtitle {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 7pt;
+    color: var(--cul-gold-light);
+    letter-spacing: 0.2pt;
+    margin-top: 3pt;
+    line-height: 1.4;
+}
+
+.cul-header-stripe {
+    height: 1.5pt;
+    background: var(--cul-gold);
+    margin-top: 12pt;
+    width: 40%;
+}
+
+/* -- Título del documento -- */
+
+.doc-title {
+    text-align: center;
+    margin-bottom: 18pt;
+}
+
+.doc-title h2 {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 14pt;
+    color: var(--cul-navy);
+    text-transform: uppercase;
+    letter-spacing: 1pt;
+    margin-bottom: 4pt;
+}
+
+.doc-title .divider {
+    width: 50pt;
+    height: 1.5pt;
+    background: var(--cul-gold);
+    margin: 0 auto;
+}
+
+/* -- Cuerpo del certificado -- */
+
+.cert-body {
+    margin-bottom: 14pt;
+}
+
+.cert-body p {
+    margin-bottom: 7pt;
+    text-align: justify;
+    text-indent: 14pt;
+    font-size: 9.5pt;
+    line-height: 1.55;
+}
+
+.cert-body .saludo {
+    text-indent: 0;
+}
+
+.cert-body .declaracion {
+    font-weight: 600;
+    color: var(--cul-gray-800);
+}
+
+/* -- Datos del estudiante -- */
+
+.student-data {
+    background: var(--cul-gray-50);
+    border-left: 2.5pt solid var(--cul-gold);
+    padding: 10pt 16pt;
+    margin: 14pt 0;
+}
+
+.student-data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5pt 20pt;
+}
+
+.student-data-grid .field {
+    display: flex;
+    flex-direction: column;
+    gap: 1pt;
+}
+
+.student-data-grid .label {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 6.5pt;
+    font-weight: 600;
+    color: var(--cul-gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+}
+
+.student-data-grid .value {
+    font-family: 'Merriweather', 'Georgia', serif;
+    font-size: 9pt;
+    font-weight: 500;
+    color: var(--cul-gray-900);
+}
+
+/* -- Sección de firma -- */
+
+.signature-block {
+    margin-top: 24pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+}
+
+.signature {
+    text-align: center;
+}
+
+.signature .line {
+    width: 100%;
+    height: 0.5pt;
+    background: var(--cul-gray-400);
+    margin-bottom: 6pt;
+}
+
+.signature .name {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 8pt;
+    color: var(--cul-gray-800);
+}
+
+.signature .role {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 7pt;
+    color: var(--cul-gray-500);
+    margin-top: 2pt;
+}
+
+.signature .extra {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 6.5pt;
+    color: var(--cul-gray-400);
+    margin-top: 1pt;
+}
+
+/* -- Footer documental -- */
+
+.doc-footer {
+    margin-top: 18pt;
+    padding-top: 8pt;
+    border-top: 0.5pt solid var(--cul-gray-200);
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 6.5pt;
+    color: var(--cul-gray-400);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.doc-footer .verification {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 6.5pt;
+    color: var(--cul-gray-500);
+    background: var(--cul-gray-100);
+    padding: 2pt 5pt;
+}
+
+.doc-footer .legal {
+    max-width: 58%;
+    text-align: right;
+    line-height: 1.35;
+}
+
+/* -- Tablas académicas -- */
+
+.cul-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12pt 0;
+    font-size: 8.5pt;
+}
+
+.cul-table thead th {
+    background: var(--cul-navy);
+    color: var(--cul-white);
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.3pt;
+    padding: 6pt 10pt;
+    text-align: left;
+}
+
+.cul-table tbody td {
+    padding: 5pt 10pt;
+    border-bottom: 0.5pt solid var(--cul-gray-200);
+    color: var(--cul-gray-800);
+}
+
+.cul-table tbody tr:nth-child(even) {
+    background: var(--cul-gray-50);
+}
+
+/* -- Utilidades -- */
+
+.cul-badge {
+    display: inline-block;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 6.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3pt;
+    padding: 2pt 6pt;
+}
+
+.cul-badge--gold {
+    background: var(--cul-gold-light);
+    color: var(--cul-navy);
+}

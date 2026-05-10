@@ -14,6 +14,7 @@ from app.routes.roles_routes import router as roles_routes
 from app.routes.usuarios_routes import router as usuarios_routes
 from app.routes.tipos_solicitud_routes import router as tipos_solicitud_routes
 from app.routes.auth_routes import router as auth_routes
+from app.routes.document_generator_routes import router as docgen_router
 
 app = FastAPI(title="Sistema de Gestión de Solicitudes Académicas — CUL")
 
@@ -41,6 +42,7 @@ app.include_router(revisiones_routes)
 app.include_router(roles_routes)
 app.include_router(usuarios_routes)
 app.include_router(tipos_solicitud_routes)
+app.include_router(docgen_router)          # GET /documentos/generar-demo
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{{ siglas }} - Certificado de Estudio</title>
+<meta name="author" content="{{ institucion }}">
+<meta name="generator" content="CUL Document Engine">
+
+<style>
+{{ css }}
+</style>
+</head>
+<body>
+
+<!-- ==================================================================
+     HEADER INSTITUCIONAL
+     ================================================================== -->
+<header class="cul-header">
+    <div class="cul-header-top">
+        {% if logo_base64 %}
+        <div class="cul-header-logo">
+            <img src="{{ logo_base64 }}" alt="Logo {{ siglas }}" />
+        </div>
+        {% else %}
+        <div class="cul-header-logo-fallback" aria-label="Logo {{ siglas }}">{{ siglas }}</div>
+        {% endif %}
+        <div class="cul-header-text">
+            <h1>{{ institucion }}</h1>
+            <p class="subtitle">Personería Jurídica 9916 de 1976 &middot; NIT {{ nit }} &middot; {{ ciudad }}, Colombia</p>
+        </div>
+    </div>
+    <div class="cul-header-stripe"></div>
+</header>
+
+<!-- ==================================================================
+     TITULO
+     ================================================================== -->
+<div class="doc-title">
+    <h2>Certificado de Estudio</h2>
+    <div class="divider"></div>
+</div>
+
+<!-- ==================================================================
+     CUERPO
+     ================================================================== -->
+<section class="cert-body">
+
+    <p class="declaracion">
+        El suscrito Secretario Académico de la <strong>{{ institucion }}</strong> &mdash; {{ siglas }},
+        en ejercicio de sus funciones legales y estatutarias,
+    </p>
+
+    <p class="saludo">
+        <strong>CERTIFICA:</strong>
+    </p>
+
+    <p>
+        Que el(la) estudiante <strong>{{ nombre_estudiante }}</strong>,
+        identificado(a) con documento de identidad No. <strong>{{ documento_id }}</strong>,
+        se encuentra <strong>matriculado(a)</strong> en el programa académico de
+        <strong>{{ programa }}</strong>, nivel <strong>{{ nivel }}</strong>,
+        jornada <strong>{{ jornada }}</strong>{% if periodo_actual %},
+        para el período académico <strong>{{ periodo_actual }}</strong>{% endif %}.
+    </p>
+
+    {% if periodo_ingreso %}
+    <p>
+        El(la) estudiante ingresó a la institución en el período
+        <strong>{{ periodo_ingreso }}</strong>
+        y a la fecha mantiene la calidad de estudiante activo(a),
+        cumpliendo con los requisitos académicos y administrativos exigidos
+        por la institución.
+    </p>
+    {% endif %}
+
+    {% if promedio %}
+    <p>
+        Al término del último período académico cursado, el(la) estudiante
+        registra un promedio acumulado de <strong>{{ promedio }}</strong>
+        en una escala de 0.0 a 5.0.
+    </p>
+    {% endif %}
+
+</section>
+
+<!-- ==================================================================
+     DATOS DEL ESTUDIANTE
+     ================================================================== -->
+<div class="student-data">
+    <div class="student-data-grid">
+
+        <div class="field">
+            <span class="label">Estudiante</span>
+            <span class="value">{{ nombre_estudiante }}</span>
+        </div>
+
+        <div class="field">
+            <span class="label">Documento de Identidad</span>
+            <span class="value">{{ documento_id }}</span>
+        </div>
+
+        <div class="field">
+            <span class="label">Programa Académico</span>
+            <span class="value">{{ programa }}</span>
+        </div>
+
+        <div class="field">
+            <span class="label">Nivel / Jornada</span>
+            <span class="value">{{ nivel }} &mdash; {{ jornada }}</span>
+        </div>
+
+        {% if periodo_ingreso %}
+        <div class="field">
+            <span class="label">Período de Ingreso</span>
+            <span class="value">{{ periodo_ingreso }}</span>
+        </div>
+        {% endif %}
+
+        {% if periodo_actual %}
+        <div class="field">
+            <span class="label">Período Actual</span>
+            <span class="value">{{ periodo_actual }}</span>
+        </div>
+        {% endif %}
+
+        {% if promedio %}
+        <div class="field">
+            <span class="label">Promedio Acumulado</span>
+            <span class="value">{{ promedio }} / 5.0</span>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- ==================================================================
+     CIERRE
+     ================================================================== -->
+<section class="cert-body">
+    <p>
+        Se expide el presente certificado a solicitud del(a) interesado(a),
+        en la ciudad de <strong>{{ ciudad }}</strong>, a los
+        <strong>{{ fecha_expedicion }}</strong>.
+    </p>
+</section>
+
+<!-- ==================================================================
+     FIRMAS
+     ================================================================== -->
+<div class="signature-block">
+    <div class="signature">
+        <div class="line"></div>
+        <div class="name">Dr. Carlos Eduardo Martínez</div>
+        <div class="role">Secretario Académico</div>
+        <div class="extra">{{ institucion }}</div>
+    </div>
+
+    <div class="signature">
+        <div class="line"></div>
+        <div class="name">Dra. Ana Lucía Rincón</div>
+        <div class="role">Directora de Registro y Control</div>
+        <div class="extra">{{ siglas }}</div>
+    </div>
+</div>
+
+<!-- ==================================================================
+     FOOTER
+     ================================================================== -->
+<footer class="doc-footer">
+    <div>
+        <span class="verification">{{ codigo_verificacion }}</span><br>
+        <span>Código de verificación</span>
+    </div>
+    <div class="legal">
+        Documento generado electrónicamente por el sistema de
+        Solicitudes Académicas {{ siglas }}. Válido sin firma
+        manuscrita según normativa institucional vigente.
+    </div>
+</footer>
+
+</body>
+</html>
