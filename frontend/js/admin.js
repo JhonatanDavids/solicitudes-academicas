@@ -560,12 +560,18 @@ function abrirVisorDocumento(docId) {
     if (esPDF) {
         bodyEl.innerHTML = `
             <div class="doc-viewer-pdf-card">
-                <div class="pdf-card-icon">
+                <div class="pdf-card-icon-box">
                     <i class="fa-solid fa-file-pdf"></i>
                 </div>
-                <h3 class="pdf-card-name">${doc.nombre}</h3>
-                <p class="pdf-card-desc">Documento PDF · ${doc.fecha || '—'}</p>
-                <button class="btn-sm blue pdf-card-btn" id="btn-open-pdf">
+                <div class="pdf-card-info">
+                    <h3 class="pdf-card-name">${doc.nombre}</h3>
+                    <p class="pdf-card-meta">
+                        <span class="pdf-type-badge">PDF</span>
+                        <span>${doc.fecha || '—'}</span>
+                    </p>
+                </div>
+                <p class="pdf-card-note">Documento generado electrónicamente por el sistema de Solicitudes Académicas CUL.</p>
+                <button class="pdf-card-btn" id="btn-open-pdf">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir documento
                 </button>
             </div>`;
@@ -575,6 +581,9 @@ function abrirVisorDocumento(docId) {
             btnOpen.addEventListener('click', () => window.open(doc.ruta, '_blank'));
         }
     } else if (esImagen) {
+        bodyEl.innerHTML = '';
+        const container = document.createElement('div');
+        container.className = 'doc-viewer-img-container';
         const wrapper = document.createElement('div');
         wrapper.className = 'doc-viewer-img-wrapper';
         const img = document.createElement('img');
@@ -590,7 +599,14 @@ function abrirVisorDocumento(docId) {
                 </div>`;
         };
         wrapper.appendChild(img);
-        bodyEl.appendChild(wrapper);
+        container.appendChild(wrapper);
+        const info = document.createElement('div');
+        info.className = 'doc-viewer-img-info';
+        info.innerHTML = `
+            <span class="img-info-name">${doc.nombre}</span>
+            <span class="img-info-meta">${doc.tipo} · ${doc.fecha || '—'}</span>`;
+        container.appendChild(info);
+        bodyEl.appendChild(container);
     } else {
         // Unknown type — fallback
         bodyEl.innerHTML = `
