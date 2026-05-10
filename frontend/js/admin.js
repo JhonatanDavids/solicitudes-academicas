@@ -16,11 +16,14 @@ let listaReportesFiltrada = [];
 
 const usuarioPortal = getUsuarioActual();
 
-// Datos mock para documentos (sección demostrativa — backend pendiente)
+// API base para documentos — reutiliza la misma config de api.js
+const DOC_API_BASE = typeof DIRECCION_API !== 'undefined' ? DIRECCION_API : 'http://localhost:8000';
+
+// Datos mock para documentos (conectados a backend real)
 const documentosMock = [
-    { id: 1, cedula: '1010202030', nombre: 'certificado_estudio.pdf', tipo: 'PDF', fecha: '2026-03-30', estado: 'válido', ruta: '../assets/docs/certificado_estudio.pdf' },
-    { id: 2, cedula: '1010202030', nombre: 'notas_semestre.png', tipo: 'Imagen', fecha: '2026-03-29', estado: 'pendiente', ruta: '../assets/docs/notas_semestre.png' },
-    { id: 3, cedula: '1001234567', nombre: 'paz_y_salvo.pdf', tipo: 'PDF', fecha: '2026-03-28', estado: 'válido', ruta: '' },
+    { id: 1, id_solicitud: 2, cedula: '1002345678', nombre: 'Certificado de Estudio', tipo: 'PDF', fecha: '2026-05-09', estado: 'válido', ruta: `${DOC_API_BASE}/documentos/certificado-real/2` },
+    { id: 2, cedula: '1010202030', nombre: 'Récord Académico', tipo: 'PDF', fecha: '2026-05-09', estado: 'pendiente', ruta: `${DOC_API_BASE}/documentos/generar-record-demo` },
+    { id: 3, cedula: '1001234567', nombre: 'Paz y Salvo', tipo: 'PDF', fecha: '2026-03-28', estado: 'válido', ruta: '' },
 ];
 
 // Estado del modal CRUD
@@ -568,28 +571,35 @@ function abrirVisorDocumento(docId) {
     const esImagen = tipoLower.includes('imagen') || tipoLower.includes('png') || tipoLower.includes('jpg') || tipoLower.includes('jpeg') || doc.ruta.toLowerCase().match(/\.(png|jpg|jpeg|gif|svg|webp)$/);
 
     if (esPDF) {
-        bodyEl.innerHTML = `
-            <div class="doc-viewer-pdf-card">
-                <div class="pdf-card-icon-box">
-                    <i class="fa-solid fa-file-pdf"></i>
-                </div>
-                <div class="pdf-card-info">
-                    <h3 class="pdf-card-name">${doc.nombre}</h3>
-                    <p class="pdf-card-meta">
-                        <span class="pdf-type-badge">PDF</span>
-                        <span>${doc.fecha || '—'}</span>
-                    </p>
-                </div>
-                <p class="pdf-card-note">Documento generado electrónicamente por el sistema de Solicitudes Académicas CUL.</p>
-                <button class="pdf-card-btn" id="btn-open-pdf">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir documento
-                </button>
-            </div>`;
-        // Wire up open button
-        const btnOpen = document.getElementById('btn-open-pdf');
-        if (btnOpen) {
-            btnOpen.addEventListener('click', () => window.open(doc.ruta, '_blank'));
-        }
+        // ── PDF inline via iframe ────────────────────────────────
+        bodyEl.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = doc.ruta;
+        iframe.className = 'doc-viewer-iframe';
+        iframe.title = doc.nombre;
+        iframe.setAttribute('loading', 'lazy');
+        // Error handling: si el iframe no carga
+        iframe.onerror = () => {
+            bodyEl.innerHTML = `
+                <div class="doc-viewer-placeholder">
+                    <div class="ph-icon">⚠️</div>
+                    <p class="ph-title">No se pudo cargar el documento</p>
+                    <p class="ph-sub">El servidor de documentos no está disponible. Intente de nuevo más tarde.</p>
+                </div>`;
+        };
+        // Timeout fallback: si tarda más de 15s, mostrar advertencia
+        const timeout = setTimeout(() => {
+            if (bodyEl.contains(iframe)) {
+                const warning = document.createElement('div');
+                warning.className = 'doc-viewer-placeholder';
+                warning.style.cssText = 'position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(254,243,199,0.95);border:1px solid #fcd34d;border-radius:8px;padding:8px 16px;font-size:13px;z-index:10;white-space:nowrap;';
+                warning.innerHTML = '<span style="color:#92400e;">⏳ El documento está tardando en cargar. Si no aparece, <a href="' + doc.ruta + '" target="_blank" style="color:#1d4ed8;text-decoration:underline;">ábralo aquí</a>.</span>';
+                bodyEl.style.position = 'relative';
+                bodyEl.appendChild(warning);
+            }
+        }, 15000);
+        iframe.onload = () => clearTimeout(timeout);
+        bodyEl.appendChild(iframe);
     } else if (esImagen) {
         bodyEl.innerHTML = '';
         const container = document.createElement('div');
@@ -2136,9 +2146,12 @@ function enviarNotificacion(mensaje) {
         downloadBtn.addEventListener('click', function () {
             const doc = window._currentViewerDoc;
             if (!doc || !doc.ruta) return;
+            // Descargar desde URL remota (backend)
             const a = document.createElement('a');
             a.href = doc.ruta;
             a.download = doc.nombre || 'documento';
+            a.target = '_blank';
+            a.rel = 'noopener';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2148,7 +2161,7 @@ function enviarNotificacion(mensaje) {
     if (openTabBtn) {
         openTabBtn.addEventListener('click', function () {
             const doc = window._currentViewerDoc;
-            if (doc && doc.ruta) window.open(doc.ruta, '_blank');
+            if (doc && doc.ruta) window.open(doc.ruta, '_blank', 'noopener');
         });
     }
 
