@@ -505,10 +505,13 @@ function renderDocumentCards(dt) {
             </div>
         `;
 
-        // Wire up "Ver" button
+        // Wire up "Ver" button — opens PDF directly in new tab
         const btnVer = card.querySelector('.btn-ver-doc');
-        if (btnVer && docOriginal) {
-            btnVer.addEventListener('click', () => abrirVisorDocumento(docOriginal.id));
+        if (btnVer && docOriginal && docOriginal.ruta) {
+            btnVer.addEventListener('click', () => {
+                window._currentViewerDoc = docOriginal;
+                window.open(docOriginal.ruta, '_blank', 'noopener');
+            });
         } else if (btnVer) {
             btnVer.addEventListener('click', () => abrirVisorDocumento(null));
         }

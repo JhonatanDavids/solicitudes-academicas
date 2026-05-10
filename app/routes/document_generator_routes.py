@@ -105,7 +105,7 @@ async def endpoint_generar_record_demo():
     """
     try:
         ruta_pdf: Path = generar_record_academico_demo()
-        logger.info("Récord académico demo generado: %s", ruta_pdf.name)
+        logger.info("Certificado de notas demo generado: %s", ruta_pdf.name)
         return FileResponse(
             path=str(ruta_pdf),
             media_type="application/pdf",
@@ -125,7 +125,7 @@ async def endpoint_generar_record_demo():
             ),
         )
     except Exception as e:
-        logger.exception("Error al generar el récord académico demo")
+        logger.exception("Error al generar el certificado de notas demo")
         raise HTTPException(
             status_code=503,
             detail=f"Error interno del motor documental: {e}",

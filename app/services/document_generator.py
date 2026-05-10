@@ -137,7 +137,7 @@ def generar_certificado_demo() -> Path:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  RÉCORD ACADÉMICO
+#  CERTIFICADO DE NOTAS
 # ═══════════════════════════════════════════════════════════════════════════
 
 def generar_record_academico(
@@ -152,7 +152,7 @@ def generar_record_academico(
     nombre_archivo: Optional[str] = None,
 ) -> Path:
     """
-    Genera un récord académico institucional en PDF con tabla de notas.
+    Genera un certificado de notas institucional en PDF con tabla de calificaciones.
 
     Parámetros:
         nombre_estudiante : Nombre completo del estudiante
@@ -202,7 +202,7 @@ def generar_record_academico(
     html = template.render(css=css, **contexto)
 
     if nombre_archivo is None:
-        nombre_archivo = f"record_{documento_id}_{periodo}.pdf"
+        nombre_archivo = f"notas_{documento_id}_{periodo}.pdf"
     ruta_salida = OUTPUT_DIR / nombre_archivo
 
     return _html_a_pdf(html, ruta_salida)
@@ -316,7 +316,7 @@ def generar_certificado_desde_solicitud(
 
 def generar_record_academico_demo() -> Path:
     """
-    Genera un récord académico DEMO con datos ficticios de Ingeniería de Sistemas.
+    Genera un certificado de notas DEMO con datos ficticios de Ingeniería de Sistemas.
     """
     return generar_record_academico(
         nombre_estudiante="María García López",
@@ -334,7 +334,7 @@ def generar_record_academico_demo() -> Path:
             {"codigo": "IS-202", "nombre": "Programación II: Estructuras de Datos", "creditos": 4, "nota": None, "estado": "EN CURSO"},
         ],
         fecha_expedicion=date.today().strftime("%d de %B de %Y"),
-        nombre_archivo="record_academico_demo.pdf",
+        nombre_archivo="certificado_notas_demo.pdf",
     )
 
 
