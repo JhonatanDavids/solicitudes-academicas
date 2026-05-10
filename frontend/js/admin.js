@@ -21,8 +21,8 @@ const DOC_API_BASE = typeof DIRECCION_API !== 'undefined' ? DIRECCION_API : 'htt
 
 // Datos mock para documentos (conectados a backend real)
 const documentosMock = [
-    { id: 1, id_solicitud: 2, cedula: '1002020030', nombre: 'Certificado de Estudio', tipo: 'PDF', fecha: '2026-05-09', estado: 'válido', ruta: `${DOC_API_BASE}/documentos/certificado-real/2` },
-    { id: 2, cedula: '1002020030', nombre: 'Certificado de Notas', tipo: 'PDF', fecha: '2026-05-09', estado: 'pendiente', ruta: `${DOC_API_BASE}/documentos/generar-record-demo` },
+    { id: 1, id_solicitud: 2, cedula: '1010202030', nombre: 'Certificado de Estudio', tipo: 'PDF', fecha: '2026-05-09', estado: 'válido', ruta: `${DOC_API_BASE}/documentos/certificado-real/2` },
+    { id: 2, cedula: '1010202030', nombre: 'Certificado de Notas', tipo: 'PDF', fecha: '2026-05-09', estado: 'pendiente', ruta: `${DOC_API_BASE}/documentos/generar-record-demo` },
     { id: 3, cedula: '1001234567', nombre: 'Paz y Salvo', tipo: 'PDF', fecha: '2026-03-28', estado: 'válido', ruta: '' },
 ];
 
@@ -393,6 +393,7 @@ function consultarDocumentos() {
     if (!cedulaInput || !tablaContainer) return;
 
     const cedula = cedulaInput.value.trim();
+    const cedulaBuscada = cedula.replace(/\D/g, '');
 
     // Validar y crear contenedor de cards una sola vez
     let cardsContainer = document.getElementById('documentos-cards');
@@ -412,7 +413,7 @@ function consultarDocumentos() {
         return;
     }
 
-    const resultados = documentosMock.filter(doc => doc.cedula === cedula);
+    const resultados = documentosMock.filter(doc => String(doc.cedula).replace(/\D/g, '') === cedulaBuscada);
 
     if (!resultados.length) {
         cardsContainer.innerHTML = '<p class="empty-hint" style="grid-column: 1/-1;">No hay documentos para esta cédula</p>';
