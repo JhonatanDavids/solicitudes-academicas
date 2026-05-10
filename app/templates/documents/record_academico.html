@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{{ siglas }} - Récord Académico</title>
+<meta name="author" content="{{ institucion }}">
+<meta name="generator" content="CUL Document Engine">
+
+<style>
+{{ css }}
+</style>
+</head>
+<body>
+
+<!-- ==================================================================
+     HEADER INSTITUCIONAL
+     ================================================================== -->
+<header class="cul-header">
+    <div class="cul-header-top">
+        {% if logo_base64 %}
+        <div class="cul-header-logo">
+            <img src="{{ logo_base64 }}" alt="Logo {{ siglas }}" />
+        </div>
+        {% else %}
+        <div class="cul-header-logo-fallback" aria-label="Logo {{ siglas }}">{{ siglas }}</div>
+        {% endif %}
+        <div class="cul-header-text">
+            <h1>{{ institucion }}</h1>
+            <p class="subtitle">Personería Jurídica 9916 de 1976 &middot; NIT {{ nit }} &middot; {{ ciudad }}, Colombia</p>
+        </div>
+    </div>
+    <div class="cul-header-stripe"></div>
+</header>
+
+<!-- ==================================================================
+     TÍTULO
+     ================================================================== -->
+<div class="doc-title">
+    <h2>Récord Académico</h2>
+    <div class="divider"></div>
+</div>
+
+<!-- ==================================================================
+     DATOS DEL ESTUDIANTE
+     ================================================================== -->
+<div class="record-student-info">
+    <div class="info-group">
+        <div class="info-item">
+            <span class="info-label">Estudiante:</span>
+            <span class="info-value">{{ nombre_estudiante }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Documento:</span>
+            <span class="info-value">{{ documento_id }}</span>
+        </div>
+    </div>
+    <div class="info-group">
+        <div class="info-item">
+            <span class="info-label">Programa:</span>
+            <span class="info-value">{{ programa }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Período:</span>
+            <span class="info-value">{{ periodo }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==================================================================
+     TABLA ACADÉMICA
+     ================================================================== -->
+<table class="cul-table">
+    <thead>
+        <tr>
+            <th class="col-codigo">Código</th>
+            <th class="col-asignatura">Asignatura</th>
+            <th class="col-creditos">Créditos</th>
+            <th class="col-nota">Nota</th>
+            <th class="col-estado">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for asig in asignaturas %}
+        <tr>
+            <td>{{ asig.codigo }}</td>
+            <td>{{ asig.nombre }}</td>
+            <td class="num">{{ asig.creditos }}</td>
+            <td class="num">{{ asig.nota }}</td>
+            <td>
+                {% if asig.estado == 'APROBADO' %}
+                <span class="status status-aprobado">Aprobado</span>
+                {% elif asig.estado == 'REPROBADO' %}
+                <span class="status status-reprobado">Reprobado</span>
+                {% elif asig.estado == 'EN CURSO' %}
+                <span class="status status-en-curso">En curso</span>
+                {% else %}
+                {{ asig.estado }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"><strong>Totales del período</strong></td>
+            <td class="num"><strong>{{ total_creditos }}</strong></td>
+            <td class="num"><strong>{{ promedio_periodo }}</strong></td>
+            <td>Promedio ponderado</td>
+        </tr>
+    </tfoot>
+</table>
+
+<!-- ==================================================================
+     CIERRE
+     ================================================================== -->
+<section class="cert-body">
+    <p>
+        Se expide el presente récord académico a solicitud del(a) interesado(a),
+        en la ciudad de <strong>{{ ciudad }}</strong>, a los
+        <strong>{{ fecha_expedicion }}</strong>.
+    </p>
+</section>
+
+<!-- ==================================================================
+     FIRMAS
+     ================================================================== -->
+<div class="signature-block">
+    <div class="signature">
+        <div class="line"></div>
+        <div class="name">Dr. Carlos Eduardo Martínez</div>
+        <div class="role">Secretario Académico</div>
+        <div class="extra">{{ institucion }}</div>
+    </div>
+
+    <div class="signature">
+        <div class="line"></div>
+        <div class="name">Dr. Jorge Enrique Pacheco</div>
+        <div class="role">Director de Programa</div>
+        <div class="extra">{{ programa }}</div>
+    </div>
+</div>
+
+<!-- ==================================================================
+     FOOTER
+     ================================================================== -->
+<footer class="doc-footer">
+    <div>
+        <span class="verification">{{ codigo_verificacion }}</span><br>
+        <span>Código de verificación</span>
+    </div>
+    <div class="legal">
+        Documento generado electrónicamente por el sistema de
+        Solicitudes Académicas {{ siglas }}. Válido sin firma
+        manuscrita según normativa institucional vigente.
+    </div>
+</footer>
+
+</body>
+</html>

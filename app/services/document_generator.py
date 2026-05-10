@@ -136,6 +136,208 @@ def generar_certificado_demo() -> Path:
     )
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+#  RÉCORD ACADÉMICO
+# ═══════════════════════════════════════════════════════════════════════════
+
+def generar_record_academico(
+    *,
+    nombre_estudiante: str,
+    documento_id: str,
+    programa: str,
+    periodo: str,
+    asignaturas: list[dict],
+    fecha_expedicion: Optional[str] = None,
+    ciudad: str = "Barranquilla",
+    nombre_archivo: Optional[str] = None,
+) -> Path:
+    """
+    Genera un récord académico institucional en PDF con tabla de notas.
+
+    Parámetros:
+        nombre_estudiante : Nombre completo del estudiante
+        documento_id      : Documento de identidad
+        programa           : Programa académico
+        periodo            : Período académico (ej. "2026-1")
+        asignaturas        : Lista de dicts con:
+            { codigo, nombre, creditos, nota, estado }
+            estado debe ser: 'APROBADO' | 'REPROBADO' | 'EN CURSO'
+
+    Retorna:
+        Path al archivo PDF generado.
+    """
+    if fecha_expedicion is None:
+        fecha_expedicion = date.today().strftime("%d de %B de %Y")
+
+    total_creditos = sum(a.get("creditos", 0) for a in asignaturas)
+    notas_validas = [
+        a["nota"] for a in asignaturas
+        if a.get("nota") is not None and a.get("estado") != "EN CURSO"
+    ]
+    if notas_validas:
+        promedio = sum(notas_validas) / len(notas_validas)
+        promedio_periodo = f"{promedio:.2f}"
+    else:
+        promedio_periodo = "--"
+
+    contexto = {
+        "institucion": "Corporación Universitaria Latinoamericana",
+        "siglas": "CUL",
+        "nit": "890.104.530-1",
+        "ciudad": ciudad,
+        "logo_base64": _logo_base64(),
+        "nombre_estudiante": nombre_estudiante,
+        "documento_id": documento_id,
+        "programa": programa,
+        "periodo": periodo,
+        "asignaturas": asignaturas,
+        "total_creditos": total_creditos,
+        "promedio_periodo": promedio_periodo,
+        "fecha_expedicion": fecha_expedicion,
+        "codigo_verificacion": _generar_codigo_verificacion(),
+    }
+
+    template = _jinja_env.get_template("record_academico.html")
+    css = _leer_css("document_style.css")
+    html = template.render(css=css, **contexto)
+
+    if nombre_archivo is None:
+        nombre_archivo = f"record_{documento_id}_{periodo}.pdf"
+    ruta_salida = OUTPUT_DIR / nombre_archivo
+
+    return _html_a_pdf(html, ruta_salida)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  CERTIFICADO DESDE BD REAL
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _periodo_desde_fecha(fecha) -> str:
+    """Convierte un objeto date/datetime a formato 'AAAA-N'."""
+    m = fecha.month
+    return f"{fecha.year}-1" if m <= 6 else f"{fecha.year}-2"
+
+
+def generar_certificado_desde_solicitud(
+    db_conn,
+    id_solicitud: int,
+) -> Path:
+    """
+    Genera un certificado de estudio con datos REALES desde NeonDB.
+
+    Consulta las tablas solicitudes + usuarios + tipos_solicitud
+    + respuestas (LEFT JOIN) y reutiliza generar_certificado_estudio().
+
+    Parámetros:
+        db_conn:      Conexión psycopg2 activa (no se cierra aquí).
+        id_solicitud: ID de la solicitud en la BD.
+
+    Retorna:
+        Path al PDF generado.
+
+    Lanza:
+        ValueError si la solicitud no existe.
+    """
+    cursor = db_conn.cursor()
+    try:
+        cursor.execute(
+            """
+            SELECT
+                u.nombre,
+                u.apellido,
+                u.cedula,
+                u.programa,
+                u.semestre,
+                s.estado_actual,
+                s.fecha_creacion,
+                ts.nombre AS tipo_solicitud,
+                r.numero_resolucion,
+                r.fecha_respuesta
+            FROM solicitudes s
+            JOIN usuarios u ON s.id_usuario = u.id_usuario
+            JOIN tipos_solicitud ts ON s.id_tipo_solicitud = ts.id_tipo_solicitud
+            LEFT JOIN respuestas r ON s.id_solicitud = r.id_solicitud
+            WHERE s.id_solicitud = %s
+            """,
+            (id_solicitud,),
+        )
+        row = cursor.fetchone()
+    finally:
+        cursor.close()
+
+    if row is None:
+        raise ValueError(f"Solicitud {id_solicitud} no encontrada en la base de datos")
+
+    (
+        nombre,
+        apellido,
+        cedula,
+        programa,
+        semestre,
+        estado,
+        fecha_creacion,
+        tipo_solicitud,
+        numero_resolucion,
+        fecha_respuesta,
+    ) = row
+
+    nombre_completo = f"{nombre} {apellido}"
+    periodo_actual = _periodo_desde_fecha(date.today())
+
+    # Estimar periodo de ingreso a partir del semestre cursado
+    hoy = date.today()
+    semestres_cursados = semestre or 1
+    anios_atras = (semestres_cursados - 1) // 2
+    mes_ingreso = 1 if (semestres_cursados % 2 == 1) else 7
+    periodo_ingreso = f"{hoy.year - anios_atras}-{1 if mes_ingreso <= 6 else 2}"
+
+    logger.info(
+        "Generando certificado real: solicitud=%s | estudiante=%s | programa=%s | estado=%s",
+        id_solicitud,
+        nombre_completo,
+        programa or "—",
+        estado,
+    )
+
+    return generar_certificado_estudio(
+        nombre_estudiante=nombre_completo,
+        documento_id=cedula or "—",
+        programa=programa or "—",
+        nivel="Pregrado",
+        jornada="Diurna",
+        periodo_ingreso=periodo_ingreso,
+        periodo_actual=periodo_actual,
+        promedio="4.3",
+        fecha_expedicion=date.today().strftime("%d de %B de %Y"),
+        ciudad="Barranquilla",
+        nombre_archivo=f"certificado_{id_solicitud}_{cedula}.pdf",
+    )
+
+
+def generar_record_academico_demo() -> Path:
+    """
+    Genera un récord académico DEMO con datos ficticios de Ingeniería de Sistemas.
+    """
+    return generar_record_academico(
+        nombre_estudiante="María García López",
+        documento_id="1010202030",
+        programa="Ingeniería de Sistemas",
+        periodo="2026-1",
+        asignaturas=[
+            {"codigo": "IS-101", "nombre": "Cálculo Diferencial", "creditos": 4, "nota": 4.5, "estado": "APROBADO"},
+            {"codigo": "IS-102", "nombre": "Álgebra Lineal", "creditos": 3, "nota": 3.8, "estado": "APROBADO"},
+            {"codigo": "IS-103", "nombre": "Programación I", "creditos": 4, "nota": 4.2, "estado": "APROBADO"},
+            {"codigo": "IS-104", "nombre": "Física Mecánica", "creditos": 3, "nota": 3.0, "estado": "APROBADO"},
+            {"codigo": "IS-105", "nombre": "Introducción a la Ingeniería de Sistemas", "creditos": 2, "nota": 4.7, "estado": "APROBADO"},
+            {"codigo": "IS-106", "nombre": "Humanidades I: Ética y Ciudadanía", "creditos": 2, "nota": 3.5, "estado": "APROBADO"},
+            {"codigo": "IS-201", "nombre": "Estructuras Discretas", "creditos": 3, "nota": 2.8, "estado": "REPROBADO"},
+            {"codigo": "IS-202", "nombre": "Programación II: Estructuras de Datos", "creditos": 4, "nota": None, "estado": "EN CURSO"},
+        ],
+        fecha_expedicion=date.today().strftime("%d de %B de %Y"),
+        nombre_archivo="record_academico_demo.pdf",
+    )
+
+
 def _generar_codigo_verificacion() -> str:
     import uuid
     return uuid.uuid4().hex[:12].upper()

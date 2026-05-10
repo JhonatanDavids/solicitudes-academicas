@@ -2,7 +2,8 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 
-load_dotenv()
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
+load_dotenv(_env_path)
 
 def get_db_connection():
     return psycopg2.connect(

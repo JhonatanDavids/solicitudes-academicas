@@ -276,8 +276,8 @@ html {
     padding-top: 8pt;
     border-top: 0.5pt solid var(--cul-gray-200);
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 6.5pt;
-    color: var(--cul-gray-400);
+    font-size: 7pt;
+    color: var(--cul-gray-500);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -285,8 +285,8 @@ html {
 
 .doc-footer .verification {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 6.5pt;
-    color: var(--cul-gray-500);
+    font-size: 7pt;
+    color: var(--cul-gray-600);
     background: var(--cul-gray-100);
     padding: 2pt 5pt;
 }
@@ -326,6 +326,113 @@ html {
 
 .cul-table tbody tr:nth-child(even) {
     background: var(--cul-gray-50);
+}
+
+/* -- Estados academicos (tabla de notas) -- */
+
+.cul-table td.status {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 7pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3pt;
+}
+
+.cul-table .status-aprobado {
+    color: #166534;
+    background: #dcfce7;
+    border-radius: 2pt;
+    padding: 2pt 6pt;
+    display: inline-block;
+}
+
+.cul-table .status-reprobado {
+    color: #991b1b;
+    background: #fee2e2;
+    border-radius: 2pt;
+    padding: 2pt 6pt;
+    display: inline-block;
+}
+
+.cul-table .status-en-curso {
+    color: #78350f;
+    background: #fde68a;
+    border: 0.5pt solid #fcd34d;
+    border-radius: 2pt;
+    padding: 2pt 6pt;
+    display: inline-block;
+}
+
+.cul-table .col-codigo { width: 12%; }
+.cul-table .col-asignatura { width: 40%; }
+.cul-table .col-creditos { width: 10%; text-align: center; }
+.cul-table .col-nota { width: 10%; text-align: center; }
+.cul-table .col-estado { width: 28%; }
+
+.cul-table td.num { text-align: center; font-variant-numeric: tabular-nums; }
+
+/* -- Pie de tabla (promedio / creditos) -- */
+
+.cul-table tfoot td {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 8pt;
+    color: var(--cul-navy);
+    background: var(--cul-gray-100);
+    border-top: 1.5pt solid var(--cul-navy);
+    border-bottom: none;
+    padding: 7pt 10pt;
+}
+
+/* -- Info compacta del estudiante (record) -- */
+
+.record-student-info {
+    display: flex;
+    align-items: center;
+    background: var(--cul-gray-50);
+    border-left: 2.5pt solid var(--cul-gold);
+    padding: 8pt 16pt;
+    margin: 12pt 0;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 8pt;
+    color: var(--cul-gray-700);
+    gap: 12pt;
+    flex-wrap: nowrap;
+}
+
+.record-student-info .info-group:first-child {
+    flex: 3;
+    min-width: 0;
+}
+
+.record-student-info .info-group:last-child {
+    flex: 2;
+    min-width: 0;
+}
+
+.record-student-info .info-group {
+    display: flex;
+    gap: 12pt;
+    flex-wrap: nowrap;
+}
+
+.record-student-info .info-item {
+    display: flex;
+    gap: 4pt;
+}
+
+.record-student-info .info-label {
+    font-weight: 600;
+    color: var(--cul-gray-500);
+    text-transform: uppercase;
+    font-size: 6.5pt;
+    letter-spacing: 0.4pt;
+}
+
+.record-student-info .info-value {
+    font-weight: 500;
+    color: var(--cul-gray-900);
+    white-space: nowrap;
 }
 
 /* -- Utilidades -- */
