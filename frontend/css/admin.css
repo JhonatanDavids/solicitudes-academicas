@@ -2635,26 +2635,135 @@ td mark {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DOCUMENT VIEWER MODAL
+   DOCUMENT VIEWER MODAL — Rediseño Fase 3A
    ═══════════════════════════════════════════════════════════════ */
 .doc-viewer-box {
-    max-width: 920px;
-    width: 95%;
+    max-width: 1200px;
+    width: 95vw;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
 }
 
+/* ── TOOLBAR HEAD ──────────────────────────────────────────── */
+.doc-viewer-head {
+    padding: 0 0 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--ad-surface);
+    border-bottom: 1px solid var(--ad-border);
+    min-height: 56px;
+    flex-shrink: 0;
+}
+
+.dv-head-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+}
+
+.dv-head-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--ad-navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dv-head-icon i {
+    font-size: 16px;
+    color: var(--ad-gold);
+}
+
+.dv-head-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.dv-head-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ad-navy);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--ad-font);
+}
+
+.dv-head-sub {
+    font-size: 11px;
+    color: var(--ad-text-3);
+    font-weight: 500;
+    font-family: var(--ad-mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dv-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 8px;
+    flex-shrink: 0;
+}
+
+.dv-toolbar-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ad-r-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ad-text-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all .15s var(--ad-ease);
+}
+
+.dv-toolbar-btn:hover {
+    background: var(--ad-surface-2);
+    border-color: var(--ad-border);
+    color: var(--ad-navy);
+}
+
+.dv-toolbar-btn:active {
+    transform: scale(.95);
+}
+
+.dv-toolbar-close {
+    margin-left: 4px;
+}
+
+.dv-toolbar-close:hover {
+    background: var(--ad-red-bg);
+    color: var(--ad-red);
+    border-color: var(--ad-red-border);
+}
+
+/* ── BODY ──────────────────────────────────────────────────── */
 .doc-viewer-body {
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 420px;
-    max-height: 75vh;
+    min-height: 480px;
+    max-height: calc(90vh - 56px);
     overflow: auto;
-    background: #f8fafc;
-    border-radius: 0 0 var(--ad-r-md) var(--ad-r-md);
+    background: #f1f5f9;
+    flex: 1;
 }
 
 .doc-viewer-body iframe {
@@ -2665,48 +2774,51 @@ td mark {
     display: block;
 }
 
-/* PDF preview card */
+/* ── PDF CARD ──────────────────────────────────────────────── */
 .doc-viewer-pdf-card {
     background: var(--ad-surface);
     border: 1px solid var(--ad-border);
-    border-radius: var(--ad-r-md);
+    border-radius: var(--ad-r-lg);
     box-shadow: var(--ad-shadow-md);
-    padding: 32px 28px;
+    padding: 48px 44px 36px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 14px;
-    max-width: 420px;
+    gap: 20px;
+    max-width: 520px;
     width: 100%;
+    margin: 40px auto;
 }
 
 .pdf-card-icon-box {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
     background: var(--ad-red-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 32px;
     color: var(--ad-red);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.12);
 }
 
 .pdf-card-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .pdf-card-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--ad-navy);
     margin: 0;
     word-break: break-word;
     line-height: 1.3;
+    font-family: var(--ad-font);
 }
 
 .pdf-card-meta {
@@ -2714,7 +2826,7 @@ td mark {
     align-items: center;
     gap: 8px;
     margin: 0;
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--ad-text-3);
     font-family: var(--ad-mono);
 }
@@ -2722,22 +2834,23 @@ td mark {
 .pdf-type-badge {
     display: inline-flex;
     align-items: center;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .5px;
-    padding: 1px 6px;
+    padding: 2px 8px;
     border-radius: 4px;
     background: var(--ad-red-bg);
     color: var(--ad-red);
+    border: 1px solid var(--ad-red-border);
 }
 
 .pdf-card-note {
     margin: 0;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--ad-text-4);
     line-height: 1.5;
-    max-width: 320px;
+    max-width: 380px;
 }
 
 .pdf-card-btn {
@@ -2746,28 +2859,31 @@ td mark {
     justify-content: center;
     gap: 8px;
     width: 100%;
-    padding: 12px 20px;
+    padding: 14px 24px;
     border-radius: var(--ad-r-sm);
     background: var(--ad-navy);
     color: #fff;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: background .2s var(--ad-ease), transform .15s var(--ad-ease);
-    margin-top: 4px;
+    transition: all .2s var(--ad-ease);
+    margin-top: 8px;
+    font-family: var(--ad-font);
+    box-shadow: 0 2px 8px rgba(13, 27, 62, .2);
 }
 
 .pdf-card-btn:hover {
     background: var(--ad-navy-mid);
     transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(13, 27, 62, .28);
 }
 
 .pdf-card-btn:active {
     transform: translateY(0);
 }
 
-/* Image preview */
+/* ── IMAGE VIEWER ──────────────────────────────────────────── */
 .doc-viewer-img-container {
     display: flex;
     flex-direction: column;
@@ -2780,57 +2896,61 @@ td mark {
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 28px 28px 20px;
-    background: #fff;
+    padding: 36px;
+    background: #1a1f36;
+    min-height: 420px;
 }
 
 .doc-viewer-body img.doc-viewer-img {
-    max-width: 90%;
+    max-width: 100%;
     max-height: 60vh;
     object-fit: contain;
     display: block;
-    border-radius: 8px;
-    box-shadow: 0 4px 24px rgba(13, 27, 62, 0.10), 0 0 0 1px rgba(13, 27, 62, 0.04);
+    border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
 }
 
 .doc-viewer-img-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    padding: 12px 28px 20px;
+    gap: 4px;
+    padding: 16px 32px 20px;
     width: 100%;
     box-sizing: border-box;
+    background: var(--ad-surface);
+    border-top: 1px solid var(--ad-border);
 }
 
 .img-info-name {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--ad-navy);
+    font-family: var(--ad-font);
 }
 
 .img-info-meta {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--ad-text-3);
     font-family: var(--ad-mono);
 }
 
+/* ── PLACEHOLDER ───────────────────────────────────────────── */
 .doc-viewer-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 60px 40px;
+    gap: 12px;
+    padding: 64px 48px;
     text-align: center;
     color: var(--ad-text-3);
-    font-size: 15px;
 }
 
 .doc-viewer-placeholder .ph-icon {
-    font-size: 52px;
-    opacity: 0.35;
-    margin-bottom: 4px;
+    font-size: 56px;
+    opacity: 0.25;
+    margin-bottom: 8px;
 }
 
 .doc-viewer-placeholder .ph-title {
@@ -2844,16 +2964,48 @@ td mark {
     font-size: 13px;
     color: var(--ad-text-4);
     margin: 0;
-    max-width: 340px;
+    max-width: 380px;
+    line-height: 1.5;
 }
 
-@media (max-width: 640px) {
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 768px) {
     .doc-viewer-box {
-        width: 98%;
-        max-height: 95vh;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
     }
+
+    .dv-head-sub {
+        display: none;
+    }
+
+    .dv-head-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+    }
+
+    .dv-head-icon i {
+        font-size: 14px;
+    }
+
+    .dv-head-info h4 {
+        font-size: 13px;
+    }
+
     .doc-viewer-body {
+        min-height: 320px;
+        max-height: calc(90vh - 56px);
+    }
+
+    .doc-viewer-img-wrapper {
+        padding: 16px;
         min-height: 280px;
-        max-height: 65vh;
+    }
+
+    .doc-viewer-pdf-card {
+        padding: 32px 24px 28px;
+        margin: 24px 16px;
     }
 }

@@ -759,12 +759,34 @@
     <!-- MODAL VISOR DOCUMENTOS -->
     <div class="modal-overlay" id="modal-doc-viewer">
         <div class="modal-box doc-viewer-box">
-            <div class="modal-head">
-                <h4 id="doc-viewer-title">Visor de Documento</h4>
-                <button class="modal-close" id="btn-close-doc-viewer">✕</button>
+            <div class="modal-head doc-viewer-head">
+                <div class="dv-head-left">
+                    <div class="dv-head-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div class="dv-head-info">
+                        <h4 id="doc-viewer-title">Visor de Documento</h4>
+                        <span class="dv-head-sub" id="doc-viewer-subtitle">Seleccione un documento para visualizar</span>
+                    </div>
+                </div>
+                <div class="dv-head-actions">
+                    <button class="dv-toolbar-btn" id="dv-btn-download" title="Descargar documento">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button class="dv-toolbar-btn" id="dv-btn-open-tab" title="Abrir en nueva pestaña">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </button>
+                    <button class="dv-toolbar-btn dv-toolbar-close" id="btn-close-doc-viewer" title="Cerrar visor">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body doc-viewer-body" id="doc-viewer-body">
-                <div class="doc-viewer-placeholder">Cargando documento...</div>
+                <div class="doc-viewer-placeholder">
+                    <div class="ph-icon">📄</div>
+                    <p class="ph-title">Seleccione un documento</p>
+                    <p class="ph-sub">El contenido del documento se mostrará aquí.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -521,6 +521,16 @@ function abrirVisorDocumento(docId) {
 
     // Find doc
     const doc = docId ? documentosMock.find(d => d.id === docId) : null;
+    window._currentViewerDoc = doc;
+    // Update subtitle
+    const subEl = document.getElementById('doc-viewer-subtitle');
+    if (subEl) {
+        if (doc) {
+            subEl.textContent = `${doc.tipo || ''} · ${doc.fecha || '—'}`;
+        } else {
+            subEl.textContent = '';
+        }
+    }
 
     // Clear previous content
     bodyEl.innerHTML = '';
@@ -625,6 +635,7 @@ function cerrarVisorDocumento() {
     const bodyEl = document.getElementById('doc-viewer-body');
     if (!modal) return;
     modal.classList.remove('show');
+    window._currentViewerDoc = null;
     // Clear body to stop iframe loading
     if (bodyEl) bodyEl.innerHTML = '';
 }
@@ -2114,3 +2125,34 @@ function enviarNotificacion(mensaje) {
     console.log('\u{1F4E7} Notificacion:', mensaje);
     toast('\u{1F4E7} ' + mensaje, 'info');
 }
+
+// ── DOC VIEWER TOOLBAR WIRING ─────────────────────────────────
+(function () {
+    const downloadBtn = document.getElementById('dv-btn-download');
+    const openTabBtn = document.getElementById('dv-btn-open-tab');
+    const closeBtn = document.getElementById('btn-close-doc-viewer');
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+            const doc = window._currentViewerDoc;
+            if (!doc || !doc.ruta) return;
+            const a = document.createElement('a');
+            a.href = doc.ruta;
+            a.download = doc.nombre || 'documento';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    }
+
+    if (openTabBtn) {
+        openTabBtn.addEventListener('click', function () {
+            const doc = window._currentViewerDoc;
+            if (doc && doc.ruta) window.open(doc.ruta, '_blank');
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', cerrarVisorDocumento);
+    }
+})();
