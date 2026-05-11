@@ -839,15 +839,6 @@ function actualizarOverview() {
    FILTROS
 ============================================================ */
 
-function filterTable(seccion, valor) {
-    const texto = valor.toLowerCase();
-    const contenedor = document.getElementById('data-' + seccion);
-    if (!contenedor) return;
-    contenedor.querySelectorAll('tbody tr').forEach(fila => {
-        fila.style.display = fila.textContent.toLowerCase().includes(texto) ? '' : 'none';
-    });
-}
-
 function filterByEstado() {
     const estado = document.getElementById('filter-estado')?.value || '';
     const $tabla = $('#data-solicitudes table');
@@ -998,9 +989,16 @@ async function openCrud(tipo, modo, id = null) {
 
     // Poblar selects dependientes
     if (tipo === 'usuario') {
+        if (!listaRoles || !listaRoles.length) {
+            toast('Los roles aún se están cargando. Intente nuevamente.', 'warning');
+            return;
+        }
         const sel = document.getElementById('cf-rol');
         if (sel) {
             sel.textContent = '';
+            const placeholder = new Option('Seleccione un rol', '');
+            placeholder.disabled = true;
+            sel.appendChild(placeholder);
             listaRoles.forEach(r => sel.appendChild(new Option(r.nombre_rol, r.id_rol)));
         }
     }
@@ -1034,15 +1032,16 @@ async function openCrud(tipo, modo, id = null) {
         const inputSolicitud = document.getElementById('cf-sol-id');
         if (inputSolicitud && id) {
             inputSolicitud.value = String(id);
+            inputSolicitud.readOnly = true;
         }
 
         const info = document.getElementById('cf-info-revision-solicitud');
         if (info && id) {
             const solicitud = listaSolicitudes.find(s => s.id_solicitud === id);
             if (solicitud) {
-                info.textContent = `${solicitud.nombre || ''} ${solicitud.apellido || ''} · ${solicitud.tipo || 'Tipo no disponible'} · Estado actual: ${solicitud.estado_actual || '–'}`;
+                info.textContent = `${solicitud.nombre || ''} ${solicitud.apellido || ''} · ${solicitud.tipo || 'Tipo no disponible'} · ${solicitud.estado_actual || '–'}`;
             } else {
-                info.textContent = `Solicitud #${id}`;
+                info.textContent = `Solicitud a revisar`;
             }
         }
     }
@@ -1144,15 +1143,25 @@ async function saveCrud() {
         if (modo === 'create') {
             const payloads = {
                 usuario: () => {
+                    const idRol = parseInt(get('cf-rol'), 10);
+                    if (isNaN(idRol)) {
+                        toast('No se pudo obtener el rol seleccionado. Intente nuevamente.', 'error');
+                        return;
+                    }
+                    const correo = get('cf-correo');
+                    if (!correo || !correo.includes('@')) {
+                        toast('Ingrese un correo electrónico válido', 'error');
+                        return;
+                    }
                     return api.crearUsuario({
                         nombre: get('cf-nombre'),
                         apellido: get('cf-apellido'),
-                        correo: get('cf-correo'),
+                        correo: correo,
                         cedula: get('cf-cedula-usuario'),
                         contrasena: get('cf-pass'),
                         programa: get('cf-programa'),
                         semestre: parseInt(get('cf-semestre'), 10) || 0,
-                        id_rol: parseInt(get('cf-rol'), 10),
+                        id_rol: idRol,
                         estado: 'activo',
                     });
                 },
@@ -1245,6 +1254,9 @@ async function saveCrud() {
         await recargar[tipo]?.();
 
     } catch (err) {
+        if (crudState.tipo === 'usuario' && crudState.modo === 'create') {
+            console.error('Error crear usuario:', err);
+        }
         toast('Error: ' + err.message, 'error');
     }
 }
@@ -1670,7 +1682,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (inpDoc) inpDoc.addEventListener('keydown', e => { if (e.key === 'Enter') consultarDocumentos(); });
 
     // Revisiones
-    bind('btn-crud-rev-create', 'click', () => openCrud('revision', 'create'));
+    // bind('btn-crud-rev-create', 'click', () => openCrud('revision', 'create'));
     bind('btn-load-rev', 'click', loadRevisiones);
     const revDoc = document.getElementById('rev-cedula-estudiante');
     if (revDoc) revDoc.addEventListener('keydown', e => { if (e.key === 'Enter') loadRevisiones(); });
@@ -2136,7 +2148,6 @@ function generarReportePDF() {
 }
 
 function enviarNotificacion(mensaje) {
-    console.log('\u{1F4E7} Notificacion:', mensaje);
     toast('\u{1F4E7} ' + mensaje, 'info');
 }
 

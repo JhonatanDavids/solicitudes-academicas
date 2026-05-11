@@ -303,10 +303,7 @@ function actualizarOverview() {
     _renderOverviewTable(listaSolicitudes);
 }
 
-let _ovListaActual = [];
-
 function _renderOverviewTable(lista) {
-    _ovListaActual = lista;
 
     const contenedor = document.getElementById('overview-recent');
     if (!contenedor) return;

@@ -126,6 +126,13 @@
                     </div>
                     <div class="search-bar"><input class="search-input" id="input-buscar-solicitudes"
                             placeholder="Buscar solicitudes..."></div>
+                    <div class="filter-bar" id="solicitudes-filter-bar">
+                        <div class="filter-chip active" data-estado="">Todas</div>
+                        <div class="filter-chip" data-estado="pendiente">Pendientes</div>
+                        <div class="filter-chip" data-estado="en_revision">En revisión</div>
+                        <div class="filter-chip" data-estado="aprobada">Aprobadas</div>
+                        <div class="filter-chip" data-estado="rechazada">Rechazadas</div>
+                    </div>
                     <div id="data-solicitudes">
                         <div class="loading-state">
                             <div class="spinner"></div><br>Cargando...
@@ -174,6 +181,25 @@
                 <div id="modal-json-content"></div>
             </div>
             <div class="modal-footer"><button class="btn-sm blue" style="padding:7px 18px;" id="btn-copiar-json">⎘ Copiar</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN LOGOUT -->
+    <div class="modal-overlay" id="modal-logout">
+        <div class="modal-box" style="width:400px;">
+            <div class="modal-head">
+                <h4>Cerrar Sesión</h4>
+                <button class="modal-close" data-action="close-logout">✕</button>
+            </div>
+            <div class="modal-body" style="text-align:center;padding:2rem 1.5rem;">
+                <div style="font-size:2.5rem;margin-bottom:0.6rem;">⬡</div>
+                <div style="font-size:1.05rem;font-weight:700;color:var(--text-strong);font-family:var(--font-display);margin-bottom:0.4rem;">¿Estás seguro de cerrar sesión?</div>
+                <div style="color:var(--text-muted);font-size:0.85rem;line-height:1.5;">Tendrás que volver a iniciar sesión para acceder nuevamente.</div>
+            </div>
+            <div class="modal-footer" style="justify-content:center;gap:10px;">
+                <button class="btn-sm cancel" style="padding:7px 22px;" data-action="close-logout">Cancelar</button>
+                <button class="btn-sm red" style="padding:7px 22px;" id="btn-confirmar-logout">Cerrar sesión</button>
+            </div>
         </div>
     </div>
 

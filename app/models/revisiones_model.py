@@ -5,9 +5,9 @@ from app.models.enums import DecisionRevision
 
 class RevisionBase(BaseModel):
     id_solicitud: int
-    id_usuario: int
+    id_usuario: Optional[int] = None
     id_paso: Optional[int] = None
-    decision: DecisionRevision
+    decision: Optional[DecisionRevision] = None
     comentario: Optional[str] = None
     estado_revision: str
 

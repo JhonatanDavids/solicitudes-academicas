@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.controllers.usuarios_controller import UsuarioController
-from app.models.usuarios_model import Usuario
+from app.models.usuarios_model import UsuarioCreate
 from app.controllers.auth_controller import (
     solo_admin,
     admin_o_coordinador,
@@ -14,7 +14,7 @@ usuario_ctrl = UsuarioController()
 
 # SOLO ADMIN
 @router.post("/create")
-async def create_usuario(usuario: Usuario, user=Depends(solo_admin)):
+async def create_usuario(usuario: UsuarioCreate, user=Depends(solo_admin)):
     return usuario_ctrl.create_usuario(usuario)
 
 # ADMIN O COORDINADOR
@@ -44,7 +44,7 @@ async def update_estado_usuario(id_usuario: int, nuevo_estado: str, user=Depends
 
 # SOLO ADMIN
 @router.put("/update/{id_usuario}")
-async def update_usuario(id_usuario: int, usuario: Usuario, user=Depends(solo_admin)):
+async def update_usuario(id_usuario: int, usuario: UsuarioCreate, user=Depends(solo_admin)):
     return usuario_ctrl.update_usuario(id_usuario, usuario)
 
 # SOLO ADMIN

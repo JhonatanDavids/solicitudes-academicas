@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.controllers.documentos_controller import DocumentoController
-from app.models.documentos_model import Documento
+from app.models.documentos_model import DocumentoCreate
 from app.controllers.auth_controller import (
     TokenData,
     solo_admin,
@@ -17,7 +17,7 @@ documento_ctrl = DocumentoController()
 # Cualquier usuario autenticado puede subir documentos
 @router.post("/upload")
 async def upload_documento(
-    documento: Documento,
+    documento: DocumentoCreate,
     usuario: TokenData = Depends(cualquier_rol)
 ):
     return documento_ctrl.upload_documento(documento)
@@ -65,7 +65,7 @@ async def get_documentos(
 @router.put("/update/{id_documento}")
 async def update_documento(
     id_documento: int,
-    documento: Documento,
+    documento: DocumentoCreate,
     usuario: TokenData = Depends(solo_admin)
 ):
     return documento_ctrl.update_documento(id_documento, documento)

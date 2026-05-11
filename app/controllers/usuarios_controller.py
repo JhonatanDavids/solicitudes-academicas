@@ -179,6 +179,9 @@ class UsuarioController:
             if cursor.rowcount == 0:
                 raise HTTPException(status_code=404, detail="Usuario no encontrado")
             return {"resultado": "Usuario eliminado"}
+        except psycopg2.errors.ForeignKeyViolation:
+            conn.rollback()
+            raise HTTPException(status_code=409, detail="No se puede eliminar el usuario porque tiene información asociada en el sistema.")
         except psycopg2.Error as err:
             conn.rollback()
             raise HTTPException(status_code=500, detail="Error al eliminar el usuario")

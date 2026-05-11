@@ -419,21 +419,58 @@ async function confirmarCambioEstado() {
    FILTROS
 ============================================================ */
 
-function filterByEstado() {
-    const estado = document.getElementById('filter-estado').value;
-    renderSolicitudes(
-        estado ? listaSolicitudes.filter(s => s.estado_actual === estado) : listaSolicitudes
-    );
+function _initSolicitudesFilterChips() {
+    const bar = document.getElementById('solicitudes-filter-bar');
+    if (!bar) return;
+
+    bar.addEventListener('click', function(e) {
+        const chip = e.target.closest('.filter-chip');
+        if (!chip) return;
+
+        bar.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        const estado = chip.dataset.estado || '';
+
+        const sel = document.getElementById('filter-estado');
+        if (sel) sel.value = estado;
+        applyAllFilters();
+    });
 }
 
-// Filtro de texto — opera sobre las filas ya renderizadas por DataTables
+function applyAllFilters() {
+    const estado = document.getElementById('filter-estado').value;
+    const texto = (document.getElementById('input-buscar-solicitudes').value || '').toLowerCase().trim();
+
+    let filtradas = listaSolicitudes;
+
+    if (estado) {
+        filtradas = filtradas.filter(s => s.estado_actual === estado);
+    }
+
+    if (texto) {
+        filtradas = filtradas.filter(s => {
+            return (
+                (s.nombre || '').toLowerCase().includes(texto) ||
+                (s.apellido || '').toLowerCase().includes(texto) ||
+                (s.tipo || '').toLowerCase().includes(texto) ||
+                (s.nombre_tipo || '').toLowerCase().includes(texto) ||
+                (s.estado_actual || '').toLowerCase().includes(texto) ||
+                (s.prioridad || '').toLowerCase().includes(texto) ||
+                String(s.id_solicitud || '').includes(texto)
+            );
+        });
+    }
+
+    renderSolicitudes(filtradas);
+}
+
+function filterByEstado() {
+    applyAllFilters();
+}
+
 function filterTable(valor) {
-    const texto = valor.toLowerCase();
-    const contenedor = document.getElementById('data-solicitudes');
-    if (!contenedor) return;
-    contenedor.querySelectorAll('tbody tr').forEach(fila => {
-        fila.style.display = fila.textContent.toLowerCase().includes(texto) ? '' : 'none';
-    });
+    applyAllFilters();
 }
 
 
@@ -579,6 +616,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modal JSON
     bind('btn-cerrar-json-1', 'click', () => closeModal('modal-json'));
     bind('btn-copiar-json', 'click', copiarJsonFuncionario);
+
+    // Inicializar chips de filtro
+    _initSolicitudesFilterChips();
 
     // ── Carga inicial ──
     try {

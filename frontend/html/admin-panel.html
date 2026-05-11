@@ -175,13 +175,13 @@
 
     <!-- Formulario: revisión -->
     <template id="tpl-form-revision">
+        <input id="cf-sol-id" type="hidden">
         <div class="form-field">
-            <label>ID Solicitud</label>
-            <input id="cf-sol-id" type="number" placeholder="1" min="1">
-        </div>
-        <div id="cf-info-revision-solicitud"
-            style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);">
-            Selecciona una solicitud para crear la revisión
+            <label>Solicitud a revisar</label>
+            <div id="cf-info-revision-solicitud"
+                style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:0.92rem;color:var(--text-primary);font-weight:500;">
+                Selecciona una solicitud para crear la revisión
+            </div>
         </div>
         <div class="form-field">
             <label>Estado revisión</label>
@@ -586,7 +586,7 @@
                         <span id="revisiones-counter" class="ad-counter"></span>
                     </div>
                     <div class="ad-toolbar-actions">
-                        <button class="btn-sm green" id="btn-crud-rev-create">+ Nueva Revisión</button>
+                        <!-- <button class="btn-sm green" id="btn-crud-rev-create">+ Nueva Revisión</button> -->
                         
                     </div>
                 </div>
@@ -790,6 +790,26 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL CONFIRMACIÓN LOGOUT -->
+    <div class="modal-overlay" id="modal-logout">
+        <div class="modal-box" style="width:400px;">
+            <div class="modal-head">
+                <h4>Cerrar Sesión</h4>
+                <button class="modal-close" data-action="close-logout">✕</button>
+            </div>
+            <div class="modal-body" style="text-align:center;padding:2rem 1.5rem;">
+                <div style="font-size:2.5rem;margin-bottom:0.6rem;">⬡</div>
+                <div style="font-size:1.05rem;font-weight:700;color:var(--ad-navy);font-family:var(--font-display);margin-bottom:0.4rem;">¿Estás seguro de cerrar sesión?</div>
+                <div style="color:var(--text-muted);font-size:0.85rem;line-height:1.5;">Tendrás que volver a iniciar sesión para acceder nuevamente.</div>
+            </div>
+            <div class="modal-footer" style="justify-content:center;gap:10px;">
+                <button class="btn-sm cancel" style="padding:7px 22px;" data-action="close-logout">Cancelar</button>
+                <button class="btn-sm red" style="padding:7px 22px;" id="btn-confirmar-logout">Cerrar sesión</button>
+            </div>
+        </div>
+    </div>
+
     <!-- UTILS -->
     <script src="../js/utils/helpers.js"></script>
     <script src="../js/utils/auth.js"></script>

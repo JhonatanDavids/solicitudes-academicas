@@ -94,7 +94,8 @@ function copyJsonModal() {
 }
 
 /**
- * Inicializa el cierre de modales al hacer click en el backdrop (overlay).
+ * Inicializa el cierre de modales al hacer click en el backdrop (overlay)
+ * y con tecla ESC (cierre global).
  * Llamar una sola vez en DOMContentLoaded.
  */
 function initModalBackdrop() {
@@ -103,6 +104,56 @@ function initModalBackdrop() {
             closeModal(e.target.id);
         }
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+
+        document.querySelectorAll('.modal-overlay.show').forEach(m => {
+            closeModal(m.id);
+        });
+
+        const confirmModal = document.querySelector('confirm-modal');
+        if (confirmModal) {
+            const cmOverlay = confirmModal.querySelector('#cm-overlay');
+            if (cmOverlay && cmOverlay.classList.contains('show')) {
+                confirmModal.hide();
+            }
+        }
+    });
+}
+
+// ── MODAL LOGOUT ──────────────────────────────────────────────
+
+let _logoutModalReady = false;
+
+function _initLogoutModal() {
+    if (_logoutModalReady) return;
+    _logoutModalReady = true;
+
+    document.querySelectorAll('[data-action="close-logout"]').forEach(btn => {
+        btn.addEventListener('click', () => closeModal('modal-logout'));
+    });
+
+    const confirmBtn = document.getElementById('btn-confirmar-logout');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', confirmarLogout);
+    }
+}
+
+function showLogoutModal() {
+    _initLogoutModal();
+    const modal = document.getElementById('modal-logout');
+    if (modal) modal.classList.add('show');
+}
+
+function confirmarLogout() {
+    closeModal('modal-logout');
+    if (typeof doLogout === 'function') {
+        doLogout();
+    } else {
+        sessionStorage.clear();
+        window.location.href = '../index.html';
+    }
 }
 
 // ── NAVEGACIÓN ────────────────────────────────────────────────

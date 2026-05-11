@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.controllers.tipos_solicitud_controller import TipoSolicitudController
-from app.models.tipos_solicitud_model import TipoSolicitud
+from app.models.tipos_solicitud_model import TipoSolicitudCreate
 from app.controllers.auth_controller import (
     TokenData,
     solo_admin,
@@ -14,7 +14,7 @@ tipo_ctrl = TipoSolicitudController()
 # CREAR TIPO DE SOLICITUD
 # Solo admin puede crear nuevos tipos
 @router.post("/create")
-async def create_tipo(tipo: TipoSolicitud, usuario: TokenData = Depends(solo_admin)):
+async def create_tipo(tipo: TipoSolicitudCreate, usuario: TokenData = Depends(solo_admin)):
     """
     Crea un nuevo tipo de solicitud.
     Requiere: admin.
@@ -46,7 +46,7 @@ async def get_tipo(id_tipo: int, usuario: TokenData = Depends(cualquier_rol)):
 # ACTUALIZAR TIPO 
 # Solo admin puede modificar tipos
 @router.put("/update/{id_tipo}")
-async def update_tipo(id_tipo: int, tipo: TipoSolicitud, usuario: TokenData = Depends(solo_admin)):
+async def update_tipo(id_tipo: int, tipo: TipoSolicitudCreate, usuario: TokenData = Depends(solo_admin)):
     """
     Actualiza un tipo de solicitud existente.
     Requiere: admin.

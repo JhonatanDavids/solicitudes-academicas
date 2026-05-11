@@ -318,6 +318,25 @@
         </div>
     </div>
 
+    <!-- MODAL CONFIRMACIÓN LOGOUT -->
+    <div class="modal-overlay" id="modal-logout">
+        <div class="modal-box" style="width:400px;">
+            <div class="modal-head">
+                <h4>Cerrar Sesión</h4>
+                <button class="modal-close" data-action="close-logout">✕</button>
+            </div>
+            <div class="modal-body" style="text-align:center;padding:2rem 1.5rem;">
+                <div style="font-size:2.5rem;margin-bottom:0.6rem;">⬡</div>
+                <div style="font-size:1.05rem;font-weight:700;color:var(--text-strong);font-family:var(--font-display);margin-bottom:0.4rem;">¿Estás seguro de cerrar sesión?</div>
+                <div style="color:var(--text-muted);font-size:0.85rem;line-height:1.5;">Tendrás que volver a iniciar sesión para acceder nuevamente.</div>
+            </div>
+            <div class="modal-footer" style="justify-content:center;gap:10px;">
+                <button class="btn-sm cancel" style="padding:7px 22px;" data-action="close-logout">Cancelar</button>
+                <button class="btn-sm red" style="padding:7px 22px;" id="btn-confirmar-logout">Cerrar sesión</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Estado vacío: no hay solicitudes -->
     <template id="tpl-lista-vacia">
         <div class="empty-state">
@@ -372,16 +391,14 @@
             var logoutBtn = document.getElementById('sb-logout');
             if (logoutBtn) logoutBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                sessionStorage.removeItem('portalUser');
-                sessionStorage.removeItem('token');
-                window.location.href = '../index.html';
+                if (typeof showLogoutModal === 'function') showLogoutModal();
+                else { sessionStorage.clear(); window.location.href = '../index.html'; }
             });
 
             var tbLogout = document.getElementById('tb-logout-btn');
             if (tbLogout) tbLogout.addEventListener('click', function () {
-                sessionStorage.removeItem('portalUser');
-                sessionStorage.removeItem('token');
-                window.location.href = '../index.html';
+                if (typeof showLogoutModal === 'function') showLogoutModal();
+                else { sessionStorage.clear(); window.location.href = '../index.html'; }
             });
 
             document.querySelectorAll('.sb-item-nav').forEach(function (item) {

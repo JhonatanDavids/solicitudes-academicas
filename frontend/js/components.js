@@ -49,7 +49,8 @@ class AppNavbar extends HTMLElement {
         });
 
         this.querySelector('#nb-logout-btn').addEventListener('click', () => {
-            if (typeof doLogout === 'function') doLogout();
+            if (typeof showLogoutModal === 'function') showLogoutModal();
+            else if (typeof doLogout === 'function') doLogout();
             else { sessionStorage.clear(); window.location.href = '../index.html'; }
         });
     }
@@ -170,7 +171,8 @@ class AppSidebar extends HTMLElement {
         if (logoutBottom) {
             logoutBottom.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (typeof doLogout === 'function') doLogout();
+                if (typeof showLogoutModal === 'function') showLogoutModal();
+                else if (typeof doLogout === 'function') doLogout();
                 else { sessionStorage.clear(); window.location.href = '../index.html'; }
             });
         }

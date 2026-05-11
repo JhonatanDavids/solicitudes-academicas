@@ -4,9 +4,8 @@
 // ══════════════════════════════════════════════════════════════
 
 // Dirección base de la API
-const DIRECCION_API = "https://solicitudes-academicas.onrender.com";
+const DIRECCION_API = "http://127.0.0.1:8000";
 
-console.log("USANDO RENDER API");
 
 // ── CABECERAS ──
 // Genera las cabeceras para cada petición, incluyendo el token JWT si existe.
@@ -41,10 +40,15 @@ async function parsearRespuesta(respuesta) {
         datos = null;
     }
 
-    // Si la respuesta NO es exitosa, lanzar error con el detalle del backend
+    // Si la respuesta NO es exitosa, lanzar error con mensaje amigable
     if (!respuesta.ok) {
-        const mensaje = (datos && datos.detail) || `Error ${respuesta.status}`;
-        throw new Error(mensaje);
+        if (respuesta.status === 422) {
+            throw new Error('No fue posible procesar la solicitud. Verifica los datos ingresados.');
+        }
+        if (datos && typeof datos.detail === 'string' && datos.detail.trim()) {
+            throw new Error(datos.detail.trim());
+        }
+        throw new Error('Ocurrió un error inesperado');
     }
 
     return datos;
@@ -259,7 +263,7 @@ const api = {
 };
 
 // ── UTILIDAD DOM SoC ──
-window.crearNodo = function(tag, options = {}, children = []) {
+window.crearNodo = function (tag, options = {}, children = []) {
     const el = document.createElement(tag);
     for (const [key, val] of Object.entries(options)) {
         if (key === 'dataset') {

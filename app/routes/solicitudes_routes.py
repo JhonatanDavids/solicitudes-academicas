@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Body, Query
 from typing import Optional
 from pydantic import BaseModel
 from app.controllers.solicitudes_controller import SolicitudController
-from app.models.solicitudes_model import Solicitud
+from app.models.solicitudes_model import SolicitudCreate
 from app.controllers.auth_controller import (
     TokenData,
     solo_admin,
@@ -23,7 +23,7 @@ class EstadoUpdateRequest(BaseModel):
 # CREAR SOLICITUD 
 # Cualquier usuario autenticado puede crear su propia solicitud
 @router.post("/create")
-async def create_solicitud(solicitud: Solicitud, usuario: TokenData = Depends(cualquier_rol)):
+async def create_solicitud(solicitud: SolicitudCreate, usuario: TokenData = Depends(cualquier_rol)):
     """
     Crea una nueva solicitud académica.
     El estudiante solo puede crear solicitudes para sí mismo.
@@ -171,7 +171,7 @@ async def update_estado_solicitud(
 @router.put("/update/{id_solicitud}")
 async def update_solicitud(
     id_solicitud: int, 
-    solicitud: Solicitud, 
+    solicitud: SolicitudCreate, 
     usuario: TokenData = Depends(solo_admin)
 ):
     """

@@ -12,7 +12,6 @@ let todasLasSolicitudes = [];
 let solicitudAbierta = null;
 let solicitudAEliminar = null;
 let idUsuarioActual = null;
-let timerToast;
 
 
 /* ============================================================
@@ -39,7 +38,7 @@ async function cargarSolicitudes() {
         const usuario = JSON.parse(sessionStorage.getItem('portalUser') || '{}');
 
         if (!usuario.id_usuario) {
-            mostrarErrorConexion();
+            toast('No fue posible conectar con el servidor', 'error');
             return;
         }
 
@@ -51,7 +50,7 @@ async function cargarSolicitudes() {
 
     } catch (error) {
         console.error(error);
-        mostrarErrorConexion();
+        toast('No fue posible conectar con el servidor', 'error');
     }
 }
 
@@ -133,7 +132,7 @@ async function crearSolicitud() {
     const descripcion = document.getElementById('f-descripcion').value;
 
     if (!idTipo || !descripcion) {
-        mostrarToast('✕ Completa todos los campos', 'error');
+        toast('Completa todos los campos', 'error');
         return;
     }
 
@@ -148,12 +147,12 @@ async function crearSolicitud() {
         });
 
         closeModal('modal-nueva');
-        mostrarToast('✓ Solicitud creada', 'success');
+        toast('Solicitud creada', 'success');
 
         await cargarSolicitudes();
 
     } catch {
-        mostrarToast('✕ Error al crear', 'error');
+        toast('Error al crear la solicitud', 'error');
     }
 }
 
@@ -165,13 +164,22 @@ async function crearSolicitud() {
 async function eliminarSolicitud(id) {
 
     try {
-        await api.eliminarSolicitud(id);
+        const resp = await fetch(DIRECCION_API + '/solicitudes/delete/' + id, {
+            method: 'DELETE',
+            headers: obtenerCabeceras()
+        });
 
-        mostrarToast(`✓ Eliminada #` + id, 'success');
+        if (resp.status === 403) {
+            toast('No puedes eliminar una solicitud que ya fue procesada.', 'error');
+            return;
+        }
+
+        await parsearRespuesta(resp);
+        toast('Solicitud eliminada correctamente', 'success');
         await cargarSolicitudes();
 
-    } catch {
-        mostrarToast('✕ Error al eliminar', 'error');
+    } catch (err) {
+        toast('Error al eliminar: ' + err.message, 'error');
     }
 }
 
@@ -244,7 +252,7 @@ function closeModal(id) {
 function copyDetalle() {
     const texto = document.getElementById('modal-detalle-content').textContent;
     navigator.clipboard.writeText(texto).then(() => {
-        mostrarToast('✓ Copiado', 'success');
+        toast('Copiado', 'success');
     });
 }
 
@@ -298,6 +306,8 @@ async function abrirModal() {
 document.addEventListener('DOMContentLoaded', () => {
     cargarSolicitudes();
 
+    initModalBackdrop();
+
     // Binding SoC
     const btnN = document.getElementById('btn-nueva-solicitud');
     if (btnN) btnN.addEventListener('click', abrirModal);
@@ -350,10 +360,4 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Cerrar modal auto
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal-overlay')) {
-            closeModal(e.target.id);
-        }
-    });
 });
