@@ -99,3 +99,65 @@ class DocumentoController:
         finally:
             cursor.close()
             conn.close()
+
+    def upload_documento(self, documento):
+        """Alias de create_documento para compatibilidad con la route /upload."""
+        return self.create_documento(documento)
+
+    def get_documentos(self):
+        """Retorna todos los documentos del sistema."""
+        conn = None
+        cursor = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM documentos ORDER BY fecha_subida DESC")
+            result = cursor.fetchall()
+            payload = []
+            for data in result:
+                payload.append({
+                    'id_documento': data[0],
+                    'id_solicitud': data[1],
+                    'nombre_archivo': data[2],
+                    'tipo_archivo': data[3],
+                    'ruta_archivo': data[4],
+                    'fecha_subida': str(data[5])
+                })
+            if result:
+                return {"resultado": jsonable_encoder(payload)}
+            else:
+                raise HTTPException(status_code=404, detail="No hay documentos registrados")
+        except psycopg2.Error as err:
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail="Error al obtener los documentos")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+    def update_documento(self, id_documento: int, documento):
+        """Actualiza los campos de un documento existente."""
+        conn = None
+        cursor = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE documentos SET nombre_archivo = %s, tipo_archivo = %s, ruta_archivo = %s WHERE id_documento = %s",
+                (documento.nombre_archivo, documento.tipo_archivo, documento.ruta_archivo, id_documento)
+            )
+            conn.commit()
+            if cursor.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Documento no encontrado")
+            return {"resultado": "Documento actualizado"}
+        except psycopg2.Error as err:
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail="Error al actualizar el documento")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()

@@ -119,3 +119,54 @@ class RespuestaController:
         finally:
             cursor.close()
             conn.close()
+
+    def update_respuesta(self, id_respuesta: int, respuesta):
+        """Actualiza una respuesta existente."""
+        conn = None
+        cursor = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                """UPDATE respuestas SET numero_resolucion = %s, motivo = %s,
+                   fecha_vigencia = %s, observaciones = %s, archivo_pdf = %s
+                   WHERE id_respuesta = %s""",
+                (respuesta.numero_resolucion, respuesta.motivo,
+                 respuesta.fecha_vigencia, respuesta.observaciones,
+                 respuesta.archivo_pdf, id_respuesta)
+            )
+            conn.commit()
+            if cursor.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Respuesta no encontrada")
+            return {"resultado": "Respuesta actualizada"}
+        except psycopg2.Error as err:
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail="Error al actualizar la respuesta")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+    def delete_respuesta(self, id_respuesta: int):
+        """Elimina una respuesta del sistema."""
+        conn = None
+        cursor = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM respuestas WHERE id_respuesta = %s", (id_respuesta,))
+            conn.commit()
+            if cursor.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Respuesta no encontrada")
+            return {"resultado": "Respuesta eliminada"}
+        except psycopg2.Error as err:
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail="Error al eliminar la respuesta")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
