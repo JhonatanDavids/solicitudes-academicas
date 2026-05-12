@@ -18,7 +18,7 @@ let _nuevoEstadoSeleccionado = null;
 const usuarioPortal = getUsuarioActual();
 
 // Solo el funcionario puede cambiar a este estado
-const ESTADOS_PERMITIDOS = ['aprobada', 'rechazada', 'en_revision'];
+const ESTADOS_PERMITIDOS = ['en_revision'];
 
 
 /* ============================================================
@@ -348,9 +348,7 @@ function abrirCambioEstado(id) {
     opcionesContainer.textContent = '';
 
     const estados = [
-        { value: 'aprobada', label: '✔ Aprobar', cls: 'estado-btn-aprobar' },
-        { value: 'rechazada', label: '✕ Rechazar', cls: 'estado-btn-rechazar' },
-        { value: 'en_revision', label: '🔍 En revisión', cls: 'estado-btn-revision' }
+        { value: 'en_revision', label: '🔍 Enviar a revisión', cls: 'estado-btn-revision' }
     ];
 
     estados.forEach(({ value, label, cls }) => {
