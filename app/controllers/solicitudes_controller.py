@@ -47,7 +47,7 @@ class SolicitudController:
             cursor = conn.cursor()
             cursor.execute(
                 """
-                SELECT s.id_solicitud, u.nombre, u.apellido, u.cedula,
+                SELECT s.id_usuario, s.id_solicitud, u.nombre, u.apellido, u.cedula,
                        ts.nombre AS tipo, s.estado_actual, s.prioridad,
                        s.fecha_creacion, s.fecha_actualizacion, s.descripcion
                 FROM solicitudes s
@@ -64,16 +64,17 @@ class SolicitudController:
                 raise HTTPException(status_code=404, detail="Solicitud no encontrada")
 
             content = {
-                "id_solicitud": result[0],
-                "nombre": result[1],
-                "apellido": result[2],
-                "cedula": result[3],
-                "tipo": result[4],
-                "estado_actual": result[5],
-                "prioridad": result[6],
-                "fecha_creacion": str(result[7]),
-                "fecha_actualizacion": str(result[8]) if result[8] else None,
-                "descripcion": result[9],
+                "id_usuario": result[0],
+                "id_solicitud": result[1],
+                "nombre": result[2],
+                "apellido": result[3],
+                "cedula": result[4],
+                "tipo": result[5],
+                "estado_actual": result[6],
+                "prioridad": result[7],
+                "fecha_creacion": str(result[8]),
+                "fecha_actualizacion": str(result[9]) if result[9] else None,
+                "descripcion": result[10],
             }
 
             return jsonable_encoder(content)
