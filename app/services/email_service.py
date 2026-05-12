@@ -276,6 +276,27 @@ def notificar_cambio_estado_solicitud(
             except Exception as exc:
                 logger.warning("No se pudo generar PDF para adjuntar al correo: %s", exc)
 
+            if pdf_path and pdf_path.is_file():
+                try:
+                    conn3 = get_db_connection()
+                    cursor3 = conn3.cursor()
+                    cursor3.execute(
+                        """INSERT INTO documentos (id_solicitud, nombre_archivo, tipo_archivo, ruta_archivo)
+                           VALUES (%s, %s, %s, %s)""",
+                        (id_solicitud, pdf_path.name, "application/pdf", str(pdf_path))
+                    )
+                    conn3.commit()
+                    cursor3.close()
+                    conn3.close()
+                    logger.info("Documento registrado en BD: solicitud=%s | archivo=%s", id_solicitud, pdf_path.name)
+                except Exception as exc:
+                    logger.warning("No se pudo registrar documento en BD: %s", exc)
+                    try:
+                        cursor3.close()
+                        conn3.close()
+                    except Exception:
+                        pass
+
             notificar_solicitud_aprobada(
                 correo, nombre_completo, id_solicitud, tipo_solicitud, pdf_path
             )
