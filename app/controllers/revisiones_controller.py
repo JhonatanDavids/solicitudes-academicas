@@ -190,6 +190,16 @@ class RevisionController:
             )
 
             conn.commit()
+
+            # ── NOTIFICACIÓN POR CORREO ──
+            try:
+                from app.services.email_service import notificar_cambio_estado_solicitud
+                notificar_cambio_estado_solicitud(
+                    revision.id_solicitud, nuevo_estado_solicitud, revision.comentario
+                )
+            except Exception:
+                pass  # El correo no debe bloquear la operación principal
+
             return {
                 "resultado": "Revisión creada correctamente",
                 "id_revision": id_revision,

@@ -1,0 +1,49 @@
+{% extends "base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 16px; color:#2b8a3e; font-size:22px;">
+  ✅ ¡Solicitud Aprobada!
+</h2>
+
+<p style="margin:0 0 16px; color:#495057; font-size:15px; line-height:1.6;">
+  Hola <strong>{{ nombre }}</strong>,
+</p>
+
+<p style="margin:0 0 20px; color:#495057; font-size:15px; line-height:1.6;">
+  Nos complace informarte que tu solicitud ha sido <strong style="color:#2b8a3e;">aprobada</strong>.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f8f3; border-radius:6px; padding:0; margin-bottom:20px;">
+  <tr>
+    <td style="padding:16px 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">N.° Solicitud:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">#{{ id_solicitud }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Tipo:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">{{ tipo }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Estado:</td>
+          <td style="padding:4px 0; text-align:right;">
+            <span style="background-color:#2b8a3e; color:#fff; font-size:12px; font-weight:600; padding:3px 10px; border-radius:12px;">
+              APROBADA
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+{% if tiene_pdf %}
+<p style="margin:0 0 8px; color:#495057; font-size:14px; line-height:1.6;">
+  📎 <strong>Se adjunta tu certificado en formato PDF.</strong>
+</p>
+{% endif %}
+
+<p style="margin:20px 0 0; color:#868e96; font-size:13px; line-height:1.5;">
+  Si tienes alguna duda, puedes acercarte a la oficina de registro académico.
+</p>
+{% endblock %}

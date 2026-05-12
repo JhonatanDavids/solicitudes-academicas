@@ -39,7 +39,30 @@ async def create_solicitud(solicitud: SolicitudCreate, usuario: TokenData = Depe
     # Forzar estado inicial — ignorar cualquier valor enviado desde el frontend
     solicitud.estado_actual = "pendiente"
     
-    return solicitud_ctrl.create_solicitud(solicitud)
+    resultado = solicitud_ctrl.create_solicitud(solicitud)
+
+    # ── NOTIFICACIÓN POR CORREO: nueva solicitud → funcionarios ──
+    try:
+        from app.config.db_config import get_db_connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT u.nombre || ' ' || u.apellido, ts.nombre
+            FROM usuarios u, tipos_solicitud ts
+            WHERE u.id_usuario = %s AND ts.id_tipo_solicitud = %s
+        """, (solicitud.id_usuario, solicitud.id_tipo_solicitud))
+        row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if row:
+            from app.services.email_service import notificar_nueva_solicitud
+            notificar_nueva_solicitud(
+                row[0], resultado["id_solicitud"], row[1], solicitud.prioridad
+            )
+    except Exception:
+        pass  # El correo no debe bloquear la creación de la solicitud
+
+    return resultado
 
 
 # OBTENER TODAS LAS SOLICITUDES 

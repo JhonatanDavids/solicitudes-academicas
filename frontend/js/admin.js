@@ -1153,14 +1153,37 @@ async function saveCrud() {
                         toast('Ingrese un correo electrónico válido', 'error');
                         return;
                     }
+                    const rolSeleccionado = listaRoles.find(r => r.id_rol === idRol);
+                    const esEstudiante = rolSeleccionado && rolSeleccionado.nombre_rol.toLowerCase() === 'estudiante';
+
+                    if (esEstudiante) {
+                        const programa = get('cf-programa');
+                        const semestre = parseInt(get('cf-semestre'), 10);
+                        if (!programa || !semestre || semestre < 1) {
+                            toast('Para estudiantes, programa y semestre son obligatorios', 'error');
+                            return;
+                        }
+                        return api.crearUsuario({
+                            nombre: get('cf-nombre'),
+                            apellido: get('cf-apellido'),
+                            correo: correo,
+                            cedula: get('cf-cedula-usuario'),
+                            contrasena: get('cf-pass'),
+                            programa: programa,
+                            semestre: semestre,
+                            id_rol: idRol,
+                            estado: 'activo',
+                        });
+                    }
+
                     return api.crearUsuario({
                         nombre: get('cf-nombre'),
                         apellido: get('cf-apellido'),
                         correo: correo,
                         cedula: get('cf-cedula-usuario'),
                         contrasena: get('cf-pass'),
-                        programa: get('cf-programa'),
-                        semestre: parseInt(get('cf-semestre'), 10) || 0,
+                        programa: null,
+                        semestre: null,
                         id_rol: idRol,
                         estado: 'activo',
                     });
@@ -1207,19 +1230,41 @@ async function saveCrud() {
         } else if (modo === 'edit') {
             const payloads = {
                 usuario: () => {
-                    const payload = {
+                    const idRol = parseInt(get('cf-rol'), 10);
+                    const rolSeleccionado = listaRoles.find(r => r.id_rol === idRol);
+                    const esEstudiante = rolSeleccionado && rolSeleccionado.nombre_rol.toLowerCase() === 'estudiante';
+
+                    if (esEstudiante) {
+                        const programa = get('cf-programa');
+                        const semestre = parseInt(get('cf-semestre'), 10);
+                        if (!programa || !semestre || semestre < 1) {
+                            toast('Para estudiantes, programa y semestre son obligatorios', 'error');
+                            return;
+                        }
+                        return api.actualizarUsuario(id, {
+                            nombre: get('cf-nombre'),
+                            apellido: get('cf-apellido'),
+                            correo: get('cf-correo'),
+                            cedula: get('cf-cedula-usuario'),
+                            contrasena: '',
+                            programa: programa,
+                            semestre: semestre,
+                            id_rol: idRol,
+                            estado: get('cf-estado-usuario') || 'activo',
+                        });
+                    }
+
+                    return api.actualizarUsuario(id, {
                         nombre: get('cf-nombre'),
                         apellido: get('cf-apellido'),
                         correo: get('cf-correo'),
                         cedula: get('cf-cedula-usuario'),
                         contrasena: '',
-                        programa: get('cf-programa'),
-                        semestre: parseInt(get('cf-semestre'), 10) || 0,
-                        id_rol: parseInt(get('cf-rol'), 10),
+                        programa: null,
+                        semestre: null,
+                        id_rol: idRol,
                         estado: get('cf-estado-usuario') || 'activo',
-                    };
-                    return api.actualizarUsuario(id, payload)
-                        .then(() => api.actualizarEstadoUsuario(id, payload.estado));
+                    });
                 },
                 rol: () => api.actualizarRol(id, {
                     nombre_rol: get('cf-nombre-rol'),

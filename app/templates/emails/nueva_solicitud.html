@@ -1,0 +1,43 @@
+{% extends "base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 16px; color:#1864ab; font-size:22px;">
+  📋 Nueva Solicitud Pendiente
+</h2>
+
+<p style="margin:0 0 20px; color:#495057; font-size:15px; line-height:1.6;">
+  Se ha registrado una nueva solicitud académica que requiere tu atención.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#e7f5ff; border-radius:6px; padding:0; margin-bottom:20px;">
+  <tr>
+    <td style="padding:16px 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">N.° Solicitud:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">#{{ id_solicitud }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Estudiante:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">{{ nombre_estudiante }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Tipo:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">{{ tipo }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Prioridad:</td>
+          <td style="padding:4px 0; text-align:right;">
+            <span style="background-color:#1864ab; color:#fff; font-size:12px; font-weight:600; padding:3px 10px; border-radius:12px;">
+              {{ prioridad | upper }}
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<p style="margin:0; color:#868e96; font-size:13px; line-height:1.5;">
+  Ingresa al sistema para revisar y gestionar esta solicitud.
+</p>
+{% endblock %}

@@ -204,6 +204,13 @@ class SolicitudController:
 
             conn.commit()
 
+            # ── NOTIFICACIÓN POR CORREO ──
+            try:
+                from app.services.email_service import notificar_cambio_estado_solicitud
+                notificar_cambio_estado_solicitud(id_solicitud, nuevo_estado, comentario)
+            except Exception:
+                pass  # El correo no debe bloquear la operación principal
+
             return {"resultado": "Estado actualizado correctamente"}
 
         except HTTPException as http_err:

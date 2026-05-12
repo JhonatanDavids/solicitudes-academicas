@@ -1,0 +1,44 @@
+{% extends "base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 16px; color:#1a3c6e; font-size:22px;">
+  🎓 ¡Bienvenido(a) al Sistema Académico!
+</h2>
+
+<p style="margin:0 0 16px; color:#495057; font-size:15px; line-height:1.6;">
+  Hola <strong>{{ nombre }} {{ apellido }}</strong>,
+</p>
+
+<p style="margin:0 0 20px; color:#495057; font-size:15px; line-height:1.6;">
+  Tu cuenta ha sido creada exitosamente en el Sistema de Gestión de Solicitudes Académicas
+  de la Corporación Universitaria Latinoamericana.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#e7f5ff; border-radius:6px; padding:0; margin-bottom:20px;">
+  <tr>
+    <td style="padding:16px 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Nombre:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">{{ nombre }} {{ apellido }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Rol asignado:</td>
+          <td style="padding:4px 0; text-align:right;">
+            <span style="background-color:#1a3c6e; color:#fff; font-size:12px; font-weight:600; padding:3px 10px; border-radius:12px;">
+              {{ rol | upper }}
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<p style="margin:0 0 8px; color:#495057; font-size:14px; line-height:1.6;">
+  Ya puedes ingresar al sistema con tu correo electrónico y la contraseña proporcionada.
+</p>
+
+<p style="margin:16px 0 0; color:#868e96; font-size:13px; line-height:1.5;">
+  Si no reconoces esta acción, por favor comunícate con el administrador del sistema.
+</p>
+{% endblock %}

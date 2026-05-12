@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════════════════════
 
 // Dirección base de la API
-const DIRECCION_API = "https://solicitudes-academicas.onrender.com";
+const DIRECCION_API = "http://127.0.0.1:8000";
 
 // ── CABECERAS ──
 // Genera las cabeceras para cada petición, incluyendo el token JWT si existe.

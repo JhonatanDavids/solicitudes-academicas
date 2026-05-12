@@ -1,0 +1,56 @@
+{% extends "base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 16px; color:#c92a2a; font-size:22px;">
+  ❌ Solicitud Rechazada
+</h2>
+
+<p style="margin:0 0 16px; color:#495057; font-size:15px; line-height:1.6;">
+  Hola <strong>{{ nombre }}</strong>,
+</p>
+
+<p style="margin:0 0 20px; color:#495057; font-size:15px; line-height:1.6;">
+  Te informamos que tu solicitud ha sido <strong style="color:#c92a2a;">rechazada</strong>.
+</p>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#fff5f5; border-radius:6px; padding:0; margin-bottom:20px;">
+  <tr>
+    <td style="padding:16px 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">N.° Solicitud:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">#{{ id_solicitud }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Tipo:</td>
+          <td style="color:#212529; font-size:13px; font-weight:600; padding:4px 0; text-align:right;">{{ tipo }}</td>
+        </tr>
+        <tr>
+          <td style="color:#868e96; font-size:13px; padding:4px 0;">Estado:</td>
+          <td style="padding:4px 0; text-align:right;">
+            <span style="background-color:#c92a2a; color:#fff; font-size:12px; font-weight:600; padding:3px 10px; border-radius:12px;">
+              RECHAZADA
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f9fa; border-left:4px solid #c92a2a; border-radius:0 6px 6px 0; margin-bottom:20px;">
+  <tr>
+    <td style="padding:14px 20px;">
+      <p style="margin:0 0 4px; color:#868e96; font-size:12px; font-weight:600; text-transform:uppercase;">
+        Motivo del rechazo
+      </p>
+      <p style="margin:0; color:#495057; font-size:14px; line-height:1.5;">
+        {{ motivo }}
+      </p>
+    </td>
+  </tr>
+</table>
+
+<p style="margin:0; color:#868e96; font-size:13px; line-height:1.5;">
+  Si consideras que la decisión fue incorrecta, puedes acercarte a coordinación académica para más información o crear una nueva solicitud.
+</p>
+{% endblock %}
